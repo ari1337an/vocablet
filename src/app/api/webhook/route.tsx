@@ -2,7 +2,7 @@ import SubscriptionRepo from "@/server/database/repositories/subscription";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
       const userId = session.metadata?.user_id as string;
       const priceId = session.metadata?.price_id as string;
       const maxUsageUnit = parseInt(session.metadata?.max_usage_limit as string);
-      console.log(session);
       
       await SubscriptionRepo.assignSubscription(
         userId,

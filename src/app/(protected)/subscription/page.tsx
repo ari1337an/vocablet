@@ -19,8 +19,14 @@ export default async function SubscriptionPage() {
     );
 
   const unUsedUnits =
-    subscriptionsActive.reduce((acc, sub) => acc + sub.maxUsageUnit, 0) -
-    subscriptionsActive.reduce((acc, sub) => acc + sub.usedUnit, 0);
+    subscriptionsActive.reduce(
+      (acc: number, sub: any) => acc + sub.maxUsageUnit,
+      0
+    ) -
+    subscriptionsActive.reduce(
+      (acc: number, sub: any) => acc + sub.usedUnit,
+      0
+    );
 
   return (
     <div className="flex flex-col gap-y-10 items-center justify-center h-full">
@@ -33,7 +39,7 @@ export default async function SubscriptionPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-white">
-          {subscriptions.map((subscription) => (
+          {subscriptions.map((subscription: any) => (
             <div
               key={subscription.stripeCustomerId || `topup-${subscription.id}`}
               className="subscription-item bg-secondary p-6 rounded-lg shadow-md border border-gray-200"
@@ -48,9 +54,7 @@ export default async function SubscriptionPage() {
                   <p className="text-sm">
                     Max Usage Units: {subscription.maxUsageUnit}
                   </p>
-                  <p className="text-sm">
-                    Used Units: {subscription.usedUnit}
-                  </p>
+                  <p className="text-sm">Used Units: {subscription.usedUnit}</p>
                 </>
               )}
 

@@ -7,13 +7,15 @@ import resendVerificationLinkUseCase from "@/server/actions/email/resend-verific
 import { REQUEST_TO_LOGIN_ROUTE } from "@/server/authentication/routes";
 import React, { useTransition } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function RequestEmailVerification() {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const recheck = () => {
     // refresh the page to check if the user has verified their email
-    window.location.reload();
+    router.refresh();
   };
 
   const resend = () => {

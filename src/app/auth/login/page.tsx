@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { SignIn } from "./_components/sign-in";
 import { Separator } from "@/app/_components/ui/separator";
 
@@ -19,7 +19,9 @@ export default function page() {
         </div>
       </div>
       <div className="w-full lg:w-1/2 bg-secondary">
-        <SignIn />
+        <Suspense>
+          <SignIn />
+        </Suspense>
       </div>
     </div>
   );

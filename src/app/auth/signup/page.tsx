@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { SignUp } from "./_components/sign-up"; // Changed to SignUp
 import { Separator } from "@/app/_components/ui/separator";
 
@@ -6,7 +6,9 @@ export default function Page() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row relative">
       <div className="w-full lg:w-1/2 bg-secondary">
-        <SignUp />
+        <Suspense>
+          <SignUp />
+        </Suspense>
       </div>
       <div className="hidden lg:flex w-1/2 bg-primary flex-col items-center px-10">
         <h1 className="text-2xl absolute top-0 mt-5">Vocablet</h1>

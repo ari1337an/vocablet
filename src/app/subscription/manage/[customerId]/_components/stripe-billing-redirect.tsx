@@ -2,9 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { loadStripe } from "@stripe/stripe-js";
 import { Progress } from "@/app/_components/ui/progress";
-import createPortalSession from "@/server/actions/stripe/create-portal-session";
+import { useRouter } from "next/navigation";
 
 export default function StripeBillingRedirect({
   stripeBillingSessionUrl,
@@ -12,6 +11,7 @@ export default function StripeBillingRedirect({
   stripeBillingSessionUrl: string;
 }) {
   const [progress, setProgress] = useState(13);
+  const router = useRouter();
 
   // Create a ref to track if the effect has run
   const hasEffectRun = useRef(false);
@@ -25,7 +25,7 @@ export default function StripeBillingRedirect({
       return;
 
     const handleBilling = async () => {
-      window.location.href = stripeBillingSessionUrl;
+      router.push(stripeBillingSessionUrl);
     };
 
     // Set the flag to indicate the effect has run
@@ -39,7 +39,7 @@ export default function StripeBillingRedirect({
       setProgress(100);
       handleBilling();
     }, 3100);
-  }, [stripeBillingSessionUrl]);
+  }, [stripeBillingSessionUrl, router]);
 
   return (
     <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
