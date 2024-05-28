@@ -1,4 +1,5 @@
 import Github from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import UserRepo from "@/server/database/repositories/user";
 import bcrypt from "bcryptjs";
@@ -7,6 +8,7 @@ import VerificationRepo from "../database/repositories/verification";
 
 export const authConfig = {
   providers: [
+    Google({ allowDangerousEmailAccountLinking: true }),
     Github({ allowDangerousEmailAccountLinking: true }),
     Credentials({
       id: "email-password-login",
