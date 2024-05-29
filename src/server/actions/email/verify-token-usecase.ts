@@ -3,8 +3,6 @@
 import { Response } from "@/app/_components/message/message";
 import { auth, signIn } from "@/server/authentication/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/server/authentication/routes";
-import UserRepo from "@/server/database/repositories/user";
-import VerificationRepo from "@/server/database/repositories/verification";
 
 export default async function verifyTokenUseCase(token: string) {
   try {

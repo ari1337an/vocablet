@@ -20,7 +20,6 @@ import {
 import AvatarIcon from "@/app/_icons/avatar";
 import UserIcon from "@/app/_icons/user";
 import CreditCardIcon from "@/app/_icons/credit-cart";
-import SettingsIcon from "@/app/_icons/settings";
 import LogoutIcon from "@/app/_icons/logout";
 import { REQUEST_TO_LOGIN_ROUTE } from "@/server/authentication/routes";
 

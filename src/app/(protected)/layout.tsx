@@ -2,17 +2,10 @@
 
 import { auth } from "@/server/authentication/auth";
 import RequestEmailVerification from "./_components/request-verification";
-import AvatarIcon from "../_icons/avatar";
-import { Avatar, AvatarFallback, AvatarImage } from "../_components/ui/avatar";
 import Navbar from "./_components/navbar/navbar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../_components/ui/tooltip";
 import UserAvatar from "./_components/navbar/user-avatar";
 import Link from "next/link";
+import { Button } from "../_components/ui/button";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -35,25 +28,21 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <main className="min-h-screen bg-secondary flex flex-col relative">
-      <div className="flex flex-row items-center justify-between px-10 py-5 sticky top-0 bg-secondary">
+    <main className="h-full flex flex-col">
+      <div className="max-h-[10vh] flex flex-row items-center justify-between px-5 py-5 z-10 sticky top-0 left-0 right-0">
         <Navbar />
         <div className="absolute left-0 right-0 flex justify-center text-2xl">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger className="hover:text-primary hover:cursor-pointer">
-                <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>by AlphaWolf Ventures Inc.</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Button
+            variant="ghost"
+            className="text-2xl hover:text-primary hover:cursor-pointer"
+          >
+            <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
+          </Button>
         </div>
         <UserAvatar avatarUrl={avatarUrl} />
       </div>
 
-      <div className="mt-5">{children}</div>
+      <div className="z-0 h-full">{children}</div>
     </main>
   );
 }

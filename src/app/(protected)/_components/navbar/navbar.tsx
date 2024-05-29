@@ -76,11 +76,11 @@ export default function Navbar({ className }: { className?: string }) {
     <div className={cn(className, "z-50")}>
       <Drawer direction="left">
         <DrawerTrigger asChild>
-          <Button variant="ghost">
+          <Button className="z-50" variant="ghost">
             <SidebarIcon className="w-5 h-5 fill-white hover:fill-primary" />
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="h-screen top-0 left-0 right-auto mt-0 w-[350px] rounded-none bg-secondary">
+        <DrawerContent className="h-screen top-0 left-0 right-auto mt-0 w-[350px] rounded-none bg-secondary drop-shadow-2xl z-50">
           <div className="mx-5">
             <div className="flex flex-row items-center justify-between">
               <DrawerHeader>

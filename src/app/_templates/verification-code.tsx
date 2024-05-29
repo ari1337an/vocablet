@@ -22,7 +22,7 @@ export default function VerificationCodeEmail({
   code = "123456",
   host = process.env.NEXT_PUBLIC_BRAND_URI as string,
 }: VerificationCodeEmailProps) {
-  const brand = host.split(".")[0];
+  const brand = process.env.NEXT_PUBLIC_BRAND_NAME as string;
 
   return (
     <Tailwind
@@ -39,7 +39,7 @@ export default function VerificationCodeEmail({
     >
       <Html dir="ltr">
         <Head>
-          <title>{`Verification code for ${host}`}</title>
+          <title>{`Verification code for ${brand.toLowerCase()}`}</title>
           <Font
             fontFamily="Inter"
             fallbackFontFamily="sans-serif"
