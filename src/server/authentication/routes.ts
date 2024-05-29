@@ -6,11 +6,18 @@
 export const publicRoutes = ["/"];
 
 /**
- * An array of API routes that are accessible to the public
+ * An array of API prefixes that are accessible to the public
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicAPIRoutes = ["/api/webhook"];
+export const publicAPIPrefixes = ["/api/webhook"];
+
+/**
+ * An array of API prefixes that are protected by bearer token authorization
+ * These routes require authentication
+ * @type {string[]}
+ */
+export const protectedAPIPrefixes = ["/api/agents"];
 
 /**
  * An array of routes that are used

@@ -86,7 +86,7 @@ export default function Navbar({ className }: { className?: string }) {
               <DrawerHeader>
                 <DrawerClose>
                   <DrawerTitle className="text-left">
-                    <Link href="/app">Vocablet</Link>
+                    <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
                   </DrawerTitle>
                 </DrawerClose>
                 <DrawerDescription>
@@ -114,7 +114,7 @@ export default function Navbar({ className }: { className?: string }) {
           </ScrollArea>
           <DrawerFooter className="text-center text-muted-foreground gap-y-0">
             <p className="text-sm">
-              &copy; {new Date().getFullYear()} Vocablet
+              &copy; {new Date().getFullYear()} {process.env.NEXT_PUBLIC_BRAND_NAME}
             </p>
             <p className="text-sm">by AlphaWolf Ventures Inc.</p>
           </DrawerFooter>

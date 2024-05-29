@@ -7,8 +7,8 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Vocablet",
-  description: "Learn vocabulary with AI and flashcards",
+  title: process.env.NEXT_PUBLIC_BRAND_NAME,
+  description: process.env.NEXT_PUBLIC_BRAND_DESC,
 };
 
 export default function RootLayout({

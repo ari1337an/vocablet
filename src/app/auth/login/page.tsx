@@ -6,7 +6,7 @@ export default function page() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row relative">
       <div className="hidden lg:flex flex-col items-center px-10 w-1/2 bg-primary">
-        <h1 className="text-2xl absolute top-0 mt-5">Vocablet</h1>
+        <h1 className="text-2xl absolute top-0 mt-5">{process.env.NEXT_PUBLIC_BRAND_NAME}</h1>
         <div className="min-h-screen flex flex-col items-center justify-center text-center gap-y-5">
           <h2 className="text-lg">Nice to see you again</h2>
           <h1 className="text-5xl uppercase">Welcome Back</h1>

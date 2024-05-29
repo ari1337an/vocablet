@@ -20,7 +20,7 @@ type VerificationCodeEmailProps = {
 
 export default function VerificationCodeEmail({
   code = "123456",
-  host = "vocablet.io",
+  host = process.env.NEXT_PUBLIC_BRAND_URI as string,
 }: VerificationCodeEmailProps) {
   const brand = host.split(".")[0];
 

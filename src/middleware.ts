@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import { authConfig } from "@/server/authentication/auth.config";
 
 import {
@@ -7,13 +7,16 @@ import {
   apiAuthPrefix,
   authRoutes,
   publicRoutes,
-  publicAPIRoutes,
+  publicAPIPrefixes,
+  protectedAPIPrefixes,
 } from "@/server/authentication/routes";
+import { getToken } from "next-auth/jwt";
+import { NextRequest } from "next/server";
 
 const { auth } = NextAuth({
   trustHost: true,
   ...authConfig,
-});
+} as NextAuthConfig);
 
 export function matchRoute(route: string, pathname: string) {
   const routeParts = route.split("/").filter((part) => part !== ""); // Split the route into parts
@@ -36,21 +39,59 @@ export function matchRoute(route: string, pathname: string) {
   return true; // If all parts match, routes match
 }
 
-export default auth((req) => {
+/**
+ * This function is used to verify the token of the request
+ * Returns true if the token is valid (i.e. The user is authorized to access the route)
+ * Returns false if the token is invalid (i.e. The user is not authorized to access the route)
+ * @param request
+ * @returns
+ */
+async function RequestTokenVerify(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    salt:
+      process.env.ENVIRONEMENT === "production"
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
+    secret: process.env.AUTH_SECRET as string,
+  });
+  if (!token) return false; // dont' let him pass
+  return true; // let him pass
+}
+
+export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicAPIRoutes = publicAPIRoutes.some((route) =>
-    matchRoute(route, nextUrl.pathname)
-  );
+  const isPublicAPIPrefix = publicAPIPrefixes.some((prefix) => {
+    return nextUrl.pathname.startsWith(prefix);
+  });
   let isPublicRoute =
     publicRoutes.some((route) => matchRoute(route, nextUrl.pathname)) ||
-    isPublicAPIRoutes;
+    isPublicAPIPrefix;
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isProtectedApiRoute = protectedAPIPrefixes.some((prefix) => {
+    return nextUrl.pathname.startsWith(prefix);
+  });
 
   if (isApiAuthRoute) {
     return; // return means give access to the route
+  }
+
+  if (isProtectedApiRoute) {
+    // if the user is logged in then let him pass
+    if (isLoggedIn) return;
+
+    // check the bearer token
+    if (await RequestTokenVerify(req)) {
+      return;
+    } else {
+      return Response.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
   }
 
   if (isAuthRoute) {

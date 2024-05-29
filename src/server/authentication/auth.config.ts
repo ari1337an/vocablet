@@ -5,6 +5,7 @@ import UserRepo from "@/server/database/repositories/user";
 import bcrypt from "bcryptjs";
 import { LoginFormSchema } from "../validation/auth/login-form";
 import VerificationRepo from "../database/repositories/verification";
+import { NextAuthConfig } from "next-auth";
 
 export const authConfig = {
   providers: [
@@ -76,4 +77,4 @@ export const authConfig = {
       },
     }),
   ],
-};
+} as NextAuthConfig;

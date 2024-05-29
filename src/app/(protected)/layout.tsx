@@ -42,7 +42,7 @@ export default async function ProtectedLayout({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="hover:text-primary hover:cursor-pointer">
-                <Link href="/app">Vocablet</Link>
+                <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
               </TooltipTrigger>
               <TooltipContent>
                 <p>by AlphaWolf Ventures Inc.</p>
