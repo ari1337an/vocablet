@@ -2,10 +2,10 @@
 
 import { auth } from "@/server/authentication/auth";
 import RequestEmailVerification from "./_components/request-verification";
-import Navbar from "./_components/navbar/navbar";
 import UserAvatar from "./_components/navbar/user-avatar";
 import Link from "next/link";
 import { Button } from "../_components/ui/button";
+import SideBar from "./_components/navbar/sidebar";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -30,7 +30,7 @@ export default async function ProtectedLayout({
   return (
     <main className="h-full flex flex-col">
       <div className="flex flex-row items-center justify-between px-10 py-5 z-10 sticky top-0 left-0 right-0">
-        <Navbar />
+        <SideBar />
         <div className="h-full absolute left-0 right-0 flex items-center justify-center text-2xl">
           <Button
             variant="ghost"

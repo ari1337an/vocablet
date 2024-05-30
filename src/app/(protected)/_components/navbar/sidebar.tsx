@@ -74,7 +74,7 @@ export default function Navbar({ className }: { className?: string }) {
 
   return (
     <div className={cn(className, "z-50")}>
-      <Drawer direction="left">
+      <Drawer direction="left" noBodyStyles={true}>
         <DrawerTrigger>
           <SidebarIcon className="z-50 hover:bg-accent hover:text-accent-foreground w-5 h-5 fill-white hover:fill-primary" />
         </DrawerTrigger>
