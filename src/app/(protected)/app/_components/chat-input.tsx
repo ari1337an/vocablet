@@ -8,7 +8,10 @@ type ChatInputProps = {
   className?: string;
 };
 
-export default function ChatInput({ onSendMessage, className }: ChatInputProps) {
+export default function ChatInput({
+  onSendMessage,
+  className,
+}: ChatInputProps) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -19,19 +22,18 @@ export default function ChatInput({ onSendMessage, className }: ChatInputProps) 
         // Check if key is not a modifier key (shift, ctrl, alt, meta)
         if (e.key.length > 1) return;
 
-        // Check if the user isn't running a command, e.g., ctrl+c
-        if (
-          e
-            .composedPath()
-            .some((el) => (el as HTMLElement).tagName === "INPUT") ||
-          e.ctrlKey ||
-          e.metaKey
-        )
-          return;
+        // // Check if the user isn't running a command, e.g., ctrl+c
+        // if (
+        //   e
+        //     .composedPath()
+        //     .some((el) => (el as HTMLElement).tagName === "INPUT") ||
+        //   e.ctrlKey ||
+        //   e.metaKey
+        // )
+        //   return;
 
-        // Focus the textarea and append the key to the value
+        // Focus the textarea only and the key will be pressed there 
         currentTextareaRef.focus();
-        currentTextareaRef.value += e.key;
         setValue(currentTextareaRef.value);
       }
       return;
@@ -78,7 +80,7 @@ export default function ChatInput({ onSendMessage, className }: ChatInputProps) 
       <div className="flex items-center w-full relative">
         <Textarea
           ref={textareaRef}
-          className="flex-grow p-4 bg-dark text-white/80 placeholder:text-white/50 rounded-xl focus-visible:ring-1 resize-none overflow-y-auto"
+          className="flex-grow py-4 pl-4 pr-20 bg-dark text-white/80 placeholder:text-white/50 rounded-xl focus-visible:ring-1 resize-none overflow-y-auto"
           placeholder="Chat with AI..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -92,6 +94,7 @@ export default function ChatInput({ onSendMessage, className }: ChatInputProps) 
           <ArrowTurnDownLeftIcon className="w-6 h-6" />
         </button>
       </div>
+
       <Disclaimer />
     </div>
   );

@@ -75,10 +75,8 @@ export default function Navbar({ className }: { className?: string }) {
   return (
     <div className={cn(className, "z-50")}>
       <Drawer direction="left">
-        <DrawerTrigger asChild>
-          <Button className="z-50" variant="ghost">
-            <SidebarIcon className="w-5 h-5 fill-white hover:fill-primary" />
-          </Button>
+        <DrawerTrigger>
+          <SidebarIcon className="z-50 hover:bg-accent hover:text-accent-foreground w-5 h-5 fill-white hover:fill-primary" />
         </DrawerTrigger>
         <DrawerContent className="h-screen top-0 left-0 right-auto mt-0 w-[350px] rounded-none bg-secondary drop-shadow-2xl z-50">
           <div className="mx-5">
@@ -86,7 +84,9 @@ export default function Navbar({ className }: { className?: string }) {
               <DrawerHeader>
                 <DrawerClose>
                   <DrawerTitle className="text-left">
-                    <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
+                    <Link href="/app">
+                      {process.env.NEXT_PUBLIC_BRAND_NAME}
+                    </Link>
                   </DrawerTitle>
                 </DrawerClose>
                 <DrawerDescription>
@@ -94,9 +94,7 @@ export default function Navbar({ className }: { className?: string }) {
                 </DrawerDescription>
               </DrawerHeader>
               <DrawerClose>
-                <Button variant="ghost">
-                  <CircleXIcon className="w-5 h-5 fill-white hover:fill-primary" />
-                </Button>
+                <CircleXIcon className="w-5 h-5 fill-white hover:fill-primary" />
               </DrawerClose>
             </div>
             <div className="flex flex-col my-4">
@@ -114,7 +112,8 @@ export default function Navbar({ className }: { className?: string }) {
           </ScrollArea>
           <DrawerFooter className="text-center text-muted-foreground gap-y-0">
             <p className="text-sm">
-              &copy; {new Date().getFullYear()} {process.env.NEXT_PUBLIC_BRAND_NAME}
+              &copy; {new Date().getFullYear()}{" "}
+              {process.env.NEXT_PUBLIC_BRAND_NAME}
             </p>
             <p className="text-sm">by AlphaWolf Ventures Inc.</p>
           </DrawerFooter>

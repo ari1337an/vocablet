@@ -32,7 +32,7 @@ export default function App({ session }: { session: any }) {
   }, [messages]);
 
   return (
-    <div className="h-[90vh] flex flex-col items-center justify-between w-full relative">
+    <div className="h-full flex flex-col items-center justify-between w-full relative">
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-y-5 lg:gap-x-5">
           <Link target="_blank" href="/subscription/buy/starter">

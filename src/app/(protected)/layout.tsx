@@ -29,9 +29,9 @@ export default async function ProtectedLayout({
 
   return (
     <main className="h-full flex flex-col">
-      <div className="max-h-[10vh] flex flex-row items-center justify-between px-5 py-5 z-10 sticky top-0 left-0 right-0">
+      <div className="flex flex-row items-center justify-between px-10 py-5 z-10 sticky top-0 left-0 right-0">
         <Navbar />
-        <div className="absolute left-0 right-0 flex justify-center text-2xl">
+        <div className="h-full absolute left-0 right-0 flex items-center justify-center text-2xl">
           <Button
             variant="ghost"
             className="text-2xl hover:text-primary hover:cursor-pointer"
