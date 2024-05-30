@@ -3,10 +3,14 @@
 import MessageComponent from "@/app/_components/message/message";
 import createCheckoutSession from "@/server/actions/stripe/create-checkout-session";
 import PlansRepo from "@/server/database/repositories/plans";
-import planToPlanSlugDTO from "@/server/dto/plan-to-planslug";
 import { PlanSlug } from "@prisma/client";
 import React from "react";
 import StripeCheckOutRedirect from "./_components/stripe-checkout-redirect";
+
+function planToPlanSlugDTO(plan: string) {
+  const formattedPlan = plan.toUpperCase() as keyof typeof PlanSlug;
+  return PlanSlug[formattedPlan] || null;
+}
 
 export default async function BuyPage({
   params,

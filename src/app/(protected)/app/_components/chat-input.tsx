@@ -6,11 +6,13 @@ import { Textarea } from "@/app/_components/ui/textarea";
 type ChatInputProps = {
   onSendMessage: (message: string) => void;
   className?: string;
+  isPending?: boolean;
 };
 
 export default function ChatInput({
   onSendMessage,
   className,
+  isPending = false,
 }: ChatInputProps) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -32,7 +34,7 @@ export default function ChatInput({
         // )
         //   return;
 
-        // Focus the textarea only and the key will be pressed there 
+        // Focus the textarea only and the key will be pressed there
         currentTextareaRef.focus();
         setValue(currentTextareaRef.value);
       }
@@ -86,10 +88,12 @@ export default function ChatInput({
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
+          disabled={isPending}
         />
         <button
           className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-primary hover:bg-primary/70 text-white rounded-full"
           onClick={handleSubmit}
+          disabled={isPending}
         >
           <ArrowTurnDownLeftIcon className="w-6 h-6" />
         </button>

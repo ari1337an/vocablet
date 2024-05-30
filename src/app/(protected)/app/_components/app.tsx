@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import Chat from "./chat";
 import ChatInput from "./chat-input";
 import Link from "next/link";
@@ -12,14 +12,62 @@ export interface MessageType {
 
 export default function App({ session }: { session: any }) {
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const [isPending, startTransition] = useTransition();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  const handleSendMessage = (message: string) => {
-    setMessages([
-      ...messages,
-      { role: "user", message },
-      { role: "assistant", message: message.toUpperCase() },
-    ]);
+  const handleSendMessage = async (message: string) => {
+    // Add the user's message to the messages array
+    const updatedMessages = [...messages, { role: "user", message }];
+    setMessages(updatedMessages as MessageType[]);
+
+    startTransition(async () => {
+      try {
+        console.log("Message sent:", message);
+        
+        // Prepare the messages for the API request
+        const apiMessages = updatedMessages.map(msg => ({
+          role: msg.role,
+          content: msg.message,
+        }));
+
+        // Make the POST request to the /api/agents/general endpoint
+        const response = await fetch("/api/agents/general", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: apiMessages,
+            conversationId: "123",
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Append the assistant's response to the messages array
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { role: "assistant", message: data.message },
+          ]);
+        } else {
+          // If the success is false, append the error message
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { role: "assistant", message: data.message },
+          ]);
+        }
+      } catch (error) {
+        // Handle any errors that occur during the fetch
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            role: "assistant",
+            message: "An error occurred. Please try again.",
+          },
+        ]);
+      }
+    });
   };
 
   useEffect(() => {
@@ -60,6 +108,7 @@ export default function App({ session }: { session: any }) {
       <ChatInput
         className="w-full max-w-2xl px-4 bg-dark rounded-lg pb-4"
         onSendMessage={handleSendMessage}
+        isPending={isPending}
       />
     </div>
   );
