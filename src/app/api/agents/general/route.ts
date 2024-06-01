@@ -12,9 +12,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const messages = body.messages;
     const conversationId = body.conversationId;
+    const requestNewConversation = body.requestNewConversation;
 
     // Call the completion function
-    const data = await GeneralAgentCompletion(userId, conversationId, messages);
+    const data = await GeneralAgentCompletion(
+      userId,
+      messages,
+      conversationId,
+      requestNewConversation
+    );
 
     // Check if the completion function was successful
     if (!data.success)
@@ -22,7 +28,11 @@ export async function POST(request: NextRequest) {
 
     // Return the completion response
     return Response.json(
-      { success: true, message: data.message },
+      {
+        success: true,
+        message: data.message,
+        conversationId: data.conversationId,
+      },
       {
         status: 200,
       }

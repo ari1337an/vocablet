@@ -15,28 +15,25 @@ import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { GENERAL_AGENT_SYSTEM_PROMPT } from "@/server/prompts/prompts";
 import DeductTokenFromUserAccountForMessage from "../../usage/token-deduction";
-import ConversationRepo from "@/server/database/repositories/conversation";
-import TurnRepo from "@/server/database/repositories/message";
+import TurnRepo from "@/server/database/repositories/turn";
+import validateOrCreateConversation from "./validate-conversation-id";
 
 export default async function GeneralAgentCompletion(
   userId: string,
-  conversationId: string,
-  messages: z.infer<typeof ConversationWithOutSystemPromptSchema>
+  messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
+  conversationId?: string,
+  requestNewConversation?: boolean
 ) {
   try {
-    // Validate the last message role
-    if (messages[messages.length - 1].role !== "user") {
-      throw new Error("Last message should be user message.");
-    }
+    // TODO: check if user have tokens to generate the response
 
-    // Validate conversation ownership
-    const isConversationOwner =
-      await ConversationRepo.matchConversationOwnership(userId, conversationId);
-    if (!isConversationOwner) {
-      throw new Error(
-        "Invalid conversation id. Please start a new conversation."
-      );
-    }
+    // Validate the conversation and get the current conversationId or create a new one if needed
+    let conversationIdCurrent = await validateOrCreateConversation(
+      userId,
+      messages,
+      conversationId,
+      requestNewConversation
+    );
 
     // Get completion from OpenAI
     const [reply, totalTokens] = await OpenAITextCompletion(
@@ -50,30 +47,28 @@ export default async function GeneralAgentCompletion(
     }
 
     // Record the turn in the database
-    const turnId = await TurnRepo.RecordTurnInDB(
+    const turn = await TurnRepo.CreateTurnInDB(
       userId,
-      conversationId,
+      conversationIdCurrent,
       messages[messages.length - 1].content,
       reply + ""
     );
-    if (!turnId) {
+    if (!turn) {
       throw new Error("Failed to record the turn in the database.");
     }
 
     // Deduct tokens from the user's account
-    const tokensDeducted = await DeductTokenFromUserAccountForMessage(
+    await DeductTokenFromUserAccountForMessage(
       userId,
-      turnId,
+      turn.id,
       parseInt(totalTokens + "", 10)
     );
-    if (!tokensDeducted) {
-      throw new Error("Failed to deduct tokens from user's account.");
-    }
 
     return {
       success: true,
       message: reply,
       totalTokens: totalTokens,
+      conversationId: conversationIdCurrent,
     };
   } catch (error) {
     return {

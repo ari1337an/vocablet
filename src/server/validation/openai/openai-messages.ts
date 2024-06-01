@@ -6,7 +6,9 @@ export const MessageSchema = z.object({
 });
 
 export const ConversationSchema = z
-  .array(MessageSchema, {message: "Conversation must be an array of messages."})
+  .array(MessageSchema, {
+    message: "Conversation must be an array of messages.",
+  })
   .refine(
     (messages) => messages.filter((msg) => msg.role === "system").length <= 1,
     {
@@ -17,6 +19,7 @@ export const ConversationSchema = z
     message: "The last message must be from the user.",
   });
 
+// edit this and check if the last prompt is from the user
 export const ConversationWithOutSystemPromptSchema = ConversationSchema.refine(
   (messages) => {
     return messages.filter((msg) => msg.role === "system").length === 0;

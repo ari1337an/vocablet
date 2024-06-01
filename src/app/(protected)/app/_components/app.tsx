@@ -12,6 +12,7 @@ export interface MessageType {
 
 export default function App({ session }: { session: any }) {
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -23,12 +24,15 @@ export default function App({ session }: { session: any }) {
     startTransition(async () => {
       try {
         console.log("Message sent:", message);
-        
+
         // Prepare the messages for the API request
-        const apiMessages = updatedMessages.map(msg => ({
+        const apiMessages = updatedMessages.map((msg) => ({
           role: msg.role,
           content: msg.message,
         }));
+
+        // Determine if this is a new conversation
+        const requestNewConversation = messages.length === 0;
 
         // Make the POST request to the /api/agents/general endpoint
         const response = await fetch("/api/agents/general", {
@@ -38,13 +42,19 @@ export default function App({ session }: { session: any }) {
           },
           body: JSON.stringify({
             messages: apiMessages,
-            conversationId: "123",
+            conversationId: requestNewConversation ? null : conversationId,
+            requestNewConversation,
           }),
         });
 
         const data = await response.json();
 
         if (data.success) {
+          // Update the conversationId if it's a new conversation
+          if (requestNewConversation && data.conversationId) {
+            setConversationId(data.conversationId);
+          }
+
           // Append the assistant's response to the messages array
           setMessages((prevMessages) => [
             ...prevMessages,
