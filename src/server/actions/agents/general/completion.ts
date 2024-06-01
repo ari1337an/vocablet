@@ -51,7 +51,8 @@ export default async function GeneralAgentCompletion(
       userId,
       conversationIdCurrent,
       messages[messages.length - 1].content,
-      reply + ""
+      reply + "",
+      totalTokens as number
     );
     if (!turn) {
       throw new Error("Failed to record the turn in the database.");

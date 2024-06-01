@@ -125,6 +125,7 @@ model Turn {
   userId         String
   message        String
   reply          String
+  totalTokens    Int
   createdAt      DateTime @default(now())
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)

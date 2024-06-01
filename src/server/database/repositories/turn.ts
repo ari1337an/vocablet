@@ -5,7 +5,8 @@ export default class TurnRepo {
     userId: string,
     conversationId: string,
     message: string,
-    reply: string
+    reply: string,
+    totalTokens: number
   ) {
     return db.turn.create({
       data: {
@@ -13,6 +14,7 @@ export default class TurnRepo {
         reply,
         conversationId,
         userId,
+        totalTokens,
       },
     });
   }
