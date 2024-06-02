@@ -1,13 +1,9 @@
 import React from "react";
 import ChatHistoryItem from "./chat-history-item";
-
-interface ChatItem {
-  text: string;
-  id: string;
-}
+import { Conversation } from "../../_store/useAppStore";
 
 interface Props {
-  items: ChatItem[];
+  items: Conversation[];
   title: string;
 }
 
@@ -18,7 +14,7 @@ const ChatHistory: React.FC<Props> = ({ items, title }) => {
         {title}
       </div>
       {items.map((item, index) => (
-        <ChatHistoryItem text={item.text} id={item.id} key={index} />
+        <ChatHistoryItem text={item.title} id={item.id} key={item.id} />
       ))}
     </div>
   );

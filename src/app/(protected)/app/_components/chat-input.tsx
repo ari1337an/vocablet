@@ -21,18 +21,21 @@ export default function ChatInput({
     const handleKeyPress = (e: KeyboardEvent) => {
       const currentTextareaRef = textareaRef.current;
       if (currentTextareaRef && document.activeElement !== currentTextareaRef) {
+        // Allow pasting with Ctrl+V or Command+V
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "v") return;
+
         // Check if key is not a modifier key (shift, ctrl, alt, meta)
         if (e.key.length > 1) return;
 
-        // // Check if the user isn't running a command, e.g., ctrl+c
-        // if (
-        //   e
-        //     .composedPath()
-        //     .some((el) => (el as HTMLElement).tagName === "INPUT") ||
-        //   e.ctrlKey ||
-        //   e.metaKey
-        // )
-        //   return;
+        // Check if the user isn't running a command, e.g., ctrl+c 
+        if (
+          e
+            .composedPath()
+            .some((el) => (el as HTMLElement).tagName === "INPUT") ||
+          e.ctrlKey ||
+          e.metaKey
+        )
+          return;
 
         // Focus the textarea only and the key will be pressed there
         currentTextareaRef.focus();

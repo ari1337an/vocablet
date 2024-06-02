@@ -43,7 +43,6 @@ export default class SubscriptionRepo {
     subscriptionId: string,
     stripeSubscriptionExpires: number | null
   ) {
-    console.log(subscriptionId, stripeSubscriptionExpires);
     return db.subscription.update({
       where: { stripeSubscriptionId: subscriptionId },
       data: {

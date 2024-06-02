@@ -11,7 +11,6 @@ export default async function SubscriptionPage() {
   const subscriptions = await SubscriptionRepo.findAllSubscriptionByUserId(
     session.user.userId
   );
-  console.log(subscriptions);
 
   const subscriptionsActive =
     await SubscriptionRepo.findAllActiveSubscriptionByUserId(

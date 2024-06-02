@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -23,6 +22,8 @@ import LearnIcon from "@/app/_icons/learn";
 import SidebarButton from "./sidebar-icon";
 import ChatHistory from "./chat-history";
 import Link from "next/link";
+import useAppStore, { Conversation } from "../../_store/useAppStore";
+import { useRouter } from "next/navigation";
 
 interface DrawerContentProps
   extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
@@ -53,23 +54,93 @@ const DrawerContent = React.forwardRef<
 DrawerContent.displayName = "DrawerContent";
 
 export default function Navbar({ className }: { className?: string }) {
-  const todayItems = [
-    { text: "How are you?xxxxxx≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", id: "0" },
-    { text: "How are you?", id: "1" },
-    { text: "How are you?", id: "2" },
-    { text: "How are you?", id: "3" },
-  ];
+  const {
+    conversations,
+    setConversations,
+    setMessages,
+    setConversationId,
+    addConversation,
+  } = useAppStore();
+  const [todayItems, setTodayItems] = useState<Conversation[]>([]);
+  const [yesterdayItems, setYesterdayItems] = useState<Conversation[]>([]);
+  const [last30DaysItems, setLast30DaysItems] = useState<Conversation[]>([]);
+  const router = useRouter();
 
-  const yesterdayItems = [
-    { text: "How are you?xxxxxx≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", id: "0" },
-    { text: "How are you?", id: "1" },
-    { text: "How are you?", id: "2" },
-    { text: "How are you?", id: "3" },
-    { text: "How are you?", id: "4" },
-    { text: "How are you?", id: "5" },
-    { text: "How are you?", id: "6" },
-    { text: "How are you?", id: "7" },
-  ];
+  useEffect(() => {
+    const fetchConversations = async () => {
+      const response = await fetch("/api/conversation");
+      const data = await response.json();
+      if (data.success) {
+        setConversations(data.conversations);
+      }
+    };
+
+    fetchConversations();
+  }, [setConversations]);
+
+  useEffect(() => {
+    const now = new Date();
+    const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+    const endOfToday = new Date(now.setHours(23, 59, 59, 999));
+    const startOfYesterday = new Date(
+      new Date().setDate(new Date().getDate() - 1)
+    );
+    startOfYesterday.setHours(0, 0, 0, 0);
+    const endOfYesterday = new Date(
+      new Date().setDate(new Date().getDate() - 1)
+    );
+    endOfYesterday.setHours(23, 59, 59, 999);
+    const startOfLast30Days = new Date(
+      new Date().setDate(new Date().getDate() - 30)
+    );
+
+    const today: Conversation[] = [];
+    const yesterday: Conversation[] = [];
+    const last30Days: Conversation[] = [];
+
+    conversations.forEach((conversation) => {
+      const createdAt = new Date(conversation.createdAt);
+
+      if (createdAt >= startOfToday && createdAt <= endOfToday) {
+        today.push(conversation);
+      } else if (createdAt >= startOfYesterday && createdAt <= endOfYesterday) {
+        yesterday.push(conversation);
+      } else if (createdAt >= startOfLast30Days && createdAt < startOfToday) {
+        last30Days.push(conversation);
+      }
+    });
+
+    // Sort the conversations by createdAt date
+    today.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    yesterday.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    last30Days.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    setTodayItems(today);
+    setYesterdayItems(yesterday);
+    setLast30DaysItems(last30Days);
+  }, [conversations]);
+
+  const handleNewChat = () => {
+    // Create a new conversation and add it to the store
+    const newConversation = {
+      id: `temp-id-${Date.now()}`, // Replace with actual ID generation logic
+      title: "New Chat",
+      createdAt: new Date().toISOString(),
+    };
+    addConversation(newConversation);
+    setConversationId(newConversation.id);
+    setMessages([]);
+    router.push("/app");
+  };
 
   return (
     <div className={cn(className, "z-50")}>
@@ -97,15 +168,28 @@ export default function Navbar({ className }: { className?: string }) {
               </DrawerClose>
             </div>
             <div className="flex flex-col my-4">
-              <SidebarButton icon={<PenIcon />} text="New chat" />
+              <DrawerClose asChild>
+                <SidebarButton
+                  icon={<PenIcon />}
+                  text="New chat"
+                  onClick={handleNewChat}
+                />
+              </DrawerClose>
               <SidebarButton icon={<LearnIcon />} text="Your Flashcards" />
             </div>
           </div>
           <ScrollArea className="h-screen">
             <div className="px-4 w-full">
               <div className="mt-10">
-                <ChatHistory items={todayItems} title="Today" />
-                <ChatHistory items={yesterdayItems} title="Yesterday" />
+                {todayItems.length !== 0 && (
+                  <ChatHistory items={todayItems} title="Today" />
+                )}
+                {yesterdayItems.length !== 0 && (
+                  <ChatHistory items={yesterdayItems} title="Yesterday" />
+                )}
+                {last30DaysItems.length !== 0 && (
+                  <ChatHistory items={last30DaysItems} title="Last 30 Days" />
+                )}
               </div>
             </div>
           </ScrollArea>

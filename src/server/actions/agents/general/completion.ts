@@ -28,12 +28,13 @@ export default async function GeneralAgentCompletion(
     // TODO: check if user have tokens to generate the response
 
     // Validate the conversation and get the current conversationId or create a new one if needed
-    let conversationIdCurrent = await validateOrCreateConversation(
+    let conversation = await validateOrCreateConversation(
       userId,
       messages,
       conversationId,
       requestNewConversation
     );
+    let conversationIdCurrent = conversation.id;
 
     // Get completion from OpenAI
     const [reply, totalTokens] = await OpenAITextCompletion(
@@ -70,6 +71,8 @@ export default async function GeneralAgentCompletion(
       message: reply,
       totalTokens: totalTokens,
       conversationId: conversationIdCurrent,
+      title: conversation.title,
+      createdAt: conversation.createdAt,
     };
   } catch (error) {
     return {

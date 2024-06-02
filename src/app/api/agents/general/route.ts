@@ -29,9 +29,7 @@ export async function POST(request: NextRequest) {
     // Return the completion response
     return Response.json(
       {
-        success: true,
-        message: data.message,
-        conversationId: data.conversationId,
+        ...data,
       },
       {
         status: 200,

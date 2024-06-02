@@ -1,35 +1,47 @@
 "use client";
-import React, { useEffect, useRef, useState, useTransition } from "react";
+import React, { useEffect, useRef, useTransition, useState } from "react";
+import { useRouter } from "next/navigation";
 import Chat from "./chat";
 import ChatInput from "./chat-input";
 import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
+import { Progress } from "@/app/_components/ui/progress";
+import useAppStore from "../../_store/useAppStore";
 
-export interface MessageType {
-  role: "user" | "assistant";
-  message: string;
-}
-
-export default function App({ session }: { session: any }) {
-  const [messages, setMessages] = useState<MessageType[]>([]);
-  const [conversationId, setConversationId] = useState<string | null>(null);
+export default function App({
+  session,
+  fetchConversationId,
+}: {
+  session: any;
+  fetchConversationId: string | null;
+}) {
+  const {
+    messages,
+    conversationId,
+    addMessage,
+    setMessages,
+    setConversationId,
+    addConversation,
+  } = useAppStore();
   const [isPending, startTransition] = useTransition();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [initialFetchComplete, setInitialFetchComplete] = useState(false);
+  const [progress, setProgress] = useState(33);
+  const router = useRouter();
 
   const handleSendMessage = async (message: string) => {
     // Add the user's message to the messages array
-    const updatedMessages = [...messages, { role: "user", message }];
-    setMessages(updatedMessages as MessageType[]);
+    addMessage({ role: "user", message });
 
     startTransition(async () => {
       try {
-        console.log("Message sent:", message);
-
         // Prepare the messages for the API request
-        const apiMessages = updatedMessages.map((msg) => ({
-          role: msg.role,
-          content: msg.message,
-        }));
+        const apiMessages = [...messages, { role: "user", message }].map(
+          (msg) => ({
+            role: msg.role,
+            content: msg.message,
+          })
+        );
 
         // Determine if this is a new conversation
         const requestNewConversation = messages.length === 0;
@@ -56,29 +68,66 @@ export default function App({ session }: { session: any }) {
           }
 
           // Append the assistant's response to the messages array
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { role: "assistant", message: data.message },
-          ]);
+          addMessage({ role: "assistant", message: data.message });
+
+          // Append the new conversation to the conversations array
+          addConversation({
+            id: data.conversationId,
+            title: data.title,
+            createdAt: data.createdAt,
+          });
         } else {
           // If the success is false, append the error message
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { role: "assistant", message: data.message },
-          ]);
+          addMessage({ role: "assistant", message: data.message });
         }
       } catch (error) {
         // Handle any errors that occur during the fetch
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            role: "assistant",
-            message: "An error occurred. Please try again.",
-          },
-        ]);
+        addMessage({
+          role: "assistant",
+          message: "An error occurred. Please try again.",
+        });
       }
     });
   };
+
+  useEffect(() => {
+    const fetchInitialConversation = async () => {
+      if (fetchConversationId) {
+        try {
+          setProgress(54);
+          const response = await fetch(
+            `/api/conversation/${fetchConversationId}`
+          );
+          const data = await response.json();
+          if (data.success) {
+            setProgress(60);
+            setTimeout(() => {
+              setMessages(data.messages);
+              setConversationId(fetchConversationId);
+              setProgress(100);
+              setInitialFetchComplete(true);
+            }, 1500);
+          } else {
+            setTimeout(() => {
+              setProgress(100);
+              router.push("/app/404");
+            }, 1500);
+          }
+        } catch (error) {
+          setTimeout(() => {
+            setProgress(100);
+            router.push("/app/404");
+          }, 1500);
+        }
+      } else {
+        setConversationId(null);
+        setMessages([]);
+        setInitialFetchComplete(true);
+      }
+    };
+
+    fetchInitialConversation();
+  }, [fetchConversationId, setMessages, setConversationId, router]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -88,6 +137,15 @@ export default function App({ session }: { session: any }) {
       });
     }
   }, [messages]);
+
+  if (fetchConversationId && !initialFetchComplete) {
+    return (
+      <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
+        <div>Loading conversation...</div>
+        <Progress value={progress} className="w-[50%] lg:w-[20%]" />
+      </main>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col items-center justify-between w-full relative">

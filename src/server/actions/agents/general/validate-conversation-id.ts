@@ -17,7 +17,7 @@ export default async function validateOrCreateConversation(
   messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
   conversationId?: string,
   requestNewConversation?: boolean
-): Promise<string> {
+) {
   if (!conversationId && !requestNewConversation) {
     throw new Error(
       "Invalid conversation id. Please request a new conversation."
@@ -40,9 +40,8 @@ export default async function validateOrCreateConversation(
       title
     );
     if (!conversation) throw new Error("Failed to create a new conversation.");
-    const newConversationId = conversation.id;
 
-    return newConversationId;
+    return conversation;
   } else {
     // Validate conversation ownership
     const conversation =
@@ -57,6 +56,6 @@ export default async function validateOrCreateConversation(
       );
     }
 
-    return conversationId as string;
+    return conversation;
   }
 }
