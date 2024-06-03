@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageType } from "./app";
+import { MessageType } from "../../_store/useAppStore";
 
 type MessageProps = {
   message: MessageType;
