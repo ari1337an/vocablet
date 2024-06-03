@@ -1,4 +1,5 @@
 import GeneralAgentCompletion from "@/server/actions/agents/general/completion";
+import VocabAgentCompletion from "@/server/actions/agents/vocab/completion";
 import GetUserIdFromReq from "@/server/actions/auth/get-userId-from-req";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,6 +14,7 @@ export async function POST(request: NextRequest) {
     const messages = body.messages;
     const conversationId = body.conversationId;
     const requestNewConversation = body.requestNewConversation;
+    const useVocabAgent = body.useVocabAgent ?? false;
 
     // Call the completion function
     const data = await GeneralAgentCompletion(
@@ -22,6 +24,25 @@ export async function POST(request: NextRequest) {
       requestNewConversation
     );
 
+    if (useVocabAgent) {
+      const vocabData = await VocabAgentCompletion(messages);
+      if (!vocabData.success)
+        throw new Error(vocabData.message as string | "Vocabulary search error.");
+      // Check if the completion function was successful
+      if (!data.success)
+        throw new Error(data.message as string | "Completion error.");
+
+      // add the vocab data with data to be returned
+      return Response.json(
+        {
+          ...data,
+          ...vocabData,
+        },
+        {
+          status: 200,
+        }
+      );
+    }
     // Check if the completion function was successful
     if (!data.success)
       throw new Error(data.message as string | "Completion error.");
