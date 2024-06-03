@@ -70,7 +70,6 @@ export default function App({
         if (data.success) {
           // Find the index of the last user message to update it
           const lastUserMessageIndex = messages.length;
-          console.log('enhanced text', enhanced_text);
 
           // Update the enhanced text and other fields for the last user message
           updateMessage(lastUserMessageIndex, {
@@ -182,7 +181,7 @@ export default function App({
         </div>
       ) : (
         <div
-          className="flex-1 w-full max-w-2xl rounded-lg overflow-y-scroll no-scrollbar"
+          className="flex-1 w-full max-w-4xl rounded-lg overflow-y-scroll no-scrollbar"
           ref={scrollAreaRef}
         >
           <Chat messages={messages} />
@@ -190,7 +189,7 @@ export default function App({
       )}
 
       <ChatInput
-        className="w-full max-w-2xl px-4 bg-dark rounded-lg pb-4"
+        className="w-full max-w-4xl px-4 bg-dark rounded-lg pb-4"
         onSendMessage={handleSendMessage}
         isPending={isPending}
       />
