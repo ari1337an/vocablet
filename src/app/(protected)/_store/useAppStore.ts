@@ -3,6 +3,9 @@ import { create } from 'zustand';
 export interface MessageType {
   role: "user" | "assistant";
   message: string;
+  enhancedText?: string;
+  words?: { [key: string]: string };
+  phrases?: { [key: string]: string };
 }
 
 export interface Conversation {
@@ -20,6 +23,7 @@ interface AppState {
   setConversationId: (id: string | null) => void;
   setConversations: (conversations: Conversation[]) => void;
   addConversation: (conversation: Conversation) => void;
+  updateMessage: (index: number, updatedFields: Partial<MessageType>) => void;
 }
 
 const useAppStore = create<AppState>((set) => ({
@@ -31,6 +35,11 @@ const useAppStore = create<AppState>((set) => ({
   setConversationId: (id) => set({ conversationId: id }),
   setConversations: (conversations) => set({ conversations }),
   addConversation: (conversation) => set((state) => ({ conversations: [...state.conversations, conversation] })),
+  updateMessage: (index, updatedFields) => set((state) => {
+    const updatedMessages = [...state.messages];
+    updatedMessages[index] = { ...updatedMessages[index], ...updatedFields };
+    return { messages: updatedMessages };
+  }),
 }));
 
 export default useAppStore;

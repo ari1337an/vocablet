@@ -21,6 +21,7 @@ export default function App({
     addMessage,
     setMessages,
     setConversationId,
+    updateMessage,
     addConversation,
   } = useAppStore();
   const [isPending, startTransition] = useTransition();
@@ -28,7 +29,6 @@ export default function App({
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
   const router = useRouter();
-
   const handleSendMessage = async (message: string) => {
     // Add the user's message to the messages array
     addMessage({ role: "user", message });
@@ -56,12 +56,27 @@ export default function App({
             messages: apiMessages,
             conversationId: requestNewConversation ? null : conversationId,
             requestNewConversation,
+            useVocabAgent: true,
           }),
         });
 
         const data = await response.json();
 
+        const user_message = data.user_message;
+        const enhanced_text = data.enhanced_text;
+        const words = data.words;
+        const phrases = data.phrases;
+
         if (data.success) {
+          // Find the index of the last user message to update it
+          const lastUserMessageIndex = messages.length;
+
+          // Update the enhanced text and other fields for the last user message
+          updateMessage(lastUserMessageIndex, {
+            enhancedText: enhanced_text,
+            words: words,
+            phrases: phrases,
+          });
           // Update the conversationId if it's a new conversation
           if (requestNewConversation && data.conversationId) {
             setConversationId(data.conversationId);
@@ -166,7 +181,7 @@ export default function App({
         </div>
       ) : (
         <div
-          className="flex-1 w-full max-w-2xl rounded-lg overflow-y-scroll no-scrollbar"
+          className="flex-1 w-full max-w-4xl rounded-lg overflow-y-scroll no-scrollbar"
           ref={scrollAreaRef}
         >
           <Chat messages={messages} />
@@ -174,7 +189,7 @@ export default function App({
       )}
 
       <ChatInput
-        className="w-full max-w-2xl px-4 bg-dark rounded-lg pb-4"
+        className="w-full max-w-4xl px-4 bg-dark rounded-lg pb-4"
         onSendMessage={handleSendMessage}
         isPending={isPending}
       />
