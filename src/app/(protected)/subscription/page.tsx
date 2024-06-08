@@ -48,24 +48,33 @@ export default async function SubscriptionPage() {
                   Subscription ID: {subscription.stripeCustomerId}
                 </p>
               )}
-              {subscription.stripeSubscriptionActive && (
-                <>
-                  <p className="text-sm">
-                    Max Usage Units: {subscription.maxUsageUnit}
-                  </p>
-                  <p className="text-sm">Used Units: {subscription.usedUnit}</p>
-                </>
-              )}
+              {subscription.stripeSubscriptionActive &&
+                !subscription.stripeInvoiceFailed && (
+                  <>
+                    <p className="text-sm">
+                      Max Usage Units: {subscription.maxUsageUnit}
+                    </p>
+                    <p className="text-sm">
+                      Used Units: {subscription.usedUnit}
+                    </p>
+                  </>
+                )}
 
               <p className="text-sm">
                 Active:{" "}
-                {subscription.stripeSubscriptionActive ? (
+                {subscription.stripeSubscriptionActive &&
+                !subscription.stripeInvoiceFailed ? (
                   <span className="text-green-600 font-bold">ACTIVE</span>
+                ) : subscription.stripeInvoiceFailed ? (
+                  <span className="text-red-600 font-bold">
+                    INACTIVE (PAYMENT FAILED)
+                  </span>
                 ) : (
                   <span className="text-red-600 font-bold">INACTIVE</span>
                 )}
               </p>
-              {subscription.stripeSubscriptionActive && (
+
+              {subscription.stripeSubscriptionActive && !subscription.stripeInvoiceFailed && (
                 <p className="text-sm">
                   Renews:{" "}
                   {subscription.stripeSubscriptionExpires === null ? (
@@ -76,15 +85,15 @@ export default async function SubscriptionPage() {
                 </p>
               )}
 
-              {subscription.stripeSubscriptionActive &&
-                subscription.stripeCustomerId && (
-                  <a
-                    href={`/subscription/manage/${subscription.stripeCustomerId}`}
-                    className="text-blue-500 underline mt-2 inline-block"
-                  >
-                    Manage Billing
-                  </a>
-                )}
+              {subscription.stripeCustomerId && (
+                <a
+                  href={`/subscription/manage/${subscription.stripeCustomerId}`}
+                  className="text-blue-500 underline mt-2 inline-block"
+                  target="_blank"
+                >
+                  Manage Billing
+                </a>
+              )}
               {!subscription.stripeCustomerId &&
                 !subscription.stripeSubscriptionId && (
                   <p className="text-sm ">One-time Top-up</p>

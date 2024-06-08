@@ -1,6 +1,28 @@
 import db from "@/server/database/db";
 
 export default class SubscriptionRepo {
+  static async markAsFailedToRenew(subscriptionId: string) {
+    const subscription =
+      await SubscriptionRepo.findSubscriptionByStripeSubscriptionId(
+        subscriptionId
+      );
+    if (!subscription) throw new Error("Subscription not found in database!");
+    return await db.subscription.update({
+      where: { id: subscription.id },
+      data: { stripeInvoiceFailed: true, usedUnit: subscription.maxUsageUnit },
+    });
+  }
+  static markAsSuccessfullyRenewed(subscriptionId: string) {
+    return db.subscription.update({
+      where: { stripeSubscriptionId: subscriptionId },
+      data: {
+        usedUnit: 0,
+        stripeSubscriptionExpires: null,
+        stripeInvoiceFailed: false,
+      },
+    });
+  }
+
   static findAllSubscriptionByUserId(userId: string) {
     return db.subscription.findMany({
       where: { userId },
@@ -21,6 +43,12 @@ export default class SubscriptionRepo {
     });
   }
 
+  static findSubscriptionByStripeSubscriptionId(stripeSubscriptionId: string) {
+    return db.subscription.findFirst({
+      where: { stripeSubscriptionId },
+    });
+  }
+
   static assignSubscription(
     userId: string,
     stripeCustomerId: string,
@@ -35,6 +63,8 @@ export default class SubscriptionRepo {
         stripePriceId,
         stripeSubscriptionId,
         maxUsageUnit,
+        stripeSubscriptionActive: true,
+        stripeSubscriptionExpires: null,
       },
     });
   }
