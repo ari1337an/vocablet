@@ -14,7 +14,7 @@ async function main() {
       itemType: SubscriptionUsageType.AI_TOKEN,
       itemUnit: 100000,
       type: PlanType.MONTHLY,
-      stripePriceId: "price_1PL5oWAaLwh5oFJL2PFYe72d",
+      stripePriceId: "price_1PPPnNAaLwh5oFJLF5UteRz4",
     },
   });
   await prisma.plan.upsert({
@@ -25,7 +25,7 @@ async function main() {
       itemType: SubscriptionUsageType.AI_TOKEN,
       itemUnit: 400000,
       type: PlanType.MONTHLY,
-      stripePriceId: "price_1PL5oWAaLwh5oFJLdH9FWn1M",
+      stripePriceId: "price_1PPPnNAaLwh5oFJLWVbDeKmo",
     },
   });
   await prisma.plan.upsert({
@@ -36,7 +36,7 @@ async function main() {
       itemType: SubscriptionUsageType.AI_TOKEN,
       itemUnit: 800000,
       type: PlanType.MONTHLY,
-      stripePriceId: "price_1PL5oWAaLwh5oFJLoaIrjrmu",
+      stripePriceId: "price_1PPPnNAaLwh5oFJL6Rp8AYN5",
     },
   });
   await prisma.plan.upsert({
@@ -47,7 +47,7 @@ async function main() {
       itemType: SubscriptionUsageType.AI_TOKEN,
       itemUnit: 100000,
       type: PlanType.ONETIME,
-      stripePriceId: "price_1PL5oWAaLwh5oFJLkw0Hs7F1",
+      stripePriceId: "price_1PPPnNAaLwh5oFJLPl08EfmS",
     },
   });
 }
