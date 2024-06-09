@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Custom validation function for strong passwords
-const strongPassword = (password: string) => {
+export const strongPassword = (password: string) => {
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);

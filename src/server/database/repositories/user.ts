@@ -1,6 +1,13 @@
 import db from "@/server/database/db";
 
 export default class UserRepo {
+  static updatePassword(emailId: any, hashedPassword: string) {
+    return db.user.update({
+      where: { email: emailId },
+      data: { password: hashedPassword },
+    });
+  }
+
   static findUserById(userId: string) {
     return db.user.findUnique({
       where: { id: userId },
@@ -39,6 +46,13 @@ export default class UserRepo {
     return db.user.update({
       where: { id: userId },
       data: { emailVerified: date },
+    });
+  }
+
+  static updateName(userId: string, firstName: string, lastName: string) {
+    return db.user.update({
+      where: { id: userId },
+      data: { name: `${firstName} ${lastName}` },
     });
   }
 }
