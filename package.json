@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "email": "email dev --dir ./src/app/_templates",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "webhook:start": "stripe listen -e customer.subscription.updated,customer.subscription.deleted,checkout.session.completed,invoice.paid,invoice.payment_failed --forward-to http://localhost:3000/api/webhook"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.1.0",
