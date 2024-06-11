@@ -26,18 +26,20 @@ export default function Message({ message }: MessageProps) {
           {message.message}
         </div>
       )}
-      {message.role === "user" && (
-        <div
-          className="p-5 break-words bg-primary text-white max-w-xl"
-          style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
-        >
-          {message.message}
-        </div>
-      )}
-      {message.role === "agent" && (
-        <div className="relative">
+
+      <div className="w-fit">
+        {message.role === "user" && (
           <div
-            className={`p-4 rounded-b-xl break-words text-sm text-[#2e3333] bg-[#C1B3AF] max-w-xl xl:max-w-2xl ${
+            className="p-5 break-words bg-primary text-white w-full"
+            style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
+          >
+            {message.message}
+          </div>
+        )}
+
+        {message.role === "agent" && (
+          <div
+            className={`p-5 rounded-b-xl break-words text-sm text-[#2e3333] bg-[#C1B3AF] w-full ${
               showAgentMessage ? "" : "hidden"
             }`}
           >
@@ -46,14 +48,8 @@ export default function Message({ message }: MessageProps) {
               {message.message}
             </div>
           </div>
-          <button
-            onClick={toggleAgentMessage}
-            className="absolute top-[20] right-0  text-white px-2 py-1 rounded"
-          >
-            {showAgentMessage ? "Hide" : "Show"}
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

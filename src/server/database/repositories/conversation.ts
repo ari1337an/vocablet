@@ -13,11 +13,17 @@ export default class ConversationRepo {
             message: true,
             reply: true,
             createdAt: true,
+            VocabAgentSuggestion: {
+              select: {
+                enhancedText: true,
+              },
+            },
           },
           orderBy: {
             createdAt: "asc",
           },
         },
+        
       },
     });
   }

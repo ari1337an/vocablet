@@ -85,9 +85,9 @@ export default async function GeneralAgentCompletion(
       const vocabAgentSuggestion = await VocabAgentSuggestionRepo.createVocabAgentSuggestion(
         turn.id,
         vocabData.totalTokens as number,
-        messages[messages.length - 1].content,
+        vocabData.enhanced_text as string,
         vocabData.words,
-        vocabData.phrases
+        vocabData.phrases,
       );
       return {
         success: true,

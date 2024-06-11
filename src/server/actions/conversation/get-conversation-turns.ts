@@ -14,8 +14,14 @@ export default async function GetConversationTurnsAction(
     // Create a message list
     const messages = conversationTurns.Turn.map((turn) => [
       { role: "user", message: turn.message },
+      ...turn.VocabAgentSuggestion.map((suggestion) => ({
+        role: "agent",
+        message: suggestion.enhancedText
+      })),
       { role: "assistant", message: turn.reply },
     ]).flat();
+
+    console.log(messages);
 
     return { success: true, messages };
   } catch (error) {
