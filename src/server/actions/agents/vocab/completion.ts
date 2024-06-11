@@ -13,7 +13,7 @@
 import { z } from "zod";
 import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
-import { C2_VOCAB_AGENT_SYSTEM_PROMPT } from "@/server/prompts/prompts";
+import { PromptFactory } from "@/server/prompts/prompt-factory";
 
 export default async function VocabAgentCompletion(
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
@@ -22,6 +22,9 @@ export default async function VocabAgentCompletion(
 
         // Get the last message from the messages array.
         const lastMessage = messages[messages.length - 1];
+        
+        // add the text 'provide advanced english words, phrases and enhanced text for the following sentence' to the last message
+        lastMessage.content = `provide advanced english words, phrases and enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
 
         // If the last message is not by the user, return an error.
         if (lastMessage.role !== "user") {
@@ -35,7 +38,7 @@ export default async function VocabAgentCompletion(
         // Get completion from OpenAI
         const [reply, totalTokens] = await OpenAITextCompletion(
             valdiatedMessage,
-            C2_VOCAB_AGENT_SYSTEM_PROMPT
+            PromptFactory.getVocabSystemPrompt(),
         );
         if (!reply || !totalTokens) {
             throw new Error(
@@ -43,20 +46,26 @@ export default async function VocabAgentCompletion(
             );
         }
 
+
+
         // Post Validation of the response
-        const response = JSON.parse(reply as string);
+        let response;
+        const temp_reply = reply as string;
+        if (temp_reply.startsWith("```json") && temp_reply.endsWith("```")) {
+            const jsonBody = temp_reply.slice(7, -3);
+            response = JSON.parse(jsonBody);
+        } else {
+            response = JSON.parse(temp_reply as string);
+        }
         if (!response || typeof response !== "object") {
             throw new Error("Invalid response format.");
         }
-        
+
         // Extract the words and sentences.
-        const { words, phrases,  enhanced_text } = response;
+        const { words, phrases, enhanced_text } = response;
         if (!words || typeof words !== "object" || !enhanced_text || typeof enhanced_text !== "string") {
             throw new Error("Invalid response format.");
         }
-
-        // traverse through the words and phrases and validate them
-
 
         // Return the validated response
         return {

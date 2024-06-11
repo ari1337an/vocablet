@@ -13,20 +13,23 @@
 import { z } from "zod";
 import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
-import { GENERAL_AGENT_SYSTEM_PROMPT } from "@/server/prompts/prompts";
+import { PromptFactory } from "@/server/prompts/prompt-factory";
 import DeductTokenFromUserAccountForMessage from "../../usage/token-deduction";
 import TurnRepo from "@/server/database/repositories/turn";
+import VocabAgentSuggestionRepo from "@/server/database/repositories/vocab-agent-suggestion";
 import validateOrCreateConversation from "./validate-conversation-id";
+import VocabAgentCompletion from "../vocab/completion";
 
 export default async function GeneralAgentCompletion(
   userId: string,
   messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
   conversationId?: string,
-  requestNewConversation?: boolean
+  requestNewConversation?: boolean,
+  useVocabAgent?: boolean
 ) {
   try {
     // TODO: check if user have tokens to generate the response
-
+    // console.log(messages);
     // Validate the conversation and get the current conversationId or create a new one if needed
     let conversation = await validateOrCreateConversation(
       userId,
@@ -35,11 +38,16 @@ export default async function GeneralAgentCompletion(
       requestNewConversation
     );
     let conversationIdCurrent = conversation.id;
-
+    let system_prompt = PromptFactory.getDefaultSystemPrompt();
+    // console.log(system_prompt);
     // Get completion from OpenAI
+
+    // filter the messages to remove the messages with 'agents' role
+    // messages = messages.filter((msg) => msg.role !== "agent");
+
     const [reply, totalTokens] = await OpenAITextCompletion(
       messages,
-      GENERAL_AGENT_SYSTEM_PROMPT
+      system_prompt,
     );
     if (!reply || !totalTokens) {
       throw new Error(
@@ -65,6 +73,33 @@ export default async function GeneralAgentCompletion(
       turn.id,
       parseInt(totalTokens + "", 10)
     );
+
+
+    if (useVocabAgent) {
+      const vocabData = await VocabAgentCompletion(messages);
+      if (!vocabData.success)
+        throw new Error(vocabData.message as string | "Vocabulary search error.");
+      // Check if the completion function was successful
+
+      // add to the database VocabAgentSuggestion
+      const vocabAgentSuggestion = await VocabAgentSuggestionRepo.createVocabAgentSuggestion(
+        turn.id,
+        vocabData.totalTokens as number,
+        messages[messages.length - 1].content,
+        vocabData.words,
+        vocabData.phrases
+      );
+      return {
+        success: true,
+        message: reply,
+        totalTokens: totalTokens,
+        conversationId: conversationIdCurrent,
+        title: conversation.title,
+        createdAt: conversation.createdAt,
+        vocab_agent_response: vocabData,
+      }
+    }
+
 
     return {
       success: true,
