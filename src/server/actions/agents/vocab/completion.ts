@@ -14,6 +14,7 @@ import { z } from "zod";
 import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { PromptFactory } from "@/server/prompts/prompt-factory";
+import UserRepo from "@/server/database/repositories/user";
 
 export default async function VocabAgentCompletion(
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
@@ -45,8 +46,6 @@ export default async function VocabAgentCompletion(
                 "Failed to generate a response or calculate total tokens."
             );
         }
-
-
 
         // Post Validation of the response
         let response;
