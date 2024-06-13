@@ -179,7 +179,13 @@ export default function Navbar({ className }: { className?: string }) {
                   onClick={handleNewChat}
                 />
               </DrawerClose>
-              <SidebarButton icon={<LearnIcon />} text="Your Flashcards" onClick={handleFlashCards} />
+              <DrawerClose asChild>
+                <SidebarButton
+                  icon={<LearnIcon />}
+                  text="Your Flashcards"
+                  onClick={handleFlashCards}
+                />
+              </DrawerClose>
             </div>
           </div>
           <ScrollArea className="h-screen">

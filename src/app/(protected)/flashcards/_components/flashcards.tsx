@@ -10,10 +10,10 @@ import FlashCard from "./flashcard";
 
 export default function FlashCards({
   session,
-  fetchConversationId,
+  fetchBucketId,
 }: {
   session: any;
-  fetchConversationId: string | null;
+  fetchBucketId: string;
 }) {
   const {
     messages,
@@ -24,7 +24,6 @@ export default function FlashCards({
     updateMessage,
     addConversation,
   } = useAppStore();
-
 
   const flashcardsData = [
     {
@@ -61,7 +60,7 @@ export default function FlashCards({
   const router = useRouter();
 
   useEffect(() => {
-    const fetchInitialConversation = async () => {
+    const fetchInitialflashcards = async () => {
       // TODO
 
       // set the initial fetch complete after 2 seconds
@@ -70,8 +69,8 @@ export default function FlashCards({
       }, 2000);
     };
 
-    fetchInitialConversation();
-  }, [fetchConversationId, setMessages, setConversationId, router]);
+    fetchInitialflashcards();
+  }, [fetchBucketId]);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcardsData.length);
@@ -84,7 +83,6 @@ export default function FlashCards({
     );
   };
 
-
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
@@ -96,12 +94,10 @@ export default function FlashCards({
 
   if (!initialFetchComplete) {
     return (
-      // <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
-      //   <div>Loading conversation...</div>
-      //   <Progress value={progress} className="w-[50%] lg:w-[20%]" />
-      // </main>
-      //TODO
-      <main>TODO</main>
+      <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
+        <div>Loading conversation...</div>
+        <Progress value={progress} className="w-[50%] lg:w-[20%]" />
+      </main>
     );
   }
 
