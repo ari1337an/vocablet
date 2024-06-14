@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
             throw new Error("Unauthorized request.");
         }
 
-        // fetch user chat history
+        // fetch user bucket lists
         const responseJson = await GetFlashcardBucketsListAction(userId);
         console.log(responseJson)
 

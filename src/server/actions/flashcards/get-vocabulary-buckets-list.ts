@@ -2,7 +2,7 @@ import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-buck
 
 export default async function GetFlashcardBucketsListAction(userId: string) {
     try {
-        // fetch user chat history
+        // fetch user bucket lists
         const buckets = await VocabularyBucketRepo.findVocabularyBucketsByUserId(userId);
         return { success: true, buckets };
     } catch (error) {

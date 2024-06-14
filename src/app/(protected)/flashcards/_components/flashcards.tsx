@@ -1,12 +1,36 @@
+
+
+/**
+ * Renders a flashcard component that allows users to learn new words or phrases.
+ * The component fetches flashcard data from an API endpoint and displays it in a card format.
+ * Users can navigate through the flashcards using the "Previous" and "Next" buttons.
+ *
+ * @param session - The session object.
+ * @param fetchBucketId - The ID of the bucket to fetch flashcards from.
+ * @returns The FlashCards component.
+ */
+
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
 import { Progress } from "@/app/_components/ui/progress";
 import useAppStore from "../../_store/useAppStore";
-import FlashCard from "./flashcard";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/app/_components/ui/card";
+import FlashcardBackContent from "./flashcard_back_content";
+
+// Define the type for flashcard data
+interface Flashcard {
+  wordOrPhrase: string;
+  meaning: string;
+  exampleSentence: string;
+}
 
 export default function FlashCards({
   session,
@@ -15,24 +39,13 @@ export default function FlashCards({
   session: any;
   fetchBucketId: string;
 }) {
-  const {
-    messages,
-    conversationId,
-    addMessage,
-    setMessages,
-    setConversationId,
-    updateMessage,
-    addConversation,
-  } = useAppStore();
+  const {} = useAppStore();
 
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [flashcardsData, setFlashcardsData] = useState([]); // State to store the fetched flashcards data
+  const [flashcardsData, setFlashcardsData] = useState<Flashcard[]>([]); // State to store the fetched flashcards data
   const [showBack, setShowBack] = useState(false); // State to show the back of the flashcard
-  const [learnedFlashcards, setLearnedFlashcards] = useState([]); // State to track learned flashcards
-  const router = useRouter();
 
   useEffect(() => {
     const fetchInitialflashcards = async () => {
@@ -63,30 +76,6 @@ export default function FlashCards({
     );
   };
 
-  const markAsLearned = () => {
-    setLearnedFlashcards((prevLearned) => [
-      ...prevLearned,
-      flashcardsData[currentIndex].id,
-    ]);
-    handleNext();
-  };
-  
-  const markAsNotLearned = () => {
-    setLearnedFlashcards((prevLearned: never[]) =>
-      prevLearned.filter((id) => id !== flashcardsData[currentIndex].id)
-    );
-    handleNext();
-  };
-
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages]);
-
   if (!initialFetchComplete) {
     return (
       <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
@@ -97,62 +86,35 @@ export default function FlashCards({
   }
 
   return (
-    <div className="flex flex-col items-center p-4">
-      <progress className="w-full mb-4" value={progress} max={100}></progress>
-      {flashcardsData.length > 0 && (
-        <div
-          className="flashcard-container"
+    <div className="w-full h-full flex items-center justify-center ">
+      <Card className="w-[350px] items-center text-center justify-center">
+        <CardHeader>
+          <CardTitle>Flashcards</CardTitle>
+          <CardDescription>Learn fast with flashcards.</CardDescription>
+        </CardHeader>
+        <CardContent
+          className="text-white cursor-pointer justify-center items-center flex  text-align-center h-[200px] bg-primary-500"
           onClick={() => setShowBack(!showBack)}
         >
-          {!showBack ? (
-            <div className="flashcard-front">
-              <h2>{flashcardsData[currentIndex].wordOrPhrase}</h2>
-            </div>
+          {flashcardsData.length > 0 ? (
+            !showBack ? (
+              <div>{flashcardsData[currentIndex].wordOrPhrase}</div>
+            ) : (
+              <FlashcardBackContent
+                wordOrPhrase={flashcardsData[currentIndex].wordOrPhrase}
+              />
+            )
           ) : (
-            <div className="flashcard-back">
-              <p>
-                <strong>Meaning:</strong> {flashcardsData[currentIndex].meaning}
-              </p>
-              <p>
-                <strong>Example:</strong>{" "}
-                {flashcardsData[currentIndex].exampleSentence}
-              </p>
-            </div>
+            <div>No flashcards available.</div>
           )}
-        </div>
-      )}
-      <div className="flex justify-between mt-4 w-full max-w-sm">
-        <button
-          onClick={handlePrevious}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-l"
-          disabled={flashcardsData.length === 0}
-        >
-          Previous
-        </button>
-        <button
-          onClick={handleNext}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-r"
-          disabled={flashcardsData.length === 0}
-        >
-          Next
-        </button>
-      </div>
-      <div className="flex justify-between mt-4 w-full max-w-sm">
-        <button
-          onClick={markAsNotLearned}
-          className="bg-red-200 hover:bg-red-300 text-red-800 font-semibold py-2 px-4 rounded-l"
-          disabled={flashcardsData.length === 0}
-        >
-          Not Learned
-        </button>
-        <button
-          onClick={markAsLearned}
-          className="bg-green-200 hover:bg-green-300 text-green-800 font-semibold py-2 px-4 rounded-r"
-          disabled={flashcardsData.length === 0}
-        >
-          Learned
-        </button>
-      </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button onClick={handlePrevious} variant="outline">
+            Previous
+          </Button>
+          <Button onClick={handleNext}>Next</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

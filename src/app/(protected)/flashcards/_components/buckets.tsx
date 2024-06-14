@@ -1,12 +1,18 @@
+/**
+ * UI component to view the list of vocabulary buckets.
+ */
+
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-
-import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
 import { Progress } from "@/app/_components/ui/progress";
 import useAppStore from "../../_store/useAppStore";
-import FlashCard from "./flashcard";
+
+interface Bucket {
+  id: string;
+  title: string;
+}
 
 export default function Buckets({}: {}) {
   const {} = useAppStore();
@@ -14,9 +20,7 @@ export default function Buckets({}: {}) {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [buckets, setBuckets] = useState([]); // State to store the buckets data
-  const [newBucketTitle, setNewBucketTitle] = useState(""); // State to store the new bucket title
+  const [buckets, setBuckets] = useState<Bucket[]>([]); // State to store the buckets data
   const router = useRouter();
 
   useEffect(() => {
@@ -51,13 +55,17 @@ export default function Buckets({}: {}) {
   }
 
   return (
-    <div className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
+    // shows the buckets list
+    <div className="w-full h-full flex flex-col items-center justify-center gap-y-5 p-4">
       <h1 className="text-2xl font-bold mb-4">Buckets List</h1>
-      <ul className="list-disc">
+      <ul className="w-full max-w-md list-none">
         {buckets.map((bucket) => (
-          <li key={bucket.id} className="flex justify-between items-center">
-            {bucket.title}
-            <button onClick={() => handleBucketClick(bucket.id)}>Click</button>
+          <li
+            key={bucket.id}
+            className="flex items-center justify-between bg-gray-100 p-3 mb-2 rounded shadow"
+          >
+            <span>{bucket.title}</span>
+            <Button onClick={() => handleBucketClick(bucket.id)}>Learn</Button>
           </li>
         ))}
       </ul>

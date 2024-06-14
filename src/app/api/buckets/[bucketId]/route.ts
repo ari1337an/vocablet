@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     try {
-        // Extract conversationId from the URL
+        // Extract bucketId from the URL
         const url = new URL(request.url);
         const bucketId = url.pathname.split('/').pop() as string;
 
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
             throw new Error("Unauthorized request.");
         }
 
-        // Fetch user chat history
+        // Fetch the flashcard vocabularies
         const responseJson = await GetFlashcardVocabulariesAction(bucketId);
 
         // Return the completion response
