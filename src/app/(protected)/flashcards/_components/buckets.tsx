@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/app/_components/ui/button";
 import { Progress } from "@/app/_components/ui/progress";
 import useAppStore from "../../_store/useAppStore";
+import { Separator } from "@/app/_components/ui/separator";
+import { AddBucketSheet } from "./add-bucket-sheet";
 
 interface Bucket {
   id: string;
@@ -40,6 +42,10 @@ export default function Buckets({}: {}) {
     fetchBuckets();
   }, []);
 
+  const handleAddBucket = (newBucket: Bucket) => {
+    setBuckets((prevBuckets) => [...prevBuckets, newBucket]);
+  };
+
   if (!initialFetchComplete) {
     return (
       <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
@@ -57,9 +63,16 @@ export default function Buckets({}: {}) {
 
   return (
     // shows the buckets list
-    <div className="w-full h-full flex flex-col items-center justify-center gap-y-5 p-4">
-      <h1 className="text-2xl font-bold mb-4">Buckets List</h1>
-      <ul className="w-full max-w-md list-none">
+    <div className="w-full h-full flex flex-col gap-y-5 px-8 lg:px-36 py-8 lg:py-24 items-center justify-normal">
+      <div className="w-full flex flex-col">
+        <div className="w-full flex flex-row justify-between">
+          <h1 className="text-2xl font-bold mb-4">Buckets List</h1>
+          <AddBucketSheet onAddBucket={handleAddBucket} />{" "}
+          {/* Pass the function as a prop */}
+        </div>
+        <Separator className="bg-white" />
+      </div>
+      <ul className="w-full list-none">
         {buckets.map((bucket) => (
           <li
             key={bucket.id}

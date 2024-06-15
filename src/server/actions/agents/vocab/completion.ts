@@ -66,6 +66,8 @@ export default async function VocabAgentCompletion(
             throw new Error("Invalid response format.");
         }
 
+        // TODO: Deduct tokens
+
         // Return the validated response
         return {
             success: true,

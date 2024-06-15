@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/server/authentication/auth";
-import React from "react";import BucketWordList from "../_components/bucket_word_list";
+import React from "react";import BucketWordList from "../_components/bucket-word-list";
 
 export default async function AppPage({
   params,

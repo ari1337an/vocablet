@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/_components/ui/card";
-import FlashcardBackContent from "./flashcard_back_content";
+import FlashcardBackContent from "./flashcard-back-content";
 
 // Define the type for flashcard data
 interface Flashcard {
