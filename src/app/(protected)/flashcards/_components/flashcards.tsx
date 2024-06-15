@@ -1,5 +1,3 @@
-
-
 /**
  * Renders a flashcard component that allows users to learn new words or phrases.
  * The component fetches flashcard data from an API endpoint and displays it in a card format.
@@ -86,6 +84,7 @@ export default function FlashCards({
   }
 
   return (
+    // Add Carousal from ShadCNUI
     <div className="w-full h-full flex items-center justify-center ">
       <Card className="w-[350px] items-center text-center justify-center">
         <CardHeader>
@@ -93,7 +92,7 @@ export default function FlashCards({
           <CardDescription>Learn fast with flashcards.</CardDescription>
         </CardHeader>
         <CardContent
-          className="text-white cursor-pointer justify-center items-center flex  text-align-center h-[200px] bg-primary-500"
+          className="text-white cursor-pointer justify-center items-center flex  text-center h-[200px] bg-primary-500"
           onClick={() => setShowBack(!showBack)}
         >
           {flashcardsData.length > 0 ? (

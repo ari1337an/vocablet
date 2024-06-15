@@ -52,6 +52,7 @@ export default function Buckets({}: {}) {
   function handleBucketClick(id: string): void {
     // GO TO PAGE /flashcards/[id]
     router.push(`/flashcards/${id}`);
+    // router.push(`/flashcards/learn/${id}`);
   }
 
   return (
@@ -62,10 +63,10 @@ export default function Buckets({}: {}) {
         {buckets.map((bucket) => (
           <li
             key={bucket.id}
-            className="flex items-center justify-between bg-gray-100 p-3 mb-2 rounded shadow"
+            className="flex items-center justify-between bg-gray-950 p-3 mb-2 rounded shadow"
           >
             <span>{bucket.title}</span>
-            <Button onClick={() => handleBucketClick(bucket.id)}>Learn</Button>
+            <Button onClick={() => handleBucketClick(bucket.id)}>View</Button>
           </li>
         ))}
       </ul>

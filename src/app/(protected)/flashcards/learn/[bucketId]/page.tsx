@@ -1,7 +1,8 @@
 "use server";
 
 import { auth } from "@/server/authentication/auth";
-import React from "react";import BucketWordList from "../_components/bucket_word_list";
+import React from "react";
+import FlashCards from "../../_components/flashcards";
 
 export default async function AppPage({
   params,
@@ -12,5 +13,7 @@ export default async function AppPage({
   const session = await auth();
   if (!session || !session.user) return null;
 
-  return <BucketWordList fetchBucketId={bucketId as string} />;
+  return (
+    <FlashCards session={session} fetchBucketId={bucketId as string} />
+  );
 }
