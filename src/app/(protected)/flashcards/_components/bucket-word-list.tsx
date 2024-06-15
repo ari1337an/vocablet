@@ -34,6 +34,7 @@ export default function BucketWordList({
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]); // State to store the bucket data
+  const [bucketName, setBucketName] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
@@ -41,11 +42,12 @@ export default function BucketWordList({
       const response = await fetch("/api/buckets/" + fetchBucketId);
       const data = await response.json();
       if (data.success) {
-        setFlashcards(data.flashcards); // Store the fetched bucket data
+        setBucketName(data.bucket.title);
+        setFlashcards(data.bucket.Vocabulary); // Store the fetched bucket data
         setInitialFetchComplete(true);
         setProgress(100);
       } else {
-        console.log("Error fetching bucket:", data.error);
+        console.error("Error fetching bucket:", data.error);
       }
     };
 
@@ -70,7 +72,7 @@ export default function BucketWordList({
       <div className="w-full flex flex-col justify-end items-start text-white  px-8 flex-grow-0">
         <div className="flex flex-row justify-between w-full py-4">
           {/* Modified line */}
-          <h1 className="text-2xl font-bold">something</h1>
+          <h1 className="text-2xl font-bold">{bucketName}</h1>
           <Button className="p-4" onClick={handleLearnButton}>Learn</Button>
         </div>
         <Separator className="my-4 bg-slate-100" />
@@ -79,18 +81,22 @@ export default function BucketWordList({
       <div className="w-full overflow-y-auto p-8 text-white flex-grow">
         {/* <h2 className="text-xl mb-4">Words in this Bucket</h2> */}
 
-        <Table>
-          <TableBody>
-            {flashcards.map((flashcard) => (
-              <TableRow
-                key={flashcard.id}
-                className="flex items-center justify-between" // Modified line
-              >
-                <TableCell>{flashcard.wordOrPhrase}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        {flashcards.length > 0 ? (
+          <Table>
+            <TableBody>
+              {flashcards.map((flashcard) => (
+                <TableRow
+                  key={flashcard.id}
+                  className="flex items-center justify-between" // Modified line
+                >
+                  <TableCell>{flashcard.wordOrPhrase}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="text-xl">There are no words in this bucket.</div>
+        )}
       </div>
     </div>
   );

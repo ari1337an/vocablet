@@ -6,6 +6,14 @@ export default class VocabularyBucketRepo {
             where: { id: bucketId },
         });
     }
+    static findVocabulariesByBucketId(bucketId: string) {
+        return db.vocabularyBucket.findUnique({
+            where: { id: bucketId },
+            include: {
+                Vocabulary: true,
+            },
+        });
+    }
 
     static findVocabularyBucketsByUserId(userId: string) {
         return db.vocabularyBucket.findMany({

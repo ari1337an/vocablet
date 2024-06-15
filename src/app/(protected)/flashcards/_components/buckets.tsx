@@ -31,7 +31,6 @@ export default function Buckets({}: {}) {
       const data = await response.json();
       if (data.success) {
         setInitialFetchComplete(true);
-        console.log("Buckets:", data.buckets);
         setProgress(100);
         setBuckets(data.buckets); // Store the fetched buckets data
       } else {
