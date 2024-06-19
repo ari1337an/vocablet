@@ -142,6 +142,10 @@ export default function Navbar({ className }: { className?: string }) {
     router.push("/app");
   };
 
+  const handleFlashCards = () => {
+    router.push("/flashcards");
+  };
+
   return (
     <div className={cn(className, "z-50")}>
       <Drawer direction="left" noBodyStyles={true}>
@@ -175,7 +179,13 @@ export default function Navbar({ className }: { className?: string }) {
                   onClick={handleNewChat}
                 />
               </DrawerClose>
-              <SidebarButton icon={<LearnIcon />} text="Your Flashcards" />
+              <DrawerClose asChild>
+                <SidebarButton
+                  icon={<LearnIcon />}
+                  text="Your Flashcards"
+                  onClick={handleFlashCards}
+                />
+              </DrawerClose>
             </div>
           </div>
           <ScrollArea className="h-screen">

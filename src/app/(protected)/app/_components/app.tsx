@@ -60,23 +60,14 @@ export default function App({
           }),
         });
 
+        // Read the json response
         const data = await response.json();
-
-        const user_message = data.user_message;
-        const enhanced_text = data.enhanced_text;
-        const words = data.words;
-        const phrases = data.phrases;
-
         if (data.success) {
-          // Find the index of the last user message to update it
-          const lastUserMessageIndex = messages.length;
 
-          // Update the enhanced text and other fields for the last user message
-          updateMessage(lastUserMessageIndex, {
-            enhancedText: enhanced_text,
-            words: words,
-            phrases: phrases,
-          });
+          // Add the Agent Suggested text to the UI.
+          const enhanced_text = data.vocab_agent_response.enhanced_text;
+          addMessage({ role: "agent", message: enhanced_text });
+          
           // Update the conversationId if it's a new conversation
           if (requestNewConversation && data.conversationId) {
             setConversationId(data.conversationId);

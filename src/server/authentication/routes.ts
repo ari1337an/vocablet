@@ -17,7 +17,7 @@ export const publicAPIPrefixes = ["/api/webhook"];
  * These routes require authentication
  * @type {string[]}
  */
-export const protectedAPIPrefixes = ["/api/agents"];
+export const protectedAPIPrefixes = ["/api/agents", "/api/buckets"];
 
 /**
  * An array of routes that are used

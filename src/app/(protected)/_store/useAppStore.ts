@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
 export interface MessageType {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "agent";
   message: string;
-  enhancedText?: string;
-  words?: { [key: string]: string };
-  phrases?: { [key: string]: string };
+  // enhancedText?: string;
+  // words?: { [key: string]: string };
+  // phrases?: { [key: string]: string };
 }
 
 export interface Conversation {

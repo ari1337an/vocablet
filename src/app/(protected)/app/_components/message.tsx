@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MessageType } from "../../_store/useAppStore";
 
 type MessageProps = {
@@ -6,51 +6,50 @@ type MessageProps = {
 };
 
 export default function Message({ message }: MessageProps) {
-  // print the words json object from the message
-  // console.log(message.words);
+  const [showAgentMessage, setShowAgentMessage] = useState(true);
+
+  const toggleAgentMessage = () => {
+    setShowAgentMessage(!showAgentMessage);
+  };
+
   return (
     <div
-      className={`my-8 text-sm max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ${
-        message.role === "user" ? "self-end" : "self-start"
+      className={`text-sm max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ${
+        message.role === "assistant" ? "self-start" : "self-end"
       }`}
     >
-      <div
-        className={`p-5 break-words ${
-          message.role === "user"
-            ? "ml-5 bg-primary text-white max-w-xl"
-            : "mr-5 bg-black text-white max-w-xl"
-        }`}
-        style={{ wordWrap: "break-word", overflowWrap: "break-word" }} // Add these styles
-      >
-        {message.message}
-      </div>
-
-      {/* check if the message role is user, if yes than show this */}
-      {message.role === "user" && message.words != null && (
+      {message.role === "assistant" && (
         <div
-          className={`p-5 ml-5 rounded-b-xl break-words text-sm text-[#2e3333] self-end bg-[#C1B3AF] ${
-            // Add classNames for mobile and larger devices
-            "max-w-xl xl:max-w-2xl"
-          }`}
-          style={{ wordWrap: "break-word", overflowWrap: "break-word" }} // Add these styles
+          className={`p-5 my-8 break-words mr-5 bg-black text-white max-w-xl`}
+          style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
         >
-          {/* use the enhanced text here. */}
-          <p className="font-bold py-1">Suggested words:</p>
-          {/* show the words object as a list of words here */}
-          <ol>
-            {Object.keys(message.words).map((word, index) => (
-              <li key={index}>
-                <span>{word}</span>:{" "}
-                {message.words != null ? message.words[word] : ""}
-              </li>
-            ))}
-          </ol>
-
-          <p className="font-bold py-1">Suggested Sentence:</p>
-
-          {message.enhancedText}
+          {message.message}
         </div>
       )}
+
+      <div className="w-fit">
+        {message.role === "user" && (
+          <div
+            className="p-5 break-words bg-primary text-white w-full"
+            style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
+          >
+            {message.message}
+          </div>
+        )}
+
+        {message.role === "agent" && (
+          <div
+            className={`p-5 rounded-b-xl break-words text-sm text-[#2e3333] bg-[#C1B3AF] w-full ${
+              showAgentMessage ? "" : "hidden"
+            }`}
+          >
+            <p className="font-bold m-0 p-0">Suggested Sentence:</p>
+            <div style={{ wordWrap: "break-word", overflowWrap: "break-word" }}>
+              {message.message}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
