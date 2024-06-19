@@ -63,11 +63,10 @@ export default function App({
         // Read the json response
         const data = await response.json();
         if (data.success) {
-
           // Add the Agent Suggested text to the UI.
           const enhanced_text = data.vocab_agent_response.enhanced_text;
           addMessage({ role: "agent", message: enhanced_text });
-          
+
           // Update the conversationId if it's a new conversation
           if (requestNewConversation && data.conversationId) {
             setConversationId(data.conversationId);

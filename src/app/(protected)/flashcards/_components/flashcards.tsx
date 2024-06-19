@@ -1,13 +1,3 @@
-/**
- * Renders a flashcard component that allows users to learn new words or phrases.
- * The component fetches flashcard data from an API endpoint and displays it in a card format.
- * Users can navigate through the flashcards using the "Previous" and "Next" buttons.
- *
- * @param session - The session object.
- * @param fetchBucketId - The ID of the bucket to fetch flashcards from.
- * @returns The FlashCards component.
- */
-
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/app/_components/ui/button";
@@ -22,6 +12,15 @@ import {
   CardTitle,
 } from "@/app/_components/ui/card";
 import FlashcardBackContent from "./flashcard-back-content";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/_components/ui/dialog";
 
 // Define the type for flashcard data
 interface Flashcard {
@@ -50,7 +49,7 @@ export default function FlashCards({
       const response = await fetch("/api/buckets/" + fetchBucketId);
       const data = await response.json();
       if (data.success) {
-        setFlashcardsData(data.flashcards); // Store the fetched flashcards data
+        setFlashcardsData(data.bucket["Vocabulary"]); // Store the fetched flashcards data
         setInitialFetchComplete(true);
         setProgress(100);
       } else {
@@ -63,28 +62,27 @@ export default function FlashCards({
 
   const handleNext = () => {
     setShowBack(false);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcardsData.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % flashcardsData?.length);
   };
 
   const handlePrevious = () => {
     setShowBack(false);
     setCurrentIndex(
       (prevIndex) =>
-        (prevIndex - 1 + flashcardsData.length) % flashcardsData.length
+        (prevIndex - 1 + flashcardsData?.length) % flashcardsData?.length
     );
   };
 
   if (!initialFetchComplete) {
     return (
       <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
-        <div>Loading conversation...</div>
+        <div>Loading Flashcard...</div>
         <Progress value={progress} className="w-[50%] lg:w-[20%]" />
       </main>
     );
   }
 
   return (
-    // Add Carousal from ShadCNUI
     <div className="w-full h-full flex items-center justify-center ">
       <Card className="w-[350px] items-center text-center justify-center">
         <CardHeader>
@@ -95,7 +93,7 @@ export default function FlashCards({
           className="text-white cursor-pointer justify-center items-center flex  text-center h-[200px] bg-primary-500"
           onClick={() => setShowBack(!showBack)}
         >
-          {flashcardsData.length > 0 ? (
+          {flashcardsData?.length > 0 ? (
             !showBack ? (
               <div>{flashcardsData[currentIndex].wordOrPhrase}</div>
             ) : (
