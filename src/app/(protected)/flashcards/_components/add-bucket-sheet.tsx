@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
-import { Label } from "@/app/_components/ui/label";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -13,25 +11,46 @@ import {
   SheetTrigger,
 } from "@/app/_components/ui/sheet";
 import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/app/_components/ui/form";
+
+const formSchema = z.object({
+  bucketName: z
+    .string()
+    .min(2, { message: "Bucket name must be at least 2 characters." })
+    .max(50, { message: "Bucket name cannot be more than 50 characters." }),
+});
 
 interface AddBucketSheetProps {
   onAddBucket: (newBucket: { id: string; title: string }) => void;
 }
 
 export function AddBucketSheet({ onAddBucket }: AddBucketSheetProps) {
-  const [bucketName, setBucketName] = useState("");
+  const [open, setOpen] = React.useState(false);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBucketName(event.target.value);
-  };
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      bucketName: "",
+    },
+  });
 
-  const handleSaveChanges = () => {
+  const onSubmit = (values: { bucketName: string }) => {
     fetch("/api/buckets/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title: bucketName }),
+      body: JSON.stringify({ title: values.bucketName }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -44,6 +63,8 @@ export function AddBucketSheet({ onAddBucket }: AddBucketSheetProps) {
               onClick: () => console.log("Undo"),
             },
           });
+          form.reset(); // Reset the form
+          setOpen(false);
         } else {
           console.error("Error creating bucket:", data.error);
         }
@@ -54,37 +75,37 @@ export function AddBucketSheet({ onAddBucket }: AddBucketSheetProps) {
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button>Add Sheet</Button>
+        <Button>Create new bucket</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Add Bucket</SheetTitle>
-          <SheetDescription>
-            {`Make changes to your profile here. Click Add when you're done.`}
-          </SheetDescription>
+          <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Title
-            </Label>
-            <Input
-              id="name"
-              value={bucketName}
-              onChange={handleInputChange}
-              className="col-span-3"
-            />
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="bucketName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Bucket name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <SheetFooter>
+                <Button type="submit">Create</Button>
+              </SheetFooter>
+            </form>
+          </Form>
         </div>
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="button" onClick={handleSaveChanges}>
-              Save changes
-            </Button>
-          </SheetClose>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

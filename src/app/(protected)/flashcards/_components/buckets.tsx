@@ -78,7 +78,7 @@ export default function Buckets({}: {}) {
             className="flex items-center justify-between bg-gray-950 p-3 mb-2 rounded shadow"
           >
             <span>{bucket.title}</span>
-            <Button onClick={() => handleBucketClick(bucket.id)}>View</Button>
+            <Button onClick={() => handleBucketClick(bucket.id)}>View Words</Button>
           </li>
         ))}
       </ul>

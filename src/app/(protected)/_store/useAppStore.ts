@@ -1,8 +1,9 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface MessageType {
   role: "user" | "assistant" | "agent";
   message: string;
+  suggestedMessage?: string;
   // enhancedText?: string;
   // words?: { [key: string]: string };
   // phrases?: { [key: string]: string };
@@ -30,16 +31,19 @@ const useAppStore = create<AppState>((set) => ({
   messages: [],
   conversationId: null,
   conversations: [],
-  addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
+  addMessage: (message) =>
+    set((state) => ({ messages: [...state.messages, message] })),
   setMessages: (messages) => set({ messages }),
   setConversationId: (id) => set({ conversationId: id }),
   setConversations: (conversations) => set({ conversations }),
-  addConversation: (conversation) => set((state) => ({ conversations: [...state.conversations, conversation] })),
-  updateMessage: (index, updatedFields) => set((state) => {
-    const updatedMessages = [...state.messages];
-    updatedMessages[index] = { ...updatedMessages[index], ...updatedFields };
-    return { messages: updatedMessages };
-  }),
+  addConversation: (conversation) =>
+    set((state) => ({ conversations: [...state.conversations, conversation] })),
+  updateMessage: (index, updatedFields) =>
+    set((state) => {
+      const updatedMessages = [...state.messages];
+      updatedMessages[index] = { ...updatedMessages[index], ...updatedFields };
+      return { messages: updatedMessages };
+    }),
 }));
 
 export default useAppStore;
