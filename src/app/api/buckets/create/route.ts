@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
         // fetch user bucket lists
         const responseJson = await CreateVocabularyBucketAction(userId, title);
-        console.log(responseJson)
+        // console.log(responseJson)
 
         // Return the completion response
         return Response.json(responseJson, {

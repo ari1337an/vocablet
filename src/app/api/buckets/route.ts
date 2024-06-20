@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
         // fetch user bucket lists
         const responseJson = await GetFlashcardBucketsListAction(userId);
-        console.log(responseJson)
+        // console.log(responseJson)
 
         // Return the completion response
         return Response.json(responseJson, {
