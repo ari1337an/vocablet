@@ -17,9 +17,20 @@ import {
   TableRow,
   TableFooter,
 } from "@/app/_components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/_components/ui/dialog";
 import DeleteIcon from "@/app/_icons/delete";
 import ShareIcon from "@/app/_icons/share";
 import FlashCardIconWrapperProps from "./flashcards-icon-wrapper";
+import toast from "react-hot-toast";
+import ConfirmationDialog from "./confirmation-dialog";
 
 interface Flashcard {
   id: string;
@@ -57,6 +68,16 @@ export default function BucketWordList({
     fetchBucket();
   }, [fetchBucketId]);
 
+  const reloadList = async () => {
+    const response = await fetch("/api/buckets/" + fetchBucketId);
+    const data = await response.json();
+    if (data.success) {
+      setFlashcards(data.bucket.Vocabulary);
+    } else {
+      console.error("Error reloading bucket:", data.error);
+    }
+  };
+  
   if (!initialFetchComplete) {
     return (
       <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
@@ -69,21 +90,15 @@ export default function BucketWordList({
   const handleLearnButton = () => {
     router.push(`/flashcards/learn/${fetchBucketId}`);
   };
-  const handleShareClick = () => {
+  const handleShareClick = async (vocabularyId: string) => {
     console.log("Share icon clicked");
     // Add your share functionality here
   };
-  const handleDeleteClick = () => {
-    console.log("Delete icon clicked");
-    // Add your share functionality here
-  };
-
 
   return (
     <div className="flex flex-col gap-y-5">
       <div className="w-full flex flex-col justify-end items-start px-8 lg:px-36 2xl:px-60 text-white sticky top-0 bg-secondary z-10">
         <div className="flex flex-row justify-between w-full py-4">
-          {/* Modified line */}
           <h1 className="text-2xl font-bold">{bucketName}</h1>
           <Button className="p-4" onClick={handleLearnButton}>
             Learn
@@ -92,24 +107,25 @@ export default function BucketWordList({
         <Separator className="my-4 bg-slate-100" />
       </div>
       <div className="w-full overflow-y-auto px-8 lg:px-36 2xl:px-60 text-white z-0">
-        {/* <h2 className="text-xl mb-4">Words in this Bucket</h2> */}
         {flashcards.length > 0 ? (
           <Table>
             <TableBody>
               {flashcards.map((flashcard) => (
                 <TableRow
                   key={flashcard.id}
-                  className="flex items-center justify-between" // Modified line
+                  className="flex items-center justify-between"
                 >
                   <TableCell>{flashcard.wordOrPhrase}</TableCell>
                   <TableCell>
                     <div className="flex flex-row justify-around items-start w-20 text-white">
                       <FlashCardIconWrapperProps>
-                        {<ShareIcon onClick={handleShareClick} />}
+                        {
+                          <ShareIcon
+                            onClick={() => handleShareClick(flashcard.id)}
+                          />
+                        }
                       </FlashCardIconWrapperProps>
-                      <FlashCardIconWrapperProps>
-                        {<DeleteIcon onClick={handleDeleteClick}/>}
-                      </FlashCardIconWrapperProps>
+                      <ConfirmationDialog vocabularyId={flashcard.id} reloadList={reloadList}/>
                     </div>
                   </TableCell>
                 </TableRow>
