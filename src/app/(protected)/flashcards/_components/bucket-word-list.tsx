@@ -17,6 +17,9 @@ import {
   TableRow,
   TableFooter,
 } from "@/app/_components/ui/table";
+import DeleteIcon from "@/app/_icons/delete";
+import ShareIcon from "@/app/_icons/share";
+import FlashCardIconWrapperProps from "./flashcards-icon-wrapper";
 
 interface Flashcard {
   id: string;
@@ -65,22 +68,31 @@ export default function BucketWordList({
 
   const handleLearnButton = () => {
     router.push(`/flashcards/learn/${fetchBucketId}`);
-  }
+  };
+  const handleShareClick = () => {
+    console.log("Share icon clicked");
+    // Add your share functionality here
+  };
+  const handleDeleteClick = () => {
+    console.log("Delete icon clicked");
+    // Add your share functionality here
+  };
+
 
   return (
-    <div className="flex flex-col gap-y-5 p-8 lg:p-36">
-      <div className="w-full flex flex-col justify-end items-start text-white  px-8 flex-grow-0">
+    <div className="flex flex-col gap-y-5">
+      <div className="w-full flex flex-col justify-end items-start px-8 lg:px-36 2xl:px-60 text-white sticky top-0 bg-secondary z-10">
         <div className="flex flex-row justify-between w-full py-4">
           {/* Modified line */}
           <h1 className="text-2xl font-bold">{bucketName}</h1>
-          <Button className="p-4" onClick={handleLearnButton}>Learn</Button>
+          <Button className="p-4" onClick={handleLearnButton}>
+            Learn
+          </Button>
         </div>
         <Separator className="my-4 bg-slate-100" />
       </div>
-      {/* Only the section after this will be scrollable */}
-      <div className="w-full overflow-y-auto p-8 text-white flex-grow">
+      <div className="w-full overflow-y-auto px-8 lg:px-36 2xl:px-60 text-white z-0">
         {/* <h2 className="text-xl mb-4">Words in this Bucket</h2> */}
-
         {flashcards.length > 0 ? (
           <Table>
             <TableBody>
@@ -90,6 +102,16 @@ export default function BucketWordList({
                   className="flex items-center justify-between" // Modified line
                 >
                   <TableCell>{flashcard.wordOrPhrase}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-row justify-around items-start w-20 text-white">
+                      <FlashCardIconWrapperProps>
+                        {<ShareIcon onClick={handleShareClick} />}
+                      </FlashCardIconWrapperProps>
+                      <FlashCardIconWrapperProps>
+                        {<DeleteIcon onClick={handleDeleteClick}/>}
+                      </FlashCardIconWrapperProps>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
