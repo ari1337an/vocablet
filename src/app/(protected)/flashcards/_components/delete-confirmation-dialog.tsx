@@ -18,13 +18,12 @@ interface ConfirmationDialogProps {
   reloadList: () => void;
 }
 
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
+const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   vocabularyId,
-  reloadList
+  reloadList,
 }) => {
-    console.log("Delete icon clicked for id: ", vocabularyId);
   const handleDeleteClick = async (vocabularyId: string) => {
-    // console.log("Delete icon clicked for id: ", vocabularyId);
+    console.log("Delete icon clicked for id: ", vocabularyId);
     const deleteResponse = await fetch("/api/vocabulary/" + vocabularyId, {
       method: "DELETE",
       headers: {
@@ -41,8 +40,10 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   };
   return (
     <Dialog>
-      <DialogTrigger onClick={(e) => e.stopPropagation()}>
-        <FlashCardIconWrapperProps>{<DeleteIcon />}</FlashCardIconWrapperProps>
+      <DialogTrigger asChild>
+        <Button variant="ghost">
+          <DeleteIcon className="w-5 h-5 fill-white hover:fill-primary" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -61,4 +62,4 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
     </Dialog>
   );
 };
-export default ConfirmationDialog;
+export default DeleteButtonWithConfirmationDialog;

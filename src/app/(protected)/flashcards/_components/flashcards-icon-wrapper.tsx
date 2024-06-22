@@ -4,7 +4,7 @@ interface FlashCardIconWrapperProps {
   children: React.ReactNode;
 }
 
-const FlashCardIconWrapperProps: React.FC<FlashCardIconWrapperProps> = ({
+const FlashCardIconWrapper: React.FC<FlashCardIconWrapperProps> = ({
   children,
 }) => {
   return React.cloneElement(children as React.ReactElement, {

@@ -17,24 +17,18 @@ import {
   TableRow,
   TableFooter,
 } from "@/app/_components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/app/_components/ui/dialog";
-import DeleteIcon from "@/app/_icons/delete";
-import ShareIcon from "@/app/_icons/share";
-import FlashCardIconWrapperProps from "./flashcards-icon-wrapper";
-import toast from "react-hot-toast";
-import ConfirmationDialog from "./confirmation-dialog";
+
+
+import DeleteButtonWithConfirmationDialog from "./delete-confirmation-dialog";
+import { ShareButtonWithVocabularySheet } from "./share-vocabulary-sheet";
 
 interface Flashcard {
   id: string;
   wordOrPhrase: string;
+}
+interface Bucket {
+  id: string;
+  title: string;
 }
 
 export default function BucketWordList({
@@ -49,6 +43,7 @@ export default function BucketWordList({
   const [progress, setProgress] = useState(33);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]); // State to store the bucket data
   const [bucketName, setBucketName] = useState<string>("");
+  const [buckets, setBuckets] = useState<Bucket[]>([]); // State to store the buckets data
   const router = useRouter();
 
   useEffect(() => {
@@ -68,6 +63,23 @@ export default function BucketWordList({
     fetchBucket();
   }, [fetchBucketId]);
 
+  useEffect(() => {
+    const fetchBuckets = async () => {
+      console.log("the fetch buckets.");
+      const response = await fetch("/api/buckets");
+      const data = await response.json();
+      if (data.success) {
+        setInitialFetchComplete(true);
+        setProgress(100);
+        setBuckets(data.buckets); // Store the fetched buckets data
+      } else {
+        console.log("Error fetching buckets:", data.error);
+      }
+    };
+
+    fetchBuckets();
+  }, []);
+
   const reloadList = async () => {
     const response = await fetch("/api/buckets/" + fetchBucketId);
     const data = await response.json();
@@ -77,7 +89,7 @@ export default function BucketWordList({
       console.error("Error reloading bucket:", data.error);
     }
   };
-  
+
   if (!initialFetchComplete) {
     return (
       <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
@@ -117,15 +129,15 @@ export default function BucketWordList({
                 >
                   <TableCell>{flashcard.wordOrPhrase}</TableCell>
                   <TableCell>
-                    <div className="flex flex-row justify-around items-start w-20 text-white">
-                      <FlashCardIconWrapperProps>
-                        {
-                          <ShareIcon
-                            onClick={() => handleShareClick(flashcard.id)}
-                          />
-                        }
-                      </FlashCardIconWrapperProps>
-                      <ConfirmationDialog vocabularyId={flashcard.id} reloadList={reloadList}/>
+                    <div className="flex flex-row justify-around items-center text-white">
+                      <ShareButtonWithVocabularySheet
+                        vocabularies={[flashcard.wordOrPhrase]}
+                        buckets={buckets}
+                      />
+                      <DeleteButtonWithConfirmationDialog
+                        vocabularyId={flashcard.id}
+                        reloadList={reloadList}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
