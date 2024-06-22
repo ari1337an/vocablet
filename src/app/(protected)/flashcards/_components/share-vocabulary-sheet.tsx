@@ -42,9 +42,11 @@ export function ShareButtonWithVocabularySheet({
       ? selectedBuckets.filter((buck) => buck.id !== bucket.id)
       : [...selectedBuckets, bucket];
     setSelectedBuckets(updatedSelection);
+    console.log('updated :', updatedSelection);
   };
 
   const handleShareClick = async () => {
+    console.log('selectedBuckets:', selectedBuckets);
     selectedBuckets.forEach((bucket) => {
       const bucketId = bucket.id;
       const bucketName = bucket.title;
@@ -59,10 +61,12 @@ export function ShareButtonWithVocabularySheet({
           if (response.ok) {
             // console.log('Share successful');
             setOpen(false);
+            setSelectedBuckets([]);
             toast.success(`Vocabulary added to bucket: ${bucketName}`);
           } else {
             console.log('Share failed');
             toast.error(`Failed to add vocabulary to bucket: ${bucketName}`);
+            setSelectedBuckets([]);
           }
         })
         .catch(error => {
@@ -70,9 +74,17 @@ export function ShareButtonWithVocabularySheet({
         });
     });
   }
+  const handleSheetChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    const temp_open = isOpen;
+    if (!temp_open) {
+      setSelectedBuckets([]); // Clear selected buckets when the sheet closes
+    }
+  };
+
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleSheetChange}>
       <SheetTrigger asChild>
         <Button variant="ghost">
           <ShareIcon className="w-5 h-5 fill-white hover:fill-primary" />

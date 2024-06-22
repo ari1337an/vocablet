@@ -35,6 +35,7 @@ const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
     vocabularies.forEach(async (vocab) => {
       const vocabularyId = vocab.id;
       const vocabWord = vocab.wordOrPhrase;
+      console.log('deleting : ', vocabWord);
 
       console.log("Delete icon clicked for id: ", vocabularyId);
       const deleteResponse = await fetch("/api/vocabulary/" + vocabularyId, {

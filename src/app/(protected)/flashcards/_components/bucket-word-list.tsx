@@ -99,6 +99,7 @@ export default function BucketWordList({
     const updatedSelection = selectedFlashcards.includes(flashcard)
       ? selectedFlashcards.filter((flash) => flash.id !== flashcard.id)
       : [...selectedFlashcards, flashcard];
+    console.log("updatedSelection", updatedSelection);
     setSelectedFlashcards(updatedSelection);
   };
 
@@ -117,7 +118,7 @@ export default function BucketWordList({
 
   const handleSelectionState = () => {
     setSelectionState(!selectionState);
-
+    setSelectedFlashcards([]); // Clear the selected words
   }
 
   return (
