@@ -13,6 +13,7 @@ import {
 import ShareIcon from "@/app/_icons/share";
 import { Button } from "@/app/_components/ui/button";
 import { Checkbox } from "@/app/_components/ui/checkbox"; // Import your Checkbox component
+import toast from "react-hot-toast";
 
 interface Bucket {
   id: string;
@@ -29,20 +30,19 @@ export function ShareButtonWithVocabularySheet({
   buckets,
 }: ShareVocabularySheetProps) {
   const [open, setOpen] = useState(false);
-  const [selectedBuckets, setSelectedBuckets] = useState<string[]>([]); // State to store selected bucket ids
+  const [selectedBuckets, setSelectedBuckets] = useState<Bucket[]>([]); // State to store selected bucket ids
 
-  const handleCheckboxChange = (bucketId: string) => {
-    const updatedSelection = selectedBuckets.includes(bucketId)
-      ? selectedBuckets.filter((id) => id !== bucketId)
-      : [...selectedBuckets, bucketId];
-
-      console.log('updated selection: ', updatedSelection);
-
+  const handleCheckboxChange = (bucket: Bucket) => {
+    const updatedSelection = selectedBuckets.includes(bucket)
+      ? selectedBuckets.filter((buck) => buck.id !== bucket.id)
+      : [...selectedBuckets, bucket];
     setSelectedBuckets(updatedSelection);
   };
 
   const handleShareClick = async () => {
-    selectedBuckets.forEach((bucketId) => {
+    selectedBuckets.forEach((bucket) => {
+      const bucketId = bucket.id;
+      const bucketName = bucket.title;
       fetch(`/api/buckets/${bucketId}`, {
         method: 'POST',
         headers: {
@@ -52,9 +52,12 @@ export function ShareButtonWithVocabularySheet({
       })
         .then(response => {
           if (response.ok) {
-            console.log('Share successful');
+            // console.log('Share successful');
+            setOpen(false);
+            toast.success(`Vocabulary added to bucket: ${bucketName}`);
           } else {
             console.log('Share failed');
+            toast.error(`Failed to add vocabulary to bucket: ${bucketName}`);
           }
         })
         .catch(error => {
@@ -83,8 +86,8 @@ export function ShareButtonWithVocabularySheet({
                 className="flex items-center justify-between bg-gray-950 p-3 mb-2 rounded shadow"
               >
                 <Checkbox
-                  checked={selectedBuckets.includes(bucket.id)}
-                  onCheckedChange={() => handleCheckboxChange(bucket.id)}
+                  checked={selectedBuckets.includes(bucket)}
+                  onCheckedChange={() => handleCheckboxChange(bucket)}
                 />
                 <label htmlFor={bucket.id} className="ml-2">
                   {bucket.title}

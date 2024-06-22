@@ -21,6 +21,7 @@ import {
 
 import DeleteButtonWithConfirmationDialog from "./delete-confirmation-dialog";
 import { ShareButtonWithVocabularySheet } from "./share-vocabulary-sheet";
+import { Checkbox } from "@/app/_components/ui/checkbox";
 
 interface Flashcard {
   id: string;
@@ -44,6 +45,9 @@ export default function BucketWordList({
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]); // State to store the bucket data
   const [bucketName, setBucketName] = useState<string>("");
   const [buckets, setBuckets] = useState<Bucket[]>([]); // State to store the buckets data
+  const [selectionState, setSelectionState] = useState<boolean>(false);
+  const [selectedFlashcards, setSelectedFlashcards] = useState<Flashcard[]>([]); // State to store the selected words
+
   const router = useRouter();
 
   useEffect(() => {
@@ -90,6 +94,14 @@ export default function BucketWordList({
     }
   };
 
+  
+  const handleCheckboxChange = (flashcard: Flashcard) => {
+    const updatedSelection = selectedFlashcards.includes(flashcard)
+      ? selectedFlashcards.filter((flash) => flash.id !== flashcard.id)
+      : [...selectedFlashcards, flashcard];
+    setSelectedFlashcards(updatedSelection);
+  };
+
   if (!initialFetchComplete) {
     return (
       <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">
@@ -102,19 +114,35 @@ export default function BucketWordList({
   const handleLearnButton = () => {
     router.push(`/flashcards/learn/${fetchBucketId}`);
   };
-  const handleShareClick = async (vocabularyId: string) => {
-    console.log("Share icon clicked");
-    // Add your share functionality here
-  };
+
+  const handleSelectionState = () => {
+    setSelectionState(!selectionState);
+
+  }
 
   return (
     <div className="flex flex-col gap-y-5">
       <div className="w-full flex flex-col justify-end items-start px-8 lg:px-36 2xl:px-60 text-white sticky top-0 bg-secondary z-10">
         <div className="flex flex-row justify-between w-full py-4">
           <h1 className="text-2xl font-bold">{bucketName}</h1>
-          <Button className="p-4" onClick={handleLearnButton}>
-            Learn
-          </Button>
+          <div className="p-4 flex flex-row justify-between items-center w-48">
+            {selectionState && <Button className="p-4">Delete</Button>}
+            {selectionState && (
+              <ShareButtonWithVocabularySheet
+                vocabularies={selectedFlashcards.map((flashcard) => flashcard.wordOrPhrase)}
+                buckets={buckets}
+              />
+            )}
+            {!selectionState && (
+              <Button className="p-4" onClick={handleLearnButton}>
+                Learn
+              </Button>
+            )}
+
+            <Button className="p-4" onClick={handleSelectionState}>
+              Select
+            </Button>
+          </div>
         </div>
         <Separator className="my-4 bg-slate-100" />
       </div>
@@ -129,16 +157,28 @@ export default function BucketWordList({
                 >
                   <TableCell>{flashcard.wordOrPhrase}</TableCell>
                   <TableCell>
-                    <div className="flex flex-row justify-around items-center text-white">
-                      <ShareButtonWithVocabularySheet
-                        vocabularies={[flashcard.wordOrPhrase]}
-                        buckets={buckets}
-                      />
-                      <DeleteButtonWithConfirmationDialog
-                        vocabularyId={flashcard.id}
-                        reloadList={reloadList}
-                      />
-                    </div>
+                    {!selectionState && (
+                      <div className="flex flex-row justify-around items-center text-white">
+                        <ShareButtonWithVocabularySheet
+                          vocabularies={[flashcard.wordOrPhrase]}
+                          buckets={buckets}
+                        />
+                        <DeleteButtonWithConfirmationDialog
+                          vocabularyId={flashcard.id}
+                          reloadList={reloadList}
+                        />
+                      </div>
+                    )}
+                    {selectionState && (
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedFlashcards.includes(flashcard)}
+                          onCheckedChange={() =>
+                            handleCheckboxChange(flashcard)
+                          }
+                        />
+                      </TableCell>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
