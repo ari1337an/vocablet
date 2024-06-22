@@ -30,4 +30,12 @@ export default class VocabularyRepo {
             },
         });
     }
+
+    static deleteVocabulary(vocabularyId: string) {
+        return db.vocabulary.delete({
+            where: {
+                id: vocabularyId,
+            },
+        });
+    }
 }

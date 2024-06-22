@@ -8,9 +8,11 @@ type MessageProps = {
 export default function Message({ message }: MessageProps) {
   const [showAgentMessage, setShowAgentMessage] = useState(true);
 
-  const toggleAgentMessage = () => {
-    setShowAgentMessage(!showAgentMessage);
-  };
+  // const toggleAgentMessage = () => {
+  //   setShowAgentMessage(!showAgentMessage);
+  // };
+
+
 
   return (
     <div
@@ -27,7 +29,8 @@ export default function Message({ message }: MessageProps) {
         </div>
       )}
 
-      <div className="w-fit">
+      <div className="w-[350px] xl:w-[500px]">
+        
         {message.role === "user" && (
           <div
             className="p-5 break-words bg-primary text-white w-full"
