@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,9 +10,8 @@ import {
   SheetTrigger,
   SheetFooter,
 } from "@/app/_components/ui/sheet";
-import ShareIcon from "@/app/_icons/share";
+import AddIcon from "@/app/_icons/add";
 import { Button } from "@/app/_components/ui/button";
-import { Checkbox } from "@/app/_components/ui/checkbox"; // Import your Checkbox component
 import toast from "react-hot-toast";
 import {
   Form,
@@ -26,7 +25,22 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/app/_components/ui/input";
-import AddIcon from "@/app/_icons/add";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/_components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/app/_components/ui/command";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { cn } from "@/app/_lib/utils";
+import { ScrollArea } from "@/app/_components/ui/scroll-area";
 
 interface Bucket {
   id: string;
@@ -50,11 +64,16 @@ const formSchema = z.object({
     .max(50, { message: "Word name cannot be more than 50 characters." }),
 });
 
+//TODO: FIX THE 'NOT SELECTING' error.
+
 export function AddWordsSheet({
   currentBucketId,
   onAddVocab,
 }: ShareVocabularySheetProps) {
   const [open, setOpen] = useState(false);
+  const [buckets, setBuckets] = useState<Bucket[]>([]);
+  const [selectedBucket, setSelectedBucket] = useState<Bucket | null>(null);
+  const [popoverOpen, setpopoverOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -63,8 +82,36 @@ export function AddWordsSheet({
     },
   });
 
+  useEffect(() => {
+    const fetchBuckets = async () => {
+      const response = await fetch("/api/buckets");
+      const data = await response.json();
+      if (data.success) {
+        setBuckets(data.buckets); // Store the fetched buckets data
+      } else {
+        console.log("Error fetching buckets:", data.error);
+      }
+    };
+
+    fetchBuckets();
+  }, []);
+
+    useEffect(() => {
+      if (open) {
+        const bucket = buckets.find((bucket) => bucket.id === currentBucketId);
+        if (bucket) {
+          setSelectedBucket(bucket);
+        }
+      }
+    }, [open, currentBucketId, buckets]);
+
   const onSubmit = (values: { vocabularyWord: string }) => {
-    fetch(`/api/buckets/${currentBucketId}`, {
+    if (!selectedBucket) {
+      toast.error("Please select a bucket");
+      return;
+    }
+
+    fetch(`/api/buckets/${selectedBucket.id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,9 +121,8 @@ export function AddWordsSheet({
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          console.log(data);
           data.vocabularies.forEach((vocabResponse: any) => {
-            if (vocabResponse.success) {
+            if (vocabResponse.success && selectedBucket.id === currentBucketId) {
               const { id, wordOrPhrase } = vocabResponse.vocab;
               onAddVocab({ id, wordOrPhrase });
             }
@@ -96,17 +142,55 @@ export function AddWordsSheet({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <Button variant="ghost">
           <AddIcon className="w-5 h-5 fill-white hover:fill-primary" />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="z-20">
         <SheetHeader>
           <SheetTitle>Add Vocabulary to sheets</SheetTitle>
           <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
+            <div>
+                <strong>Selected Bucket:</strong>
+                <span> {selectedBucket === null? 'No buckets selected' : selectedBucket.title}</span>
+            </div>
+          <ScrollArea>
+            <Command className="w-full z-50">
+              <CommandInput
+                placeholder="Search bucket..."
+                className="h-9 z-50"
+              />
+              <CommandList className="z-50 h-40">
+                <CommandEmpty>No bucket found.</CommandEmpty>
+                <CommandGroup>
+                  {buckets.map((bucket) => (
+                    <CommandItem
+                      key={bucket.id}
+                      value={bucket.id}
+                      onSelect={(currentValue) => {
+                        console.log("something::", currentValue);
+                        setSelectedBucket(bucket);
+                        // setOpen(false);
+                      }}
+                    >
+                      {bucket.title}
+                      <CheckIcon
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          selectedBucket?.id === bucket.id
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </ScrollArea>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
