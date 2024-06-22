@@ -13,33 +13,51 @@ import FlashCardIconWrapperProps from "./flashcards-icon-wrapper";
 import ShareIcon from "@/app/_icons/share";
 import DeleteIcon from "@/app/_icons/delete";
 import toast from "react-hot-toast";
+import { useState } from "react";
+
+interface Flashcard {
+  id: string;
+  wordOrPhrase: string;
+}
+
 interface ConfirmationDialogProps {
-  vocabularyId: string;
+  vocabularies: Flashcard[];
   reloadList: () => void;
 }
 
 const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
-  vocabularyId,
+  vocabularies,
   reloadList,
 }) => {
-  const handleDeleteClick = async (vocabularyId: string) => {
-    console.log("Delete icon clicked for id: ", vocabularyId);
-    const deleteResponse = await fetch("/api/vocabulary/" + vocabularyId, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any additional headers as needed
-      },
-      // You can include credentials: 'include' if your API requires authentication cookies
+  const [open, setOpen] = useState(false);
+  const handleDeleteClick = async () => {
+    // const deletedVocabularies = vocabularies.map((vocab) => vocab.wordOrPhrase);
+    vocabularies.forEach(async (vocab) => {
+      const vocabularyId = vocab.id;
+      const vocabWord = vocab.wordOrPhrase;
+
+      console.log("Delete icon clicked for id: ", vocabularyId);
+      const deleteResponse = await fetch("/api/vocabulary/" + vocabularyId, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          // Add any additional headers as needed
+        },
+        // You can include credentials: 'include' if your API requires authentication cookies
+      });
+      if (!deleteResponse.ok) {
+        toast.error("Failed to delete vocabulary: " + vocabWord);
+        setOpen(false);
+        throw new Error("Failed to delete vocabulary");
+      }
     });
-    if (!deleteResponse.ok) {
-      throw new Error("Failed to delete vocabulary");
-    }
-    toast.success("Vocabulary deleted successfully");
+
+    toast.success("Deleted successfully");
+    setOpen(false); // Close the dialog after deletion
     reloadList(); // Reload the list after deletion
   };
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost">
           <DeleteIcon className="w-5 h-5 fill-white hover:fill-primary" />
@@ -54,7 +72,7 @@ const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="submit" onClick={() => handleDeleteClick(vocabularyId)}>
+          <Button type="submit" onClick={handleDeleteClick}>
             Yes
           </Button>
         </DialogFooter>

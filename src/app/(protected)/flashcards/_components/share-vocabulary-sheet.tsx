@@ -20,8 +20,13 @@ interface Bucket {
   title: string;
 }
 
+interface Flashcard {
+  id: string;
+  wordOrPhrase: string;
+}
+
 interface ShareVocabularySheetProps {
-  vocabularies: string[];
+  vocabularies: Flashcard[];
   buckets: Bucket[];
 }
 
@@ -48,7 +53,7 @@ export function ShareButtonWithVocabularySheet({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ vocabularies }),
+        body: JSON.stringify({ vocabularies: vocabularies.map((vocab) => vocab.wordOrPhrase)}),
       })
         .then(response => {
           if (response.ok) {

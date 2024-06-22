@@ -126,10 +126,15 @@ export default function BucketWordList({
         <div className="flex flex-row justify-between w-full py-4">
           <h1 className="text-2xl font-bold">{bucketName}</h1>
           <div className="p-4 flex flex-row justify-between items-center w-48">
-            {selectionState && <Button className="p-4">Delete</Button>}
+            {selectionState && (
+              <DeleteButtonWithConfirmationDialog
+                vocabularies={selectedFlashcards}
+                reloadList={reloadList}
+              />
+            )}
             {selectionState && (
               <ShareButtonWithVocabularySheet
-                vocabularies={selectedFlashcards.map((flashcard) => flashcard.wordOrPhrase)}
+                vocabularies={selectedFlashcards}
                 buckets={buckets}
               />
             )}
@@ -160,11 +165,11 @@ export default function BucketWordList({
                     {!selectionState && (
                       <div className="flex flex-row justify-around items-center text-white">
                         <ShareButtonWithVocabularySheet
-                          vocabularies={[flashcard.wordOrPhrase]}
+                          vocabularies={[flashcard]}
                           buckets={buckets}
                         />
                         <DeleteButtonWithConfirmationDialog
-                          vocabularyId={flashcard.id}
+                          vocabularies={[flashcard]}
                           reloadList={reloadList}
                         />
                       </div>
