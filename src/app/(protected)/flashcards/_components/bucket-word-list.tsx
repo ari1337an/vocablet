@@ -145,7 +145,7 @@ export default function BucketWordList({
             )}
 
             <Button className="p-4" onClick={handleSelectionState}>
-              Select
+              {selectionState ? "Cancel" : "Select"}
             </Button>
           </div>
         </div>
