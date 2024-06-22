@@ -18,10 +18,10 @@ import {
   TableFooter,
 } from "@/app/_components/ui/table";
 
-
 import DeleteButtonWithConfirmationDialog from "./delete-confirmation-dialog";
-import { ShareButtonWithVocabularySheet } from "./share-vocabulary-sheet";
+import { ShareVocabularyButtonSheet } from "./share-vocabulary-sheet";
 import { Checkbox } from "@/app/_components/ui/checkbox";
+import { AddWordsSheet } from "./add-words-sheet";
 
 interface Flashcard {
   id: string;
@@ -94,7 +94,10 @@ export default function BucketWordList({
     }
   };
 
-  
+  const handleAddVocabulary = (newFlashcard: Flashcard) => {
+    setFlashcards((prevFlashcards) => [...prevFlashcards, newFlashcard]);
+  };
+
   const handleCheckboxChange = (flashcard: Flashcard) => {
     const updatedSelection = selectedFlashcards.includes(flashcard)
       ? selectedFlashcards.filter((flash) => flash.id !== flashcard.id)
@@ -119,7 +122,7 @@ export default function BucketWordList({
   const handleSelectionState = () => {
     setSelectionState(!selectionState);
     setSelectedFlashcards([]); // Clear the selected words
-  }
+  };
 
   return (
     <div className="flex flex-col gap-y-5">
@@ -134,9 +137,15 @@ export default function BucketWordList({
               />
             )}
             {selectionState && (
-              <ShareButtonWithVocabularySheet
+              <ShareVocabularyButtonSheet
                 vocabularies={selectedFlashcards}
                 buckets={buckets}
+              />
+            )}
+            {!selectionState && (
+              <AddWordsSheet
+                currentBucketId={fetchBucketId}
+                onAddVocab={handleAddVocabulary}
               />
             )}
             {!selectionState && (
@@ -165,10 +174,11 @@ export default function BucketWordList({
                   <TableCell>
                     {!selectionState && (
                       <div className="flex flex-row justify-around items-center text-white">
-                        <ShareButtonWithVocabularySheet
+                        <ShareVocabularyButtonSheet
                           vocabularies={[flashcard]}
                           buckets={buckets}
                         />
+
                         <DeleteButtonWithConfirmationDialog
                           vocabularies={[flashcard]}
                           reloadList={reloadList}

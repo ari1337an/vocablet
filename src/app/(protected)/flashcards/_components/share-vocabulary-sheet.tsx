@@ -30,7 +30,7 @@ interface ShareVocabularySheetProps {
   buckets: Bucket[];
 }
 
-export function ShareButtonWithVocabularySheet({
+export function ShareVocabularyButtonSheet({
   vocabularies,
   buckets,
 }: ShareVocabularySheetProps) {
@@ -42,11 +42,11 @@ export function ShareButtonWithVocabularySheet({
       ? selectedBuckets.filter((buck) => buck.id !== bucket.id)
       : [...selectedBuckets, bucket];
     setSelectedBuckets(updatedSelection);
-    console.log('updated :', updatedSelection);
+    // console.log('updated :', updatedSelection);
   };
 
   const handleShareClick = async () => {
-    console.log('selectedBuckets:', selectedBuckets);
+    // console.log('selectedBuckets:', selectedBuckets);
     selectedBuckets.forEach((bucket) => {
       const bucketId = bucket.id;
       const bucketName = bucket.title;

@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
         );
     }
 }
+
 export async function POST(request: NextRequest) {
     try {
         // Extract bucketId from the URL
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Return the completion response
-        return NextResponse.json(responseJsonArray, {
+        return NextResponse.json({ success: true, vocabularies: responseJsonArray }, {
             status: 200,
         });
     } catch (error) {
