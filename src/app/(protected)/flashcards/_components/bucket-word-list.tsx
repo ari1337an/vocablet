@@ -1,7 +1,3 @@
-/**
- * UI component to view the list of vocabulary buckets word list.
- */
-
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,18 +11,30 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableFooter,
 } from "@/app/_components/ui/table";
-
 import DeleteButtonWithConfirmationDialog from "./delete-confirmation-dialog";
 import { ShareVocabularyButtonSheet } from "./share-vocabulary-sheet";
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { AddWordsSheet } from "./add-words-sheet";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Input } from "@/app/_components/ui/input";
 
 interface Flashcard {
   id: string;
   wordOrPhrase: string;
 }
+
 interface Bucket {
   id: string;
   title: string;
@@ -38,17 +46,75 @@ export default function BucketWordList({
   fetchBucketId: string;
 }) {
   const {} = useAppStore();
-
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
-  const [flashcards, setFlashcards] = useState<Flashcard[]>([]); // State to store the bucket data
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [bucketName, setBucketName] = useState<string>("");
-  const [buckets, setBuckets] = useState<Bucket[]>([]); // State to store the buckets data
+  const [buckets, setBuckets] = useState<Bucket[]>([]);
   const [selectionState, setSelectionState] = useState<boolean>(false);
-  const [selectedFlashcards, setSelectedFlashcards] = useState<Flashcard[]>([]); // State to store the selected words
-
+  const [selectedFlashcards, setSelectedFlashcards] = useState<Flashcard[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
   const router = useRouter();
+
+  const columns: ColumnDef<Flashcard>[] = [
+    {
+      accessorKey: "wordOrPhrase",
+      header: "Word/Phrase",
+      cell: ({ row }) => <div>{row.getValue("wordOrPhrase")}</div>,
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const flashcard = row.original;
+
+        return (
+          <div className="flex space-x-2">
+            {!selectionState && (
+              <ShareVocabularyButtonSheet
+                vocabularies={[flashcard]}
+                buckets={buckets}
+              />
+            )}
+            {!selectionState && (
+              <DeleteButtonWithConfirmationDialog
+                vocabularies={[flashcard]}
+                reloadList={reloadList}
+              />
+            )}
+            {selectionState && (
+              <Checkbox
+                checked={selectedFlashcards.includes(flashcard)}
+                onCheckedChange={() => handleCheckboxChange(flashcard)}
+              />
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data: flashcards,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   useEffect(() => {
     const fetchBucket = async () => {
@@ -56,7 +122,7 @@ export default function BucketWordList({
       const data = await response.json();
       if (data.success) {
         setBucketName(data.bucket.title);
-        setFlashcards(data.bucket.Vocabulary); // Store the fetched bucket data
+        setFlashcards(data.bucket.Vocabulary);
         setInitialFetchComplete(true);
         setProgress(100);
       } else {
@@ -69,13 +135,13 @@ export default function BucketWordList({
 
   useEffect(() => {
     const fetchBuckets = async () => {
-      console.log("the fetch buckets.");
+      setProgress(66);
       const response = await fetch("/api/buckets", { cache: "no-store" });
       const data = await response.json();
       if (data.success) {
+        setBuckets(data.buckets);
         setInitialFetchComplete(true);
         setProgress(100);
-        setBuckets(data.buckets); // Store the fetched buckets data
       } else {
         console.log("Error fetching buckets:", data.error);
       }
@@ -104,8 +170,16 @@ export default function BucketWordList({
     const updatedSelection = selectedFlashcards.includes(flashcard)
       ? selectedFlashcards.filter((flash) => flash.id !== flashcard.id)
       : [...selectedFlashcards, flashcard];
-    console.log("updatedSelection", updatedSelection);
     setSelectedFlashcards(updatedSelection);
+  };
+
+  const handleLearnButton = () => {
+    router.push(`/flashcards/learn/${fetchBucketId}`);
+  };
+
+  const handleSelectionState = () => {
+    setSelectionState(!selectionState);
+    setSelectedFlashcards([]);
   };
 
   if (!initialFetchComplete) {
@@ -116,15 +190,6 @@ export default function BucketWordList({
       </main>
     );
   }
-
-  const handleLearnButton = () => {
-    router.push(`/flashcards/learn/${fetchBucketId}`);
-  };
-
-  const handleSelectionState = () => {
-    setSelectionState(!selectionState);
-    setSelectedFlashcards([]); // Clear the selected words
-  };
 
   return (
     <div className="flex flex-col gap-y-5">
@@ -155,7 +220,6 @@ export default function BucketWordList({
                 Learn
               </Button>
             )}
-
             <Button className="p-4" onClick={handleSelectionState}>
               {selectionState ? "Cancel" : "Select"}
             </Button>
@@ -163,48 +227,98 @@ export default function BucketWordList({
         </div>
         <Separator className="my-4 bg-slate-100" />
       </div>
+      <div className="w-full flex items-center py-4 px-8 lg:px-36 2xl:px-60 text-white z-0">
+        <Input
+          placeholder="Filter words..."
+          value={
+            (table.getColumn("wordOrPhrase")?.getFilterValue() as string) ?? ""
+          }
+          onChange={(event) =>
+            table.getColumn("wordOrPhrase")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+      </div>
       <div className="w-full overflow-y-auto px-8 lg:px-36 2xl:px-60 text-white z-0">
         {flashcards.length > 0 ? (
-          <Table>
-            <TableBody>
-              {flashcards.map((flashcard) => (
-                <TableRow
-                  key={flashcard.id}
-                  className="flex items-center justify-between"
-                >
-                  <TableCell>{flashcard.wordOrPhrase}</TableCell>
-                  <TableCell>
-                    {!selectionState && (
-                      <div className="flex flex-row justify-around items-center text-white">
-                        <ShareVocabularyButtonSheet
-                          vocabularies={[flashcard]}
-                          buckets={buckets}
-                        />
-
-                        <DeleteButtonWithConfirmationDialog
-                          vocabularies={[flashcard]}
-                          reloadList={reloadList}
-                        />
-                      </div>
-                    )}
-                    {selectionState && (
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedFlashcards.includes(flashcard)}
-                          onCheckedChange={() =>
-                            handleCheckboxChange(flashcard)
-                          }
-                        />
+          <div className="w-full rounded-md border">
+            <Table className="w-full">
+              <TableHead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow
+                    key={headerGroup.id}
+                  >
+                    {headerGroup.headers.map((header) => (
+                      <TableCell
+                        key={header.id}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableCell>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHead>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} className="border-b border-gray-300">
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell
+                          key={cell.id}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center border-r border-gray-300"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         ) : (
           <div className="text-xl">There are no words in this bucket.</div>
         )}
+      </div>
+      <div className="w-full flex items-center justify-end space-x-2 py-4 px-8 lg:px-36 2xl:px-60 text-white z-0">
+        {/* <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div> */}
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );
