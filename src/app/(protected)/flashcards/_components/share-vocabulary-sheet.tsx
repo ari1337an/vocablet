@@ -14,6 +14,13 @@ import ShareIcon from "@/app/_icons/share";
 import { Button } from "@/app/_components/ui/button";
 import { Checkbox } from "@/app/_components/ui/checkbox"; // Import your Checkbox component
 import toast from "react-hot-toast";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import {
+  Command,
+  CommandInput,
+  CommandItem,
+} from "@/app/_components/ui/command";
+import { CommandEmpty, CommandGroup, CommandList } from "cmdk";
 
 interface Bucket {
   id: string;
@@ -51,29 +58,31 @@ export function ShareVocabularyButtonSheet({
       const bucketId = bucket.id;
       const bucketName = bucket.title;
       fetch(`/api/buckets/${bucketId}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ vocabularies: vocabularies.map((vocab) => vocab.wordOrPhrase)}),
+        body: JSON.stringify({
+          vocabularies: vocabularies.map((vocab) => vocab.wordOrPhrase),
+        }),
       })
-        .then(response => {
+        .then((response) => {
           if (response.ok) {
             // console.log('Share successful');
             setOpen(false);
             setSelectedBuckets([]);
             toast.success(`Vocabulary added to bucket: ${bucketName}`);
           } else {
-            console.log('Share failed');
+            console.log("Share failed");
             toast.error(`Failed to add vocabulary to bucket: ${bucketName}`);
             setSelectedBuckets([]);
           }
         })
-        .catch(error => {
-          console.error('Error sharing vocabulary:', error);
+        .catch((error) => {
+          console.error("Error sharing vocabulary:", error);
         });
     });
-  }
+  };
   const handleSheetChange = (isOpen: boolean) => {
     setOpen(isOpen);
     const temp_open = isOpen;
@@ -81,7 +90,6 @@ export function ShareVocabularyButtonSheet({
       setSelectedBuckets([]); // Clear selected buckets when the sheet closes
     }
   };
-
 
   return (
     <Sheet open={open} onOpenChange={handleSheetChange}>
@@ -94,28 +102,38 @@ export function ShareVocabularyButtonSheet({
         <SheetHeader>
           <SheetTitle>Add Vocabulary to sheets</SheetTitle>
           <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
+          <Button onClick={handleShareClick}>Add</Button>
         </SheetHeader>
         <div className="grid gap-4 py-4">
-          <ul className="w-full list-none">
-            {buckets.map((bucket) => (
-              <li
-                key={bucket.id}
-                className="flex items-center justify-between bg-gray-950 p-3 mb-2 rounded shadow"
-              >
-                <Checkbox
-                  checked={selectedBuckets.includes(bucket)}
-                  onCheckedChange={() => handleCheckboxChange(bucket)}
-                />
-                <label htmlFor={bucket.id} className="ml-2">
-                  {bucket.title}
-                </label>
-              </li>
-            ))}
-          </ul>
+          <Command>
+            <CommandInput placeholder="Search bucket..." className="h-9" />
+            <ScrollArea className="max-h-[500px] overflow-y-auto">
+              <CommandList>
+                <CommandEmpty>No buckets found</CommandEmpty>
+                <CommandGroup>
+                  {/* <ul className="w-full list-none"> */}
+                  {buckets.map((bucket) => (
+                    <CommandItem
+                      key={bucket.id}
+                      value={bucket.title}
+                      className="flex items-center justify-between bg-gray-950 p-3 mb-2 rounded shadow"
+                      onSelect={() => handleCheckboxChange(bucket)}
+                    >
+                      <Checkbox
+                        checked={selectedBuckets.includes(bucket)}
+                        // onCheckedChange={() => handleCheckboxChange(bucket)}
+                      />
+                      <label htmlFor={bucket.id} className="ml-2">
+                        {bucket.title}
+                      </label>
+                    </CommandItem>
+                  ))}
+                  {/* </ul> */}
+                </CommandGroup>
+              </CommandList>
+            </ScrollArea>
+          </Command>
         </div>
-        <SheetFooter>
-          <Button onClick={handleShareClick}>Add</Button>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

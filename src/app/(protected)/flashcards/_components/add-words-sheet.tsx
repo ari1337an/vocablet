@@ -230,7 +230,7 @@ export function AddWordsSheet({
                   {buckets.map((bucket) => (
                     <CommandItem
                       key={bucket.id}
-                      value={bucket.id}
+                      value={bucket.title}
                       onSelect={(currentValue) => {
                         console.log("something::", currentValue);
                         setSelectedBucket(bucket);
