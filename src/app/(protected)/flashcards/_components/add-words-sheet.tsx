@@ -41,6 +41,7 @@ import {
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/app/_lib/utils";
 import { ScrollArea } from "@/app/_components/ui/scroll-area";
+import { Textarea } from "@/app/_components/ui/textarea";
 
 interface Bucket {
   id: string;
@@ -51,9 +52,8 @@ interface Flashcard {
   id: string;
   wordOrPhrase: string;
 }
-
 interface ShareVocabularySheetProps {
-  currentBucketId: string;
+  currentBucketId: string | null;
   onAddVocab: (newVocab: { id: string; wordOrPhrase: string }) => void;
 }
 
@@ -64,7 +64,14 @@ const formSchema = z.object({
     .max(50, { message: "Word name cannot be more than 50 characters." }),
 });
 
-//TODO: FIX THE 'NOT SELECTING' error.
+const promptFormSchema = z.object({
+  prompt: z
+    .string()
+    .min(5, { message: "Prompt must be at least 5 characters." })
+    .max(300, { message: "Prompt cannot be more than 300 characters." }),
+});
+
+//TODO: FIX THE 'NOT SELECTING' error with popover.
 
 export function AddWordsSheet({
   currentBucketId,
@@ -82,6 +89,13 @@ export function AddWordsSheet({
     },
   });
 
+  const promptForm = useForm({
+    resolver: zodResolver(promptFormSchema),
+    defaultValues: {
+      prompt: "",
+    },
+  });
+
   useEffect(() => {
     const fetchBuckets = async () => {
       const response = await fetch("/api/buckets");
@@ -96,14 +110,14 @@ export function AddWordsSheet({
     fetchBuckets();
   }, []);
 
-    useEffect(() => {
-      if (open) {
-        const bucket = buckets.find((bucket) => bucket.id === currentBucketId);
-        if (bucket) {
-          setSelectedBucket(bucket);
-        }
+  useEffect(() => {
+    if (open && currentBucketId) {
+      const bucket = buckets.find((bucket) => bucket.id === currentBucketId);
+      if (bucket) {
+        setSelectedBucket(bucket);
       }
-    }, [open, currentBucketId, buckets]);
+    }
+  }, [open, currentBucketId, buckets]);
 
   const onSubmit = (values: { vocabularyWord: string }) => {
     if (!selectedBucket) {
@@ -122,7 +136,10 @@ export function AddWordsSheet({
       .then((data) => {
         if (data.success) {
           data.vocabularies.forEach((vocabResponse: any) => {
-            if (vocabResponse.success && selectedBucket.id === currentBucketId) {
+            if (
+              vocabResponse.success &&
+              selectedBucket.id === currentBucketId
+            ) {
               const { id, wordOrPhrase } = vocabResponse.vocab;
               onAddVocab({ id, wordOrPhrase });
             }
@@ -140,6 +157,45 @@ export function AddWordsSheet({
       });
   };
 
+  const onPromptSubmit = (values: { prompt: string }) => {
+    console.log("TODO: Implement prompt submission");
+    // if (!selectedBucket) {
+    //   toast.error("Please select a bucket");
+    //   return;
+    // }
+
+    // fetch(`/api/buckets/${selectedBucket.id}`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ vocabularies: [values.vocabularyWord] }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     if (data.success) {
+    //       data.vocabularies.forEach((vocabResponse: any) => {
+    //         if (
+    //           vocabResponse.success &&
+    //           selectedBucket.id === currentBucketId
+    //         ) {
+    //           const { id, wordOrPhrase } = vocabResponse.vocab;
+    //           onAddVocab({ id, wordOrPhrase });
+    //         }
+    //       });
+
+    //       toast.success("Word has been Added");
+    //       form.reset(); // Reset the form
+    //       setOpen(false);
+    //     } else {
+    //       console.error("Error creating vocabulary:", data.error);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error creating vocab:", error);
+    //   });
+  };
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
@@ -153,10 +209,15 @@ export function AddWordsSheet({
           <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
-            <div>
-                <strong>Selected Bucket:</strong>
-                <span> {selectedBucket === null? 'No buckets selected' : selectedBucket.title}</span>
-            </div>
+          <div>
+            <strong>Selected Bucket:</strong>
+            <span>
+              {" "}
+              {selectedBucket === null
+                ? "No buckets selected"
+                : selectedBucket.title}
+            </span>
+          </div>
           <ScrollArea>
             <Command className="w-full z-50">
               <CommandInput
@@ -208,6 +269,30 @@ export function AddWordsSheet({
               />
               <SheetFooter>
                 <Button type="submit">Add</Button>
+              </SheetFooter>
+            </form>
+          </Form>
+          <Form {...promptForm}>
+            <form
+              onSubmit={promptForm.handleSubmit(onPromptSubmit)}
+              className="space-y-8"
+            >
+              <FormField
+                control={form.control}
+                name="prompt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="A specific scenario to generate words." {...field} />
+                      {/* <Input placeholder="Vocabulary Word" {...field} /> */}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <SheetFooter>
+                <Button type="submit">Generate Words</Button>
               </SheetFooter>
             </form>
           </Form>

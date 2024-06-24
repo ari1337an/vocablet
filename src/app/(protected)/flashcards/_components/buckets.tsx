@@ -10,6 +10,7 @@ import { Progress } from "@/app/_components/ui/progress";
 import useAppStore from "../../_store/useAppStore";
 import { Separator } from "@/app/_components/ui/separator";
 import { AddBucketSheet } from "./add-bucket-sheet";
+import { AddWordsSheet } from "./add-words-sheet";
 
 interface Bucket {
   id: string;
@@ -64,9 +65,12 @@ export default function Buckets({}: {}) {
     // shows the buckets list
     <div className="w-full h-full flex flex-col gap-y-5 px-8 lg:px-36 py-8 lg:py-24 items-center justify-normal">
       <div className="w-full flex flex-col">
-        <div className="w-full flex flex-row justify-between">
+        <div className="w-full flex flex-row justify-between items-center">
           <h1 className="text-2xl font-bold mb-4">Buckets List</h1>
-          <AddBucketSheet onAddBucket={handleAddBucket} />{" "}
+          <div className="p-4 items-center justify-center">
+            <AddWordsSheet currentBucketId={null} onAddVocab={() => {}} />
+            <AddBucketSheet onAddBucket={handleAddBucket} />
+          </div>
           {/* Pass the function as a prop */}
         </div>
         <Separator className="bg-white" />
@@ -78,7 +82,9 @@ export default function Buckets({}: {}) {
             className="flex items-center justify-between bg-gray-950 p-3 mb-2 rounded shadow"
           >
             <span>{bucket.title}</span>
-            <Button onClick={() => handleBucketClick(bucket.id)}>View Words</Button>
+            <Button onClick={() => handleBucketClick(bucket.id)}>
+              View Words
+            </Button>
           </li>
         ))}
       </ul>
