@@ -98,7 +98,7 @@ export function AddWordsSheet({
 
   useEffect(() => {
     const fetchBuckets = async () => {
-      const response = await fetch("/api/buckets");
+      const response = await fetch("/api/buckets",);
       const data = await response.json();
       if (data.success) {
         setBuckets(data.buckets); // Store the fetched buckets data

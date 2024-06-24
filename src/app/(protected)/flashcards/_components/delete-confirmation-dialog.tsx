@@ -49,13 +49,13 @@ const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       if (!deleteResponse.ok) {
         toast.error("Failed to delete vocabulary: " + vocabWord);
         setOpen(false);
-        throw new Error("Failed to delete vocabulary");
+        // throw new Error("Failed to delete vocabulary");
       }
     });
 
-    toast.success("Deleted successfully");
-    setOpen(false); // Close the dialog after deletion
     reloadList(); // Reload the list after deletion
+    setOpen(false); // Close the dialog after deletion
+    toast.success("Deleted successfully");
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>

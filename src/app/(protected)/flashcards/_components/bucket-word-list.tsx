@@ -70,7 +70,7 @@ export default function BucketWordList({
   useEffect(() => {
     const fetchBuckets = async () => {
       console.log("the fetch buckets.");
-      const response = await fetch("/api/buckets");
+      const response = await fetch("/api/buckets", { cache: "no-store" });
       const data = await response.json();
       if (data.success) {
         setInitialFetchComplete(true);
@@ -85,7 +85,9 @@ export default function BucketWordList({
   }, []);
 
   const reloadList = async () => {
-    const response = await fetch("/api/buckets/" + fetchBucketId);
+    const response = await fetch("/api/buckets/" + fetchBucketId, {
+      cache: "no-store",
+    });
     const data = await response.json();
     if (data.success) {
       setFlashcards(data.bucket.Vocabulary);
