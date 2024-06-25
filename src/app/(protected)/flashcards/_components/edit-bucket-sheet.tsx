@@ -10,7 +10,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/_components/ui/sheet";
-import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +22,7 @@ import {
   FormMessage,
 } from "@/app/_components/ui/form";
 import EditIcon from "@/app/_icons/edit";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   bucketName: z
@@ -40,7 +40,10 @@ interface EditBucketSheetProps {
   setBucket: React.Dispatch<React.SetStateAction<Bucket>>;
 }
 
-export function EditBucketSheet({ currentBucket, setBucket }: EditBucketSheetProps) {
+export function EditBucketSheet({
+  currentBucket,
+  setBucket,
+}: EditBucketSheetProps) {
   const [open, setOpen] = React.useState(false);
 
   const form = useForm({
@@ -51,37 +54,32 @@ export function EditBucketSheet({ currentBucket, setBucket }: EditBucketSheetPro
   });
 
   const onSubmit = (values: { bucketName: string }) => {
-    setBucket({ id: currentBucket.id, title: values.bucketName });
-    setOpen(false);
+    // setBucket({ id: currentBucket.id, title: values.bucketName });
+    // setOpen(false);
     // set(values.bucketName);
-    // fetch("/api/buckets/create", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ title: values.bucketName }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       // TODO
-    //       // onAddBucket(data.bucket); // Call the function to add the new bucket to the list
-    //       toast("Bucket has been created", {
-    //         description: "",
-    //         action: {
-    //           label: "Undo",
-    //           onClick: () => console.log("Undo"),
-    //         },
-    //       });
-    //       form.reset(); // Reset the form
-    //       setOpen(false);
-    //     } else {
-    //       console.error("Error creating bucket:", data.error);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error creating bucket:", error);
-    //   });
+    fetch("/api/buckets/" + currentBucket.id, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ updatedName: values.bucketName }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // TODO
+          // onAddBucket(data.bucket); // Call the function to add the new bucket to the list
+          setBucket(data.bucket);
+          toast.success("Bucket Name updated successfully.");
+          form.reset(); // Reset the form
+          setOpen(false);
+        } else {
+          console.error("Error creating bucket:", data.error);
+        }
+      })
+      .catch((error) => {
+        console.error("Error creating bucket:", error);
+      });
   };
 
   return (
@@ -93,8 +91,8 @@ export function EditBucketSheet({ currentBucket, setBucket }: EditBucketSheetPro
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add Bucket</SheetTitle>
-          <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
+          <SheetTitle>Edit Bucket Name</SheetTitle>
+          <SheetDescription>{`Click Update when you're done.`}</SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4">
           <Form {...form}>
@@ -113,7 +111,7 @@ export function EditBucketSheet({ currentBucket, setBucket }: EditBucketSheetPro
                 )}
               />
               <SheetFooter>
-                <Button type="submit">Create</Button>
+                <Button type="submit">Update</Button>
               </SheetFooter>
             </form>
           </Form>
