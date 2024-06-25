@@ -29,6 +29,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Input } from "@/app/_components/ui/input";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 
 interface Flashcard {
   id: string;
@@ -63,7 +64,15 @@ export default function BucketWordList({
   const columns: ColumnDef<Flashcard>[] = [
     {
       accessorKey: "wordOrPhrase",
-      header: "Word/Phrase",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Word/Phrase
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => <div>{row.getValue("wordOrPhrase")}</div>,
     },
     {
@@ -245,13 +254,9 @@ export default function BucketWordList({
             <Table className="w-full">
               <TableHead>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow
-                    key={headerGroup.id}
-                  >
+                  <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableCell
-                        key={header.id}
-                      >
+                      <TableCell key={header.id}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -268,9 +273,7 @@ export default function BucketWordList({
                   table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id} className="border-b border-gray-300">
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                        >
+                        <TableCell key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -297,10 +300,6 @@ export default function BucketWordList({
         )}
       </div>
       <div className="w-full flex items-center justify-end space-x-2 py-4 px-8 lg:px-36 2xl:px-60 text-white z-0">
-        {/* <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"

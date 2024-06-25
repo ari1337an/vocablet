@@ -28,6 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/_components/ui/table";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 
 interface Bucket {
   id: string;
@@ -76,7 +77,15 @@ export default function Buckets() {
   const columns: ColumnDef<Bucket>[] = [
     {
       accessorKey: "title",
-      header: "Title",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Title
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => <div>{row.getValue("title")}</div>,
     },
     {
@@ -162,9 +171,7 @@ export default function Buckets() {
         <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-              >
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -212,10 +219,6 @@ export default function Buckets() {
         </Table>
       </div>
       <div className="w-full flex items-center justify-end space-x-2 py-4">
-        {/* <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div> */}
         <div className="space-x-2">
           <Button
             variant="outline"
