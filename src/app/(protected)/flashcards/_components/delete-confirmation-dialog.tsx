@@ -22,12 +22,13 @@ interface Flashcard {
 
 interface ConfirmationDialogProps {
   vocabularies: Flashcard[];
-  reloadList: () => void;
+  // reloadList: () => void;
+  setFlashcards: React.Dispatch<React.SetStateAction<Flashcard[]>>;
 }
 
 const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   vocabularies,
-  reloadList,
+  setFlashcards,
 }) => {
   const [open, setOpen] = useState(false);
   const handleDeleteClick = async () => {
@@ -45,15 +46,20 @@ const DeleteButtonWithConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
           // Add any additional headers as needed
         },
         // You can include credentials: 'include' if your API requires authentication cookies
+      }).then((response) => {
+        if (response.ok){
+          setFlashcards((prevFlashcards) =>
+            prevFlashcards.filter((flashcard) => flashcard.id !== vocabularyId)
+          );
+        }
+        else{
+          toast.error("Failed to delete vocabulary: " + vocabWord);
+        }
       });
-      if (!deleteResponse.ok) {
-        toast.error("Failed to delete vocabulary: " + vocabWord);
-        setOpen(false);
-        // throw new Error("Failed to delete vocabulary");
-      }
+      setOpen(false);
     });
 
-    reloadList(); // Reload the list after deletion
+    // reloadList(); // Reload the list after deletion
     setOpen(false); // Close the dialog after deletion
     toast.success("Deleted successfully");
   };

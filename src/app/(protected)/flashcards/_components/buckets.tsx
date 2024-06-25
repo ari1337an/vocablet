@@ -29,6 +29,7 @@ import {
   TableRow,
 } from "@/app/_components/ui/table";
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import DeleteBucketButtonWithConfirmationDialog from "./bucket-delete-confirmation-dialog";
 
 interface Bucket {
   id: string;
@@ -68,11 +69,11 @@ export default function Buckets() {
     setBuckets((prevBuckets) => [...prevBuckets, newBucket]);
   };
 
-  const handleDeleteBucket = (id: string) => {
-    setBuckets((prevBuckets) =>
-      prevBuckets.filter((bucket) => bucket.id !== id)
-    );
-  };
+  // const handleDeleteBucket = (id: string) => {
+  //   setBuckets((prevBuckets) =>
+  //     prevBuckets.filter((bucket) => bucket.id !== id)
+  //   );
+  // };
 
   const columns: ColumnDef<Bucket>[] = [
     {
@@ -101,12 +102,16 @@ export default function Buckets() {
             >
               View Words
             </Button>
-            <Button
+            {/* <Button
               variant="ghost"
               onClick={() => handleDeleteBucket(bucket.id)}
             >
               Delete
-            </Button>
+            </Button> */}
+            <DeleteBucketButtonWithConfirmationDialog
+              bucket={bucket}
+              setBuckets={setBuckets}
+              />
           </div>
         );
       },

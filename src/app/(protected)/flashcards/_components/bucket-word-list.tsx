@@ -91,7 +91,8 @@ export default function BucketWordList({
             {!selectionState && (
               <DeleteButtonWithConfirmationDialog
                 vocabularies={[flashcard]}
-                reloadList={reloadList}
+                // reloadList={reloadList}
+                setFlashcards={setFlashcards}
               />
             )}
             {selectionState && (
@@ -209,7 +210,7 @@ export default function BucketWordList({
             {selectionState && (
               <DeleteButtonWithConfirmationDialog
                 vocabularies={selectedFlashcards}
-                reloadList={reloadList}
+                setFlashcards={setFlashcards}
               />
             )}
             {selectionState && (
