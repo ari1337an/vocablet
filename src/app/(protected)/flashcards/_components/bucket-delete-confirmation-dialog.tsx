@@ -30,10 +30,25 @@ const DeleteBucketButtonWithConfirmationDialog: React.FC<
 > = ({ bucket, setBuckets }) => {
   const [open, setOpen] = useState(false);
 
-  const handleDeleteBucket = (id: string) => {
-    setBuckets((prevBuckets) =>
-      prevBuckets.filter((bucket) => bucket.id !== id)
-    );
+  const handleDeleteBucket = async (id: string) => {
+    await fetch("/api/buckets/" + id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any additional headers as needed
+      },
+      // You can include credentials: 'include' if your API requires authentication cookies
+    }).then((response) => {
+      if (response.ok) {
+        setBuckets((prevBuckets) =>
+          prevBuckets.filter((bucket) => bucket.id !== id)
+        );
+        toast.success("Bucket deleted successfully");
+        setOpen(false);
+      } else {
+        toast.error("Failed to delete bucket");
+      }
+    });
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>

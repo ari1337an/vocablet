@@ -46,4 +46,10 @@ export default class VocabularyBucketRepo {
             },
         });
     }
+    
+    static deleteVocabularyBucket(bucketId: string) {
+        return db.vocabularyBucket.delete({
+            where: { id: bucketId },
+        });
+    }
 }
