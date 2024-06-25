@@ -278,7 +278,7 @@ export function AddWordsSheet({
               className="space-y-8"
             >
               <FormField
-                control={form.control}
+                control={promptForm.control}
                 name="prompt"
                 render={({ field }) => (
                   <FormItem>

@@ -30,6 +30,8 @@ import {
 } from "@tanstack/react-table";
 import { Input } from "@/app/_components/ui/input";
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import EditIcon from "@/app/_icons/edit";
+import { EditBucketSheet } from "./edit-bucket-sheet";
 
 interface Flashcard {
   id: string;
@@ -51,7 +53,7 @@ export default function BucketWordList({
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
-  const [bucketName, setBucketName] = useState<string>("");
+  const [bucket, setBucket] = useState<Bucket>({ id: "", title: "" });
   const [buckets, setBuckets] = useState<Bucket[]>([]);
   const [selectionState, setSelectionState] = useState<boolean>(false);
   const [selectedFlashcards, setSelectedFlashcards] = useState<Flashcard[]>([]);
@@ -131,7 +133,8 @@ export default function BucketWordList({
       const response = await fetch("/api/buckets/" + fetchBucketId);
       const data = await response.json();
       if (data.success) {
-        setBucketName(data.bucket.title);
+        // setBucketName(data.bucket.title);
+        setBucket(data.bucket);
         setFlashcards(data.bucket.Vocabulary);
         setInitialFetchComplete(true);
         setProgress(100);
@@ -204,8 +207,12 @@ export default function BucketWordList({
   return (
     <div className="flex flex-col gap-y-5">
       <div className="w-full flex flex-col justify-end items-start px-8 lg:px-36 2xl:px-60 text-white sticky top-0 bg-secondary z-10">
-        <div className="flex flex-row justify-between w-full py-4">
-          <h1 className="text-2xl font-bold">{bucketName}</h1>
+        <div className="flex flex-row justify-between w-full py-4 items-center">
+          <div className="flex flex-row">
+            <h1 className="text-2xl font-bold">{bucket.title}</h1>
+            <EditBucketSheet currentBucket={bucket} setBucket={setBucket} />
+            {/* <EditIcon className="w-5 h-5 fill-white mx-4" /> */}
+          </div>
           <div className="p-4 flex flex-row justify-between items-center w-48">
             {selectionState && (
               <DeleteButtonWithConfirmationDialog
