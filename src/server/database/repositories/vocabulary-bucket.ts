@@ -34,4 +34,22 @@ export default class VocabularyBucketRepo {
             },
         });
     }
+
+    static updateVocabularyBucketName(
+        bucketId: string,
+        title: string,
+    ) {
+        return db.vocabularyBucket.update({
+            where: { id: bucketId },
+            data: {
+                title,
+            },
+        });
+    }
+    
+    static deleteVocabularyBucket(bucketId: string) {
+        return db.vocabularyBucket.delete({
+            where: { id: bucketId },
+        });
+    }
 }
