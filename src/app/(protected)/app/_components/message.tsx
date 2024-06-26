@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MessageType } from "../../_store/useAppStore";
+import MarkdownComponent from "./markdown-component";
 
 type MessageProps = {
   message: MessageType;
@@ -12,8 +13,6 @@ export default function Message({ message }: MessageProps) {
   //   setShowAgentMessage(!showAgentMessage);
   // };
 
-
-
   return (
     <div
       className={`text-sm max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ${
@@ -22,15 +21,14 @@ export default function Message({ message }: MessageProps) {
     >
       {message.role === "assistant" && (
         <div
-          className={`p-5 my-8 break-words mr-5 bg-black text-white max-w-xl`}
+          className={`p-5 my-8 break-words mr-5 bg-black text-white max-w-xl rounded-lg`}
           style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
         >
-          {message.message}
+          <MarkdownComponent markdownText={message.message} />
         </div>
       )}
 
       <div className="w-[350px] xl:w-[500px]">
-        
         {message.role === "user" && (
           <div
             className="p-5 break-words bg-primary text-white w-full"
