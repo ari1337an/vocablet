@@ -2,10 +2,10 @@ import { create } from "zustand";
 
 export interface MessageType {
   role: "user" | "assistant" | "agent";
-  message: string;
+  message?: string;
   suggestedMessage?: string;
-  // enhancedText?: string;
-  // words?: { [key: string]: string };
+  enhancedText?: string;
+  words?: { [key: string]: string };
   // phrases?: { [key: string]: string };
 }
 

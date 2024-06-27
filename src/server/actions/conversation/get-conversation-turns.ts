@@ -16,7 +16,8 @@ export default async function GetConversationTurnsAction(
       { role: "user", message: turn.message },
       ...turn.VocabAgentSuggestion.map((suggestion) => ({
         role: "agent",
-        message: suggestion.enhancedText
+        enhancedText: suggestion.enhancedText,
+        words: suggestion.words,
       })),
       { role: "assistant", message: turn.reply },
     ]).flat();
