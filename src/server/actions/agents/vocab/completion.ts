@@ -71,17 +71,19 @@ export default async function VocabAgentCompletion(
         }
 
         // Extract the words and sentences.
-        const { enhanced_text } = response;
+        const { enhanced_text , enhanced_words} = response;
         if (!enhanced_text || typeof enhanced_text !== "string") {
             throw new Error("Invalid response format.");
         }
 
+        console.log('enhanced words;', enhanced_words);
         // TODO: Deduct tokens
 
         // Return the validated response
         return {
             success: true,
             enhanced_text: enhanced_text,
+            enhanced_words: enhanced_words,
             words: words,
             totalTokens: totalTokens,
         };

@@ -23,7 +23,7 @@ export class PromptFactory {
         const output_format: string = AGENT_RESPONSE_FORMAT;
         const your_task: string = C2_VOCAB_AGENT_SYSTEM_PROMPT;
 
-        const agent_prompt = `Your are ${your_role}. You are a tool helping ${opponent_role}. Your task: '${your_task}'. Your Output format must follow the following pattern: ${output_format}. Maintain the tone of the sentence based on the content.`;
+        const agent_prompt = `Your are ${your_role}. You are a tool helping ${opponent_role}. Your task: '${your_task}'. Suggest advanced & unique vocabularies in enhanced_words from the enhanced text. Your Output format must follow the following pattern: ${output_format}. Maintain the tone of the sentence based on the content.`;
         return agent_prompt;
     }
 

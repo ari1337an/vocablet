@@ -97,13 +97,16 @@ export default async function RoleplayAgentCompletion(
             const vocabDataWords = vocabData.words as string;
             const wordString = vocabDataWords.replace(/'/g, '"');
             const words = JSON.parse(wordString);
+
+            const enhanced_words = vocabData.enhanced_words;
+
             // console.log('words:: ', words);
             // add to the database VocabAgentSuggestion
             const vocabAgentSuggestion = await VocabAgentSuggestionRepo.createVocabAgentSuggestion(
                 turn.id,
                 vocabData.totalTokens as number,
                 vocabData.enhanced_text as string,
-                words as string[]
+                enhanced_words as string[]
             );
 
             if (!vocabAgentSuggestion) {
