@@ -33,19 +33,26 @@ export default async function WordSuggesterCompletion(
         // Get the last message from the messages array.
         const lastMessage = messages[messages.length - 1];
 
+
+   
+        const promptMessageWordSuggest = `Provide minimum 12 and maximum 20 advanced & unique vocabularies based the the scenario & domain delimited by """. \n """ ${lastMessage.content} """`;
+        const wordSuggestInput = {
+            role: lastMessage.role,
+            content: promptMessageWordSuggest,
+        };
+
         // If the last message is not by the user, return an error.
-        if (lastMessage.role !== "user") {
+        if (wordSuggestInput.role !== "user") {
             throw new Error("The last message should be from the user.");
         }
-        lastMessage.content = `Provide minimum 12 and maximum 20 advanced & unique vocabularies based the the scenario & domain delimited by """. \n """ ${lastMessage.content} """`;
-
         // Convert the lastMessage to ConversationWithOutSystemPromptSchema
-        const valdiatedMessage =
-            ConversationWithOutSystemPromptSchema.parse([lastMessage]);
+        const validatedWordSuggestMessage =
+            ConversationWithOutSystemPromptSchema.parse([wordSuggestInput]);
+
 
         let system_prompt = PromptFactory.getWordSuggestSystemPrompt();
         const [reply, totalTokens] = await OpenAITextCompletion(
-            valdiatedMessage,
+            validatedWordSuggestMessage,
             system_prompt,
         );
         if (!reply || !totalTokens) {

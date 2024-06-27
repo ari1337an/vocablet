@@ -24,18 +24,24 @@ export default async function VocabAgentCompletion(
     try {
 
         // Get the last message from the messages array.
+        // const temp_messages = messages;
         const lastMessage = messages[messages.length - 1];
         // add the text 'provide advanced english words, phrases and enhanced text for the following sentence' to the last message
-        lastMessage.content = `provide advanced english enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
+        const promptedMessage = `provide advanced english enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
+
+        const input = {
+            role: lastMessage.role,
+            content: promptedMessage,
+        };
 
         // If the last message is not by the user, return an error.
-        if (lastMessage.role !== "user") {
+        if (input.role !== "user") {
             throw new Error("The last message should be from the user.");
         }
 
         // Convert the lastMessage to ConversationWithOutSystemPromptSchema
         const valdiatedMessage =
-            ConversationWithOutSystemPromptSchema.parse([lastMessage]);
+            ConversationWithOutSystemPromptSchema.parse([input]);
 
         // Get completion from OpenAI
         const [reply, totalTokens] = await OpenAITextCompletion(
@@ -47,7 +53,7 @@ export default async function VocabAgentCompletion(
                 "Failed to generate a response or calculate total tokens."
             );
         }
-
+        // console.log('message: ', messages);
         const wordSuggestAgentResponse = await WordSuggesterCompletion(userId, messages);
         const {words} = wordSuggestAgentResponse;
         // console.log('words', words);
@@ -75,7 +81,6 @@ export default async function VocabAgentCompletion(
         // Return the validated response
         return {
             success: true,
-            user_message: lastMessage.content,
             enhanced_text: enhanced_text,
             words: words,
             totalTokens: totalTokens,
