@@ -16,6 +16,7 @@ export default class ConversationRepo {
             VocabAgentSuggestion: {
               select: {
                 enhancedText: true,
+                words: true,
               },
             },
           },
@@ -23,7 +24,6 @@ export default class ConversationRepo {
             createdAt: "asc",
           },
         },
-        
       },
     });
   }

@@ -24,6 +24,7 @@ import ChatHistory from "./chat-history";
 import Link from "next/link";
 import useAppStore, { Conversation } from "../../_store/useAppStore";
 import { useRouter } from "next/navigation";
+import { createId } from '@paralleldrive/cuid2';
 
 interface DrawerContentProps
   extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
@@ -132,11 +133,11 @@ export default function Navbar({ className }: { className?: string }) {
   const handleNewChat = () => {
     // Create a new conversation and add it to the store
     const newConversation = {
-      id: `temp-id-${Date.now()}`, // Replace with actual ID generation logic
-      title: "New Chat",
+      id: createId(), // Replace with actual ID generation logic
+      title: "Empty Chat",
       createdAt: new Date().toISOString(),
     };
-    addConversation(newConversation);
+    // addConversation(newConversation);
     setConversationId(newConversation.id);
     setMessages([]);
     router.push("/app");
