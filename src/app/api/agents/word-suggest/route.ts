@@ -14,17 +14,18 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
         const messages = body.messages;
-        const prompt = 'Provide minimum 12 advanced & unique vocabularies based the the scenario delimited by """.'
+        // const prompt = 'Provide minimum 12 advanced & unique vocabularies based the the scenario delimited by """.'
         // Wrap user messages with triple quotation marks
-        const wrappedMessages = messages.map((message: { role: string, content: string }) => ({
-            role: message.role,
-            content: `${prompt}\n"""${message.content}"""`,
-        }));
-
+        // const wrappedMessages = messages.map((message: { role: string, content: string }) => ({
+        //     role: message.role,
+        //     content: `${prompt}\n"""${message.content}"""`,
+        // }));
+        
+        // console.log('wrappedMessages', wrappedMessages);
         // Call the completion function
         const data = await WordSuggesterCompletion(
             userId,
-            wrappedMessages
+            messages
         );
 
         // Check if the completion function was successful

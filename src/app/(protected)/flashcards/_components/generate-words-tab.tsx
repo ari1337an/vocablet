@@ -122,7 +122,7 @@ export function GenerateWordsTab({
 
         const data = await response.json();
         if (data.success) {
-          const messageString = data.message.replace(/'/g, '"');
+          const messageString = data.words.replace(/'/g, '"');
           const words = JSON.parse(messageString);
           setWords(words);
           setSelectedWords(words);

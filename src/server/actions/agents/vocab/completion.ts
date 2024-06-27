@@ -15,17 +15,18 @@ import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { PromptFactory } from "@/server/prompts/prompt-factory";
 import UserRepo from "@/server/database/repositories/user";
+import WordSuggesterCompletion from "../word-suggest/completion";
 
 export default async function VocabAgentCompletion(
+    userId: string,
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
 ) {
     try {
 
         // Get the last message from the messages array.
         const lastMessage = messages[messages.length - 1];
-        
         // add the text 'provide advanced english words, phrases and enhanced text for the following sentence' to the last message
-        lastMessage.content = `provide advanced english words, phrases and enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
+        lastMessage.content = `provide advanced english enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
 
         // If the last message is not by the user, return an error.
         if (lastMessage.role !== "user") {
@@ -47,6 +48,9 @@ export default async function VocabAgentCompletion(
             );
         }
 
+        const wordSuggestAgentResponse = await WordSuggesterCompletion(userId, messages);
+        const {words} = wordSuggestAgentResponse;
+        // console.log('words', words);
         // Post Validation of the response
         let response;
         const temp_reply = reply as string;
@@ -61,8 +65,8 @@ export default async function VocabAgentCompletion(
         }
 
         // Extract the words and sentences.
-        const { words, phrases, enhanced_text } = response;
-        if (!words || typeof words !== "object" || !enhanced_text || typeof enhanced_text !== "string") {
+        const { enhanced_text } = response;
+        if (!enhanced_text || typeof enhanced_text !== "string") {
             throw new Error("Invalid response format.");
         }
 
@@ -72,9 +76,8 @@ export default async function VocabAgentCompletion(
         return {
             success: true,
             user_message: lastMessage.content,
-            words: words,
-            phrases: phrases,
             enhanced_text: enhanced_text,
+            words: words,
             totalTokens: totalTokens,
         };
     } catch (error) {

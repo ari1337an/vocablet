@@ -29,17 +29,23 @@ export default async function WordSuggesterCompletion(
 ) {
     try {
         // TODO: check if user have tokens to generate the response
-        // Validate the conversation and get the current conversationId or create a new one if needed
-        // let conversation = await validateOrCreateConversation(
-        //     userId,
-        //     messages,
-        //     conversationId,
-        //     requestNewConversation
-        // );
-        // let conversationIdCurrent = conversation.id;
+
+        // Get the last message from the messages array.
+        const lastMessage = messages[messages.length - 1];
+
+        // If the last message is not by the user, return an error.
+        if (lastMessage.role !== "user") {
+            throw new Error("The last message should be from the user.");
+        }
+        lastMessage.content = `Provide minimum 12 and maximum 20 advanced & unique vocabularies based the the scenario & domain delimited by """. \n """ ${lastMessage.content} """`;
+
+        // Convert the lastMessage to ConversationWithOutSystemPromptSchema
+        const valdiatedMessage =
+            ConversationWithOutSystemPromptSchema.parse([lastMessage]);
+
         let system_prompt = PromptFactory.getWordSuggestSystemPrompt();
         const [reply, totalTokens] = await OpenAITextCompletion(
-            messages,
+            valdiatedMessage,
             system_prompt,
         );
         if (!reply || !totalTokens) {
@@ -61,7 +67,7 @@ export default async function WordSuggesterCompletion(
 
         return {
             success: true,
-            message: reply,
+            words: reply,
         };
     } catch (error) {
         return {
