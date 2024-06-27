@@ -137,7 +137,7 @@ export default function Navbar({ className }: { className?: string }) {
       title: "Empty Chat",
       createdAt: new Date().toISOString(),
     };
-    addConversation(newConversation);
+    // addConversation(newConversation);
     setConversationId(newConversation.id);
     setMessages([]);
     router.push("/app");
