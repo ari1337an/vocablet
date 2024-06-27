@@ -33,7 +33,7 @@ const MarkdownComponent: React.FC<MarkdownComponentProps> = ({
           const codeContent = String(children);
           const codeIndex = node.position?.start.offset || 0;
           const language = match ? match[1] : "unknown";
-          const isInlineCode = codeContent.length <= 50;
+          const isInlineCode = codeContent.length <= 20;
 
           if (inline || isInlineCode) {
             return (
