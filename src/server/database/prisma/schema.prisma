@@ -141,8 +141,7 @@ model VocabAgentSuggestion {
   id           String @id @default(cuid())
   turnId       String
   totalTokens  Int
-  words        Json
-  phrases      Json
+  words        String[]
   enhancedText String
 
   createdAt DateTime @default(now())
@@ -164,8 +163,6 @@ model Vocabulary {
   id              String   @id @default(cuid())
   bucketId        String
   wordOrPhrase    String
-  meaning         String
-  exampleSentence String
   createdAt       DateTime @default(now())
 
   bucket VocabularyBucket @relation(fields: [bucketId], references: [id], onDelete: Cascade)

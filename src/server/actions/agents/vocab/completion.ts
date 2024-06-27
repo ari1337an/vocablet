@@ -15,26 +15,33 @@ import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { PromptFactory } from "@/server/prompts/prompt-factory";
 import UserRepo from "@/server/database/repositories/user";
+import WordSuggesterCompletion from "../word-suggest/completion";
 
 export default async function VocabAgentCompletion(
+    userId: string,
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
 ) {
     try {
 
         // Get the last message from the messages array.
+        // const temp_messages = messages;
         const lastMessage = messages[messages.length - 1];
-        
         // add the text 'provide advanced english words, phrases and enhanced text for the following sentence' to the last message
-        lastMessage.content = `provide advanced english words, phrases and enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
+        const promptedMessage = `provide advanced english enhanced text for the following sentence in json format \n'${lastMessage.content}'`;
+
+        const input = {
+            role: lastMessage.role,
+            content: promptedMessage,
+        };
 
         // If the last message is not by the user, return an error.
-        if (lastMessage.role !== "user") {
+        if (input.role !== "user") {
             throw new Error("The last message should be from the user.");
         }
 
         // Convert the lastMessage to ConversationWithOutSystemPromptSchema
         const valdiatedMessage =
-            ConversationWithOutSystemPromptSchema.parse([lastMessage]);
+            ConversationWithOutSystemPromptSchema.parse([input]);
 
         // Get completion from OpenAI
         const [reply, totalTokens] = await OpenAITextCompletion(
@@ -46,7 +53,10 @@ export default async function VocabAgentCompletion(
                 "Failed to generate a response or calculate total tokens."
             );
         }
-
+        // console.log('message: ', messages);
+        const wordSuggestAgentResponse = await WordSuggesterCompletion(userId, messages);
+        const {words} = wordSuggestAgentResponse;
+        // console.log('words', words);
         // Post Validation of the response
         let response;
         const temp_reply = reply as string;
@@ -61,8 +71,8 @@ export default async function VocabAgentCompletion(
         }
 
         // Extract the words and sentences.
-        const { words, phrases, enhanced_text } = response;
-        if (!words || typeof words !== "object" || !enhanced_text || typeof enhanced_text !== "string") {
+        const { enhanced_text } = response;
+        if (!enhanced_text || typeof enhanced_text !== "string") {
             throw new Error("Invalid response format.");
         }
 
@@ -71,10 +81,8 @@ export default async function VocabAgentCompletion(
         // Return the validated response
         return {
             success: true,
-            user_message: lastMessage.content,
-            words: words,
-            phrases: phrases,
             enhanced_text: enhanced_text,
+            words: words,
             totalTokens: totalTokens,
         };
     } catch (error) {

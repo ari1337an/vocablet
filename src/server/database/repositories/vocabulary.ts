@@ -17,16 +17,12 @@ export default class VocabularyRepo {
 
     static createVocabulary(
         bucketId: string,
-        wordOrPhrase: string,
-        meaning: string ,
-        exampleSentence: string
+        wordOrPhrase: string
     ) {
         return db.vocabulary.create({
             data: {
                 bucketId,
                 wordOrPhrase,
-                meaning,
-                exampleSentence
             },
         });
     }

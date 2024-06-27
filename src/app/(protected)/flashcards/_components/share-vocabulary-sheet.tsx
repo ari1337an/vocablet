@@ -100,7 +100,7 @@ export function ShareVocabularyButtonSheet({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Add Vocabulary to sheets</SheetTitle>
+          <SheetTitle>Add Vocabulary to bucket(s)</SheetTitle>
           <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
           <Button onClick={handleShareClick}>Add</Button>
         </SheetHeader>

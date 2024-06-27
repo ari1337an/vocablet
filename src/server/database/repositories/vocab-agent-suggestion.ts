@@ -21,16 +21,14 @@ export default class VocabAgentSuggestionRepo {
     turnId: string,
     totalTokens: number,
     enhancedText: string,
-    words: Record<string, any>,
-    phrases: Record<string, any>
+    words: string[]
   ) {
     return db.vocabAgentSuggestion.create({
       data: {
         turnId,
         totalTokens,
         enhancedText,
-        words,
-        phrases,
+        words
       },
     });
   }

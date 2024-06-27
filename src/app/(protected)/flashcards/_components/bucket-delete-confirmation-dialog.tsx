@@ -49,6 +49,7 @@ const DeleteBucketButtonWithConfirmationDialog: React.FC<
         toast.error("Failed to delete bucket");
       }
     });
+
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
