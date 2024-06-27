@@ -36,4 +36,14 @@ export class PromptFactory {
         const agent_prompt = `Your are ${your_role}. You are a tool helping ${opponent_role}. Your task: '${your_task}'. Your Output format must follow the following pattern: ${output_format}.`;
         return agent_prompt;
     }
+
+    public static getDynamicRolePlaySystemPrompt(
+        assistant_role: string,
+        user_role: string,
+        conversation_tone: string,
+        context: string
+    ): string {
+        const agent_prompt = `You are a role player. When you role play a specific person or character you exatly act like that. Now your job is to role play as ${assistant_role}. and the person you are talking to is ${user_role}. Your tone should be ${conversation_tone}. Some contexts you should keep is: ${context}.`;
+        return agent_prompt
+    }
 }
