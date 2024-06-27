@@ -83,7 +83,7 @@ export function AddWordsSheet({
       </SheetTrigger>
       <SheetContent className="z-20">
         <SheetHeader>
-          <SheetTitle>Add Vocabulary to sheets</SheetTitle>
+          <SheetTitle>Add Vocabulary to Bucket(s)</SheetTitle>
           <SheetDescription>{`Click Add when you're done.`}</SheetDescription>
         </SheetHeader>
         <div>
