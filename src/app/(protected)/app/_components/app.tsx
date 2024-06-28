@@ -133,11 +133,11 @@ export default function App({
             setTimeout(() => {
               setMessages(data.messages);
               setConversationId(fetchConversationId);
-              console.log('data::', data);
+              // console.log('data::', data);
               if(data.roleplayResponse.hasRoleplayEnabled){
-                console.log('roleplayResponse::', data.roleplayResponse);
+                // console.log('roleplayResponse::', data.roleplayResponse);
                 const roleplayModeResponse = data.roleplayResponse.conversationRoleplay.Roleplay;
-                console.log('conv rolplay: ', roleplayModeResponse);
+                // console.log('conv rolplay: ', roleplayModeResponse);
                 setRoleplayMode({agent: "roleplay", ...roleplayModeResponse});
               }
               else{
@@ -167,7 +167,7 @@ export default function App({
     };
 
     fetchInitialConversation();
-  }, [fetchConversationId, setMessages, setConversationId, router]);
+  }, [fetchConversationId, setMessages, setConversationId, router, setRoleplayMode]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
