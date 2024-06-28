@@ -133,6 +133,16 @@ export default function App({
             setTimeout(() => {
               setMessages(data.messages);
               setConversationId(fetchConversationId);
+              console.log('data::', data);
+              if(data.roleplayResponse.hasRoleplayEnabled){
+                console.log('roleplayResponse::', data.roleplayResponse);
+                const roleplayModeResponse = data.roleplayResponse.conversationRoleplay.Roleplay;
+                console.log('conv rolplay: ', roleplayModeResponse);
+                setRoleplayMode({agent: "roleplay", ...roleplayModeResponse});
+              }
+              else{
+                setRoleplayMode({agent: "general"});
+              }
               // setRoleplayMode({})
               setProgress(100);
               setInitialFetchComplete(true);
