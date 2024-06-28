@@ -62,7 +62,6 @@ export function GenerateWordsTab({
   };
 
   const handleSaveWords = () => {
-    console.log("selected words: ", selectedWords);
     if (!selectedBucket) {
       toast.error("Please select a bucket");
       return;
@@ -108,7 +107,6 @@ export function GenerateWordsTab({
             content: msg.message,
           })
         );
-        console.log("api messages: ", apiMessages);
 
         const response = await fetch("/api/agents/word-suggest", {
           method: "POST",

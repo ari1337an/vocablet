@@ -22,13 +22,11 @@ import VocabAgentCompletion from "../vocab/completion";
 import UserRepo from "@/server/database/repositories/user";
 import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
 import VocabularyRepo from "@/server/database/repositories/vocabulary";
+import RoleplayRepo from "@/server/database/repositories/roleplay";
 
 export default async function RoleplayAgentCompletion(
     userId: string,
-    assistant_role: string,
-    user_role: string,
-    conversation_tone: string,
-    conversation_context: string,
+    roleplayId: string,
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
     conversationId?: string,
     requestNewConversation?: boolean,
@@ -41,10 +39,21 @@ export default async function RoleplayAgentCompletion(
             userId,
             messages,
             conversationId,
-            requestNewConversation
+            requestNewConversation,
+            roleplayId
         );
+        const roleplayResponse = await RoleplayRepo.findRoleplayById(roleplayId);
+        console.log('roleplay:::', roleplayResponse);
         let conversationIdCurrent = conversation.id;
-        let system_prompt = PromptFactory.getDynamicRolePlaySystemPrompt(assistant_role, user_role, conversation_tone, conversation_context);
+        let system_prompt;
+        if(roleplayResponse) {
+
+            system_prompt = PromptFactory.getDynamicRolePlaySystemPrompt(roleplayResponse?.assistantRole, roleplayResponse?.userRole, roleplayResponse?.conversationTone, roleplayResponse?.conversationContext);
+        }
+        else{
+            system_prompt = PromptFactory.getDefaultSystemPrompt();
+        }
+
         const [reply, totalTokens] = await OpenAITextCompletion(
             messages,
             system_prompt,

@@ -17,10 +17,8 @@ export async function POST(request: NextRequest) {
         const requestNewConversation = body.requestNewConversation;
         const useVocabAgent = body.useVocabAgent ?? false;
 
-        const assistant_role = body.assistant_role;
-        const user_role = body.user_role;
-        const conversation_tone = body.conversation_tone;
-        const conversation_context = body.conversation_context;
+        const roleplayId = body.roleplayId;
+        // console.log('roleplayId', roleplayId);
 
         // filter out the messages with 'agents' role
         const filteredMessages = messages.filter((msg: any) => msg.role !== "agent");
@@ -28,10 +26,7 @@ export async function POST(request: NextRequest) {
         // Call the completion function
         const data = await RoleplayAgentCompletion(
             userId,
-            assistant_role,
-            user_role,
-            conversation_tone,
-            conversation_context,
+            roleplayId,
             filteredMessages,
             conversationId,
             requestNewConversation,

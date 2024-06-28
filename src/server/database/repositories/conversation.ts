@@ -35,6 +35,17 @@ export default class ConversationRepo {
       },
     });
   }
+
+  static async CreateNewConversationWithRoleplay(userId: string, title: string, roleplayId: string) {
+    return await db.conversation.create({
+      data: {
+        title,
+        userId,
+        roleplayId, // Directly setting the roleplayId field
+      },
+    });
+  }
+
   static async GetConversationByUserIdAndConversationId(
     userId: string,
     conversationId: string
@@ -43,6 +54,26 @@ export default class ConversationRepo {
       where: {
         id: conversationId,
         userId,
+      },
+    });
+  }
+
+  static async GetRoleplayByConversationId(conversationId: string) {
+    return db.conversation.findUnique({
+      where: {
+        id: conversationId,
+      },
+      select: {
+        Roleplay: {
+          select: {
+            id: true,
+            title: true,
+            assistantRole: true,
+            userRole: true,
+            conversationTone: true,
+            conversationContext: true,
+          },
+        },
       },
     });
   }

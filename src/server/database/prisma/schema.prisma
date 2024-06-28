@@ -24,6 +24,7 @@ model User {
   Subscription Subscription[]
   Conversation Conversation[]
   Turn         Turn[]
+  Roleplay     Roleplay[]
 
   vocabularyBuckets VocabularyBucket[] // Vocabulary Buckets
 }
@@ -117,10 +118,12 @@ model Conversation {
   id        String   @id @default(cuid())
   title     String
   userId    String
+  roleplayId String?
   createdAt DateTime @default(now())
 
-  user User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Turn Turn[]
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Turn     Turn[]
+  Roleplay Roleplay? @relation(fields: [roleplayId], references: [id])
 }
 
 model Turn {
@@ -138,7 +141,7 @@ model Turn {
 }
 
 model VocabAgentSuggestion {
-  id           String @id @default(cuid())
+  id           String   @id @default(cuid())
   turnId       String
   totalTokens  Int
   words        String[]
@@ -160,10 +163,24 @@ model VocabularyBucket {
 }
 
 model Vocabulary {
-  id              String   @id @default(cuid())
-  bucketId        String
-  wordOrPhrase    String
-  createdAt       DateTime @default(now())
+  id           String   @id @default(cuid())
+  bucketId     String
+  wordOrPhrase String
+  createdAt    DateTime @default(now())
 
   bucket VocabularyBucket @relation(fields: [bucketId], references: [id], onDelete: Cascade)
+}
+
+model Roleplay {
+  id                  String   @id @default(cuid())
+  userId              String
+  title               String
+  assistantRole       String
+  userRole            String
+  conversationTone    String
+  conversationContext String
+  createdAt           DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
 }

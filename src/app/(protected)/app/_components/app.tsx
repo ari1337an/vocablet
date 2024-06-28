@@ -7,6 +7,9 @@ import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
 import { Progress } from "@/app/_components/ui/progress";
 import useAppStore from "../../_store/useAppStore";
+import { Label } from "@/app/_components/ui/label";
+import { Switch } from "@/app/_components/ui/switch";
+import { RoleplayingSwitchSheet } from "./roleplaying-switch-sheet";
 
 export default function App({
   session,
@@ -21,7 +24,8 @@ export default function App({
     addMessage,
     setMessages,
     setConversationId,
-    updateMessage,
+    roleplayMode,
+    setRoleplayMode,
     addConversation,
   } = useAppStore();
   const [isPending, startTransition] = useTransition();
@@ -45,32 +49,47 @@ export default function App({
 
         // Determine if this is a new conversation
         const requestNewConversation = messages.length === 0;
-
+        let response;
+        // console.log(roleplayMode);
+        if (roleplayMode.agent === "roleplay") {
+          response = await fetch("/api/agents/roleplay", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              roleplayId: roleplayMode.id,
+              messages: apiMessages,
+              conversationId: requestNewConversation ? null : conversationId,
+              requestNewConversation,
+              useVocabAgent: true,
+            }),
+          });
+        } else {
+          response = await fetch("/api/agents/general", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              messages: apiMessages,
+              conversationId: requestNewConversation ? null : conversationId,
+              requestNewConversation,
+              useVocabAgent: true,
+            }),
+          });
+        }
         // Make the POST request to the /api/agents/general endpoint
-        const response = await fetch("/api/agents/general", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            messages: apiMessages,
-            conversationId: requestNewConversation ? null : conversationId,
-            requestNewConversation,
-            useVocabAgent: true,
-          }),
-        });
 
         // Read the json response
         const data = await response.json();
 
         if (data.success) {
-          // Add the Agent Suggested text to the UI.
+          // Add the Agent Suggested text to the UI.          
           addMessage({
             role: "agent",
             enhancedText: data.vocab_agent_response.enhanced_text,
-            words: data.vocab_agent_response.words
-              ? JSON.parse(data.vocab_agent_response.words.replace(/'/g, '"'))
-              : null,
+            words: data.vocab_agent_response.enhanced_words
           });
 
           // Update the conversationId if it's a new conversation
@@ -80,7 +99,6 @@ export default function App({
 
           // Append the assistant's response to the messages array
           addMessage({ role: "assistant", message: data.message });
-
           // Append the new conversation to the conversations array
           addConversation({
             id: data.conversationId,
@@ -111,11 +129,11 @@ export default function App({
           );
           const data = await response.json();
           if (data.success) {
-            console.log(data)
             setProgress(60);
             setTimeout(() => {
               setMessages(data.messages);
               setConversationId(fetchConversationId);
+              // setRoleplayMode({})
               setProgress(100);
               setInitialFetchComplete(true);
             }, 1500);
@@ -161,6 +179,9 @@ export default function App({
 
   return (
     <div className="h-full flex flex-col items-center justify-between w-full relative">
+      <div className="flex justify-end w-full px-5">
+        <RoleplayingSwitchSheet />
+      </div>
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-y-5 lg:gap-x-5">
           <Link target="_blank" href="/subscription/buy/starter">
