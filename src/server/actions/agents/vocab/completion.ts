@@ -20,6 +20,7 @@ import WordSuggesterCompletion from "../word-suggest/completion";
 export default async function VocabAgentCompletion(
     userId: string,
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
+    minimum_words?: number,
 ) {
     try {
 
@@ -53,8 +54,13 @@ export default async function VocabAgentCompletion(
                 "Failed to generate a response or calculate total tokens."
             );
         }
+        let wordSuggestAgentResponse;
+        if(minimum_words){
+            wordSuggestAgentResponse = await WordSuggesterCompletion(userId, messages, minimum_words);
+        }else{
+            wordSuggestAgentResponse = await WordSuggesterCompletion(userId, messages);
+        }
         // console.log('message: ', messages);
-        const wordSuggestAgentResponse = await WordSuggesterCompletion(userId, messages);
         const {words} = wordSuggestAgentResponse;
         // console.log('words', words);
         // Post Validation of the response

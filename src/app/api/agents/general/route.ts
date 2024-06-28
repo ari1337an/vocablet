@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     const conversationId = body.conversationId;
     const requestNewConversation = body.requestNewConversation;
     const useVocabAgent = body.useVocabAgent ?? false;
+    const minimum_words = 3;
 
     // filter out the messages with 'agents' role
     const filteredMessages = messages.filter((msg: any) => msg.role !== "agent");
@@ -25,7 +26,8 @@ export async function POST(request: NextRequest) {
       filteredMessages,
       conversationId,
       requestNewConversation,
-      useVocabAgent
+      useVocabAgent,
+      minimum_words
     );
     
     // Check if the completion function was successful

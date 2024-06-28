@@ -27,11 +27,11 @@ export class PromptFactory {
         return agent_prompt;
     }
 
-    public static getWordSuggestSystemPrompt(): string {
+    public static getWordSuggestSystemPrompt(minimum_words=12): string {
         const your_role: string = "Vocablet AI Word Suggest Tool";
         const opponent_role: string = "English C2 Level Advanced Learners";
         const output_format: string = WORD_SUGGEST_OUTPUT_FORMAT;
-        const your_task: string = "You will only provide list of words based on the scenario given in the tripple quotation marks. You are not allowed to provide any other information. Suggest minimum 13 advanced level english words. Get creative with the word suggestion. The suggestions should be from the same domain as the scenario & suggest words that will help learners learn diverse range of vocabularies from the same domain. Do not suggest easy words.";
+        const your_task: string = `You will only provide list of words based on the scenario given in the tripple quotation marks. You are not allowed to provide any other information. Suggest minimum ${minimum_words} advanced level english words. Get creative with the word suggestion. The suggestions should be from the same domain as the scenario & suggest words that will help learners learn diverse range of vocabularies from the same domain. Do not suggest easy words.`;
 
         const agent_prompt = `Your are ${your_role}. You are a tool helping ${opponent_role}. Your task: '${your_task}'. Your Output format must follow the following pattern: ${output_format}.`;
         return agent_prompt;
