@@ -26,16 +26,22 @@ import VocabularyRepo from "@/server/database/repositories/vocabulary";
 export default async function WordSuggesterCompletion(
     userId: string,
     messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
+    minimum_words?: number,
 ) {
     try {
         // TODO: check if user have tokens to generate the response
 
         // Get the last message from the messages array.
         const lastMessage = messages[messages.length - 1];
+        let promptMessageWordSuggest;
+        if (minimum_words) {
+            promptMessageWordSuggest = `Provide minimum ${minimum_words} advanced & unique vocabularies based the the scenario & domain delimited by """. \n """ ${lastMessage.content} """`;
+        }
+        else {
 
+            promptMessageWordSuggest = `Provide minimum 12 advanced & unique vocabularies based the the scenario & domain delimited by """. \n """ ${lastMessage.content} """`;
+        }
 
-   
-        const promptMessageWordSuggest = `Provide minimum 12 and maximum 20 advanced & unique vocabularies based the the scenario & domain delimited by """. \n """ ${lastMessage.content} """`;
         const wordSuggestInput = {
             role: lastMessage.role,
             content: promptMessageWordSuggest,
@@ -49,8 +55,13 @@ export default async function WordSuggesterCompletion(
         const validatedWordSuggestMessage =
             ConversationWithOutSystemPromptSchema.parse([wordSuggestInput]);
 
-
-        let system_prompt = PromptFactory.getWordSuggestSystemPrompt();
+        let system_prompt;
+        if (minimum_words) {
+            system_prompt = PromptFactory.getWordSuggestSystemPrompt(minimum_words);
+        }else{
+            system_prompt = PromptFactory.getWordSuggestSystemPrompt();
+        }
+        
         const [reply, totalTokens] = await OpenAITextCompletion(
             validatedWordSuggestMessage,
             system_prompt,

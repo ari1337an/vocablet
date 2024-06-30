@@ -5,7 +5,7 @@ export interface MessageType {
   message?: string;
   suggestedMessage?: string;
   enhancedText?: string;
-  words?: { [key: string]: string };
+  words?: string[];
   // phrases?: { [key: string]: string };
 }
 
@@ -15,22 +15,36 @@ export interface Conversation {
   createdAt: string;
 }
 
+export interface Roleplay {
+  agent: "general" | "roleplay";
+  id?: string;
+  title?: string;
+  assistantRole?: string;
+  userRole?: string;
+  conversationTone?: string;
+  conversationContext?: string;
+}
+
 interface AppState {
   messages: MessageType[];
   conversationId: string | null;
   conversations: Conversation[];
+  roleplayMode: Roleplay;
   addMessage: (message: MessageType) => void;
   setMessages: (messages: MessageType[]) => void;
   setConversationId: (id: string | null) => void;
   setConversations: (conversations: Conversation[]) => void;
   addConversation: (conversation: Conversation) => void;
   updateMessage: (index: number, updatedFields: Partial<MessageType>) => void;
+  setRoleplayMode: (roleplayMode: Roleplay) => void;
+  updateRoleplayFields: (updatedFields: Partial<Roleplay>) => void;
 }
 
 const useAppStore = create<AppState>((set) => ({
   messages: [],
   conversationId: null,
   conversations: [],
+  roleplayMode: { agent: "general" },
   addMessage: (message) =>
     set((state) => ({ messages: [...state.messages, message] })),
   setMessages: (messages) => set({ messages }),
@@ -44,6 +58,11 @@ const useAppStore = create<AppState>((set) => ({
       updatedMessages[index] = { ...updatedMessages[index], ...updatedFields };
       return { messages: updatedMessages };
     }),
+  setRoleplayMode: (roleplayMode) => set({ roleplayMode }),
+  updateRoleplayFields: (updatedFields) =>
+    set((state) => ({
+      roleplayMode: { ...state.roleplayMode, ...updatedFields },
+    })),
 }));
 
 export default useAppStore;

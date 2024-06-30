@@ -1,0 +1,55 @@
+// TODOimport GeneralAgentCompletion from "@/server/actions/agents/general/completion";
+import RoleplayAgentCompletion from "@/server/actions/agents/roleplay/complete";
+import VocabAgentCompletion from "@/server/actions/agents/vocab/completion";
+import GetUserIdFromReq from "@/server/actions/auth/get-userId-from-req";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+    try {
+        const userId = await GetUserIdFromReq(request);
+        if (!userId) {
+            throw new Error("Unauthorized request.");
+        }
+
+        const body = await request.json();
+        const messages = body.messages;
+        const conversationId = body.conversationId;
+        const requestNewConversation = body.requestNewConversation;
+        const useVocabAgent = body.useVocabAgent ?? false;
+
+        const roleplayId = body.roleplayId;
+        // console.log('roleplayId', roleplayId);
+
+        // filter out the messages with 'agents' role
+        const filteredMessages = messages.filter((msg: any) => msg.role !== "agent");
+
+        // Call the completion function
+        const data = await RoleplayAgentCompletion(
+            userId,
+            roleplayId,
+            filteredMessages,
+            conversationId,
+            requestNewConversation,
+            useVocabAgent
+        );
+
+        // Check if the completion function was successful
+        if (!data.success)
+            throw new Error(data.message as string | "Completion error.");
+
+        // Return the completion response
+        return Response.json(
+            {
+                ...data,
+            },
+            {
+                status: 200,
+            }
+        );
+    } catch (error) {
+        return NextResponse.json(
+            { success: false, message: (error as Error).message },
+            { status: 500 }
+        );
+    }
+}

@@ -16,7 +16,8 @@ export default async function validateOrCreateConversation(
   userId: string,
   messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
   conversationId?: string,
-  requestNewConversation?: boolean
+  requestNewConversation?: boolean,
+  roleplayId?: string
 ) {
   if (!conversationId && !requestNewConversation) {
     throw new Error(
@@ -33,12 +34,19 @@ export default async function validateOrCreateConversation(
     // generate title from messages
     // TODO: Implement a better way to generate the title
     const title = valdiatedMessage[0].content.trim().slice(0, 50);
+    let conversation;
 
+    if (roleplayId) {
+      conversation = await ConversationRepo.CreateNewConversationWithRoleplay(userId, title, roleplayId);
+    }
+    else {
+
+      conversation = await ConversationRepo.CreateNewConversation(
+        userId,
+        title
+      );
+    }
     // Create a new conversation
-    const conversation = await ConversationRepo.CreateNewConversation(
-      userId,
-      title
-    );
     if (!conversation) throw new Error("Failed to create a new conversation.");
 
     return conversation;
