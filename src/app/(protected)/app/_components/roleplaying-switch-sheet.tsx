@@ -116,7 +116,7 @@ export function RoleplayingSwitchSheet({
           {(selectedRoleplay  || activeTab == "general")&& (
             <Button onClick={() => handleSetButton()}>Set</Button>
           )}
-          <SheetDescription>{`Click Set when you're done.`}</SheetDescription>
+          <SheetDescription>{`Select a roleplaying template or create new`}</SheetDescription>
         </SheetHeader>
         <Tabs defaultValue="roleplay" onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
