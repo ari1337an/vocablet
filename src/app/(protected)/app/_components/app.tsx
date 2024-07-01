@@ -190,7 +190,7 @@ export default function App({
   return (
     <div className="h-full flex flex-col items-center justify-between w-full relative">
       <div className="flex justify-end w-full px-5">
-        <RoleplayingSwitchSheet />
+        <RoleplayingSwitchSheet conversationOngoing={conversationId === null ? false: true} />
       </div>
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-y-5 lg:gap-x-5">

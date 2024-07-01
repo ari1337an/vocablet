@@ -46,11 +46,11 @@ const formSchema = z.object({
   assistantRole: z
     .string()
     .min(3, { message: "Assistant role must be at least 3 characters." })
-    .max(50, { message: "Assistant role cannot be more than 50 characters." }),
+    .max(100, { message: "Assistant role cannot be more than 50 characters." }),
   userRole: z
     .string()
     .min(2, { message: "User role be at least 3 characters." })
-    .max(50, { message: "User role cannot be more than 50 characters." }),
+    .max(100, { message: "User role cannot be more than 50 characters." }),
   conversationTone: z
     .string()
     .min(3, { message: "Conversation tone must be at least 3 characters." })

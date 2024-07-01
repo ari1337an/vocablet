@@ -56,13 +56,24 @@ interface Roleplay {
   conversationContext: string;
 }
 
-export function RoleplayingSwitchSheet() {
+export function RoleplayingSwitchSheet({
+  conversationOngoing,
+}: {
+  conversationOngoing: boolean;
+}) {
   const { roleplayMode, setRoleplayMode } = useAppStore();
+  const [isMounted, setIsMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedRoleplay, setSelectedRoleplay] = useState<Roleplay | null>(null);
+  const [selectedRoleplay, setSelectedRoleplay] = useState<Roleplay | null>(
+    null
+  );
   const [activeTab, setActiveTab] = useState("roleplay");
 
   const handleSetButton = () => {
+    if(conversationOngoing) {
+      toast.error("Cannot change roleplay mode during conversation.");
+      return;
+    }
     if (selectedRoleplay && activeTab == "roleplay") {
       setRoleplayMode({
         agent: "roleplay",
@@ -74,8 +85,7 @@ export function RoleplayingSwitchSheet() {
         conversationContext: selectedRoleplay.conversationContext,
       });
       setOpen(false);
-    }
-    else{
+    } else {
       setRoleplayMode({
         agent: "general",
       });
@@ -83,16 +93,25 @@ export function RoleplayingSwitchSheet() {
     }
   };
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
-        <div>
+        {/* <div> */}
+        {isMounted ? (
           <Switch
             checked={roleplayMode.agent === "roleplay"}
             id="roleplay-mode"
           />
-          <Label>Roleplay Mode</Label>
-        </div>
+        ) : (
+          <div></div>
+        )}
+
+        <Label>Roleplay Mode</Label>
+        {/* </div> */}
       </SheetTrigger>
       <SheetContent className="z-20">
         <SheetHeader>
