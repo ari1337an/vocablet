@@ -261,7 +261,7 @@ export function RoleplayTab({
             />
             <SheetFooter>
               <Button type="submit">Create New</Button>
-              <Button onClick={() => {}}>Update</Button>
+              {/* <Button onClick={() => {}}>Update</Button> */}
             </SheetFooter>
           </form>
         </Form>
