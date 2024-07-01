@@ -70,7 +70,7 @@ export function RoleplayingSwitchSheet({
   const [activeTab, setActiveTab] = useState("roleplay");
 
   const handleSetButton = () => {
-    if(conversationOngoing) {
+    if (conversationOngoing) {
       toast.error("Cannot change roleplay mode during conversation.");
       return;
     }
@@ -100,7 +100,6 @@ export function RoleplayingSwitchSheet({
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
-        {/* <div> */}
         {isMounted ? (
           <Switch
             checked={roleplayMode.agent === "roleplay"}
@@ -109,14 +108,14 @@ export function RoleplayingSwitchSheet({
         ) : (
           <div></div>
         )}
-
         <Label>Roleplay Mode</Label>
-        {/* </div> */}
       </SheetTrigger>
-      <SheetContent className="z-20">
+      <SheetContent className="h-full overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Add Vocabulary to Bucket(s)</SheetTitle>
-          <Button onClick={() => handleSetButton()}>Set</Button>
+          <SheetTitle>Roleplay Mode</SheetTitle>
+          {(selectedRoleplay  || activeTab == "general")&& (
+            <Button onClick={() => handleSetButton()}>Set</Button>
+          )}
           <SheetDescription>{`Click Set when you're done.`}</SheetDescription>
         </SheetHeader>
         <Tabs defaultValue="roleplay" onValueChange={setActiveTab}>
@@ -124,7 +123,6 @@ export function RoleplayingSwitchSheet({
             <TabsTrigger value="roleplay">Roleplay</TabsTrigger>
             <TabsTrigger value="general">General</TabsTrigger>
           </TabsList>
-
           <TabsContent value="roleplay">
             <RoleplayTab
               setOpen={setOpen}
