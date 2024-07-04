@@ -7,8 +7,6 @@ export default async function InsertVocabularyInBucketAction(bucketId: string, v
         const vocab = await VocabularyRepo.createVocabulary(
             bucketId,
             vocabulary,
-            "phrase",
-            "example sentence"
         );
         return { success: true, vocab };
     } catch (error) {
