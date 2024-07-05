@@ -56,13 +56,24 @@ interface Roleplay {
   conversationContext: string;
 }
 
-export function RoleplayingSwitchSheet() {
+export function RoleplayingSwitchSheet({
+  conversationOngoing,
+}: {
+  conversationOngoing: boolean;
+}) {
   const { roleplayMode, setRoleplayMode } = useAppStore();
+  const [isMounted, setIsMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedRoleplay, setSelectedRoleplay] = useState<Roleplay | null>(null);
+  const [selectedRoleplay, setSelectedRoleplay] = useState<Roleplay | null>(
+    null
+  );
   const [activeTab, setActiveTab] = useState("roleplay");
 
   const handleSetButton = () => {
+    if (conversationOngoing) {
+      toast.error("Cannot change roleplay mode during conversation.");
+      return;
+    }
     if (selectedRoleplay && activeTab == "roleplay") {
       setRoleplayMode({
         agent: "roleplay",
@@ -74,8 +85,7 @@ export function RoleplayingSwitchSheet() {
         conversationContext: selectedRoleplay.conversationContext,
       });
       setOpen(false);
-    }
-    else{
+    } else {
       setRoleplayMode({
         agent: "general",
       });
@@ -83,29 +93,36 @@ export function RoleplayingSwitchSheet() {
     }
   };
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
-        <div>
+        {isMounted ? (
           <Switch
             checked={roleplayMode.agent === "roleplay"}
             id="roleplay-mode"
           />
-          <Label>Roleplay Mode</Label>
-        </div>
+        ) : (
+          <div></div>
+        )}
+        <Label>Roleplay Mode</Label>
       </SheetTrigger>
-      <SheetContent className="z-20">
+      <SheetContent className="h-full overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Add Vocabulary to Bucket(s)</SheetTitle>
-          <Button onClick={() => handleSetButton()}>Set</Button>
-          <SheetDescription>{`Click Set when you're done.`}</SheetDescription>
+          <SheetTitle>Roleplay Mode</SheetTitle>
+          {(selectedRoleplay  || activeTab == "general")&& (
+            <Button onClick={() => handleSetButton()}>Set</Button>
+          )}
+          <SheetDescription>{`Select a roleplaying template or create new`}</SheetDescription>
         </SheetHeader>
         <Tabs defaultValue="roleplay" onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="roleplay">Roleplay</TabsTrigger>
             <TabsTrigger value="general">General</TabsTrigger>
           </TabsList>
-
           <TabsContent value="roleplay">
             <RoleplayTab
               setOpen={setOpen}
