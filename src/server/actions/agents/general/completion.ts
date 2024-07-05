@@ -4,7 +4,6 @@ import { z } from "zod";
 import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { PromptFactory } from "@/server/prompts/prompt-factory";
-import DeductTokenFromUserAccountForMessage from "../../usage/token-deduction";
 import TurnRepo from "@/server/database/repositories/turn";
 import VocabAgentSuggestionRepo from "@/server/database/repositories/vocab-agent-suggestion";
 import validateOrCreateConversation from "./validate-conversation-id";
@@ -72,13 +71,6 @@ export default async function GeneralAgentCompletion(
     if (!turn || !isValidJson(JSON.stringify(turn))) {
       throw new Error("Failed to record the turn in the database.");
     }
-
-    // Deduct tokens from the user's account
-    await DeductTokenFromUserAccountForMessage(
-      userId,
-      turn.id,
-      parseInt(totalTokens + "", 10)
-    );
 
     // Validate token deduction response (assuming it returns a value)
     if (!isValidJson(JSON.stringify({ userId, turnId: turn.id, totalTokens }))) {

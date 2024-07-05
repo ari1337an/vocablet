@@ -14,14 +14,8 @@ import { z } from "zod";
 import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { PromptFactory } from "@/server/prompts/prompt-factory";
-import DeductTokenFromUserAccountForMessage from "../../usage/token-deduction";
-import TurnRepo from "@/server/database/repositories/turn";
-import VocabAgentSuggestionRepo from "@/server/database/repositories/vocab-agent-suggestion";
-// import validateOrCreateConversation from "./validate-conversation-id";
-import VocabAgentCompletion from "../vocab/completion";
 import UserRepo from "@/server/database/repositories/user";
 import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
-import VocabularyRepo from "@/server/database/repositories/vocabulary";
 
 export default async function WordSuggesterCompletion(
     userId: string,
