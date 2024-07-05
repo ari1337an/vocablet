@@ -12,56 +12,34 @@ export default async function SubscriptionPage() {
     session.user.userId
   );
 
-  const subscriptionsActive =
-    await SubscriptionRepo.findAllActiveSubscriptionByUserId(
-      session.user.userId
-    );
-
-  const unUsedUnits =
-    subscriptionsActive.reduce(
-      (acc: number, sub: any) => acc + sub.maxUsageUnit,
-      0
-    ) -
-    subscriptionsActive.reduce(
-      (acc: number, sub: any) => acc + sub.usedUnit,
-      0
-    );
-
   return (
     <div className="flex flex-col gap-y-10 items-center justify-center h-full">
-      <h2 className="font-bold text-2xl underline">
-        You have {unUsedUnits} AI Tokens
-      </h2>
       {subscriptions.length === 0 ? (
         <div className="text-center text-lg">
-          You don&apos;t have any subscriptions!
+          You don&apos;t have any subscription!
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-white">
+        <div className="flex flex-col items-center justify-center">
           {subscriptions.map((subscription: any) => (
             <div
               key={subscription.stripeCustomerId || `topup-${subscription.id}`}
-              className="subscription-item bg-secondary p-6 rounded-lg shadow-md border border-gray-200"
+              className="bg-black px-12 py-10 rounded-lg shadow-md border "
             >
-              {subscription.stripeCustomerId && (
+              {subscription.stripePriceId ===
+                process.env.PRICING_PLAN_1_PRICE_ID && (
                 <p className="text-sm ">
-                  Subscription ID: {subscription.stripeCustomerId}
+                  Plan: {process.env.PRICING_PLAN_1_NAME}
                 </p>
               )}
-              {subscription.stripeSubscriptionActive &&
-                !subscription.stripeInvoiceFailed && (
-                  <>
-                    <p className="text-sm">
-                      Max Usage Units: {subscription.maxUsageUnit}
-                    </p>
-                    <p className="text-sm">
-                      Used Units: {subscription.usedUnit}
-                    </p>
-                  </>
-                )}
+              {subscription.stripePriceId ===
+                process.env.PRICING_PLAN_2_PRICE_ID && (
+                <p className="text-sm ">
+                  Plan: {process.env.PRICING_PLAN_2_NAME}
+                </p>
+              )}
 
               <p className="text-sm">
-                Active:{" "}
+                Status:{" "}
                 {subscription.stripeSubscriptionActive &&
                 !subscription.stripeInvoiceFailed ? (
                   <span className="text-green-600 font-bold">ACTIVE</span>
@@ -74,16 +52,19 @@ export default async function SubscriptionPage() {
                 )}
               </p>
 
-              {subscription.stripeSubscriptionActive && !subscription.stripeInvoiceFailed && (
-                <p className="text-sm">
-                  Renews:{" "}
-                  {subscription.stripeSubscriptionExpires === null ? (
-                    <span className="text-green-600 font-bold">Each month</span>
-                  ) : (
-                    <span className="text-red-600 font-bold">NO</span>
-                  )}
-                </p>
-              )}
+              {subscription.stripeSubscriptionActive &&
+                !subscription.stripeInvoiceFailed && (
+                  <p className="text-sm">
+                    Renews:{" "}
+                    {subscription.stripeSubscriptionExpires === null ? (
+                      <span className="text-green-600 font-bold">
+                        Each month
+                      </span>
+                    ) : (
+                      <span className="text-red-600 font-bold">NO</span>
+                    )}
+                  </p>
+                )}
 
               {subscription.stripeCustomerId && (
                 <a

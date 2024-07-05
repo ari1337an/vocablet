@@ -1,13 +1,10 @@
 import { auth } from "@/server/authentication/auth";
-import { PlanType } from "@prisma/client";
 import Stripe from "stripe";
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export default async function createCheckoutSession(
-  priceId: string,
-  type: string,
-  maxUsageUnit: number
+  priceId: string
 ) {
   try {
     // Check if the user is authenticated, if not return unauthorized, else get the user id and email
@@ -29,20 +26,12 @@ export default async function createCheckoutSession(
 
     // Set the session mode based on the plan type
     let sessionMode = "subscription";
-    if (type.toUpperCase() === PlanType.ONETIME) {
-      sessionMode = "payment";
-    } else if (type.toUpperCase() === PlanType.MONTHLY) {
-      sessionMode = "subscription";
-    } else {
-      return { success: false, message: "Invalid Plan Type!" };
-    }
-
+   
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
       metadata: {
         user_id: userId,
         price_id: priceId,
-        max_usage_limit: maxUsageUnit,
       },
       customer_email: email,
       payment_method_types: ["card"],
@@ -52,7 +41,7 @@ export default async function createCheckoutSession(
           quantity: 1,
         },
       ],
-      mode: sessionMode == "subscription" ? "subscription" : "payment",
+      mode: "subscription",
       success_url: `https://${process.env.AWS_SES_DOMAIN}/subscription/success`,
       cancel_url: `https://${process.env.AWS_SES_DOMAIN}/subscription/cancel`,
     });
