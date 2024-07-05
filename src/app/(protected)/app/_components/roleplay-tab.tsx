@@ -46,11 +46,11 @@ const formSchema = z.object({
   assistantRole: z
     .string()
     .min(3, { message: "Assistant role must be at least 3 characters." })
-    .max(50, { message: "Assistant role cannot be more than 50 characters." }),
+    .max(100, { message: "Assistant role cannot be more than 50 characters." }),
   userRole: z
     .string()
     .min(2, { message: "User role be at least 3 characters." })
-    .max(50, { message: "User role cannot be more than 50 characters." }),
+    .max(100, { message: "User role cannot be more than 50 characters." }),
   conversationTone: z
     .string()
     .min(3, { message: "Conversation tone must be at least 3 characters." })
@@ -151,9 +151,9 @@ export function RoleplayTab({
     <div className="grid gap-4 py-4 max-h-fit">
       <ScrollArea>
         <Command className="w-full z-50">
-          <CommandInput placeholder="Search bucket..." className="h-9 z-50" />
+          <CommandInput placeholder="Search Roleplay Template..." className="h-9 z-50" />
           <CommandList className="z-50 h-40">
-            <CommandEmpty>No bucket found.</CommandEmpty>
+            <CommandEmpty>No Roleplay template found.</CommandEmpty>
             <CommandGroup>
               {loadedRoleplays.map((roleplay) => (
                 <CommandItem
@@ -251,7 +251,7 @@ export function RoleplayTab({
                   <FormLabel>Conversation Context</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={roleplayMode.conversationContext}
+                      placeholder={selectedRoleplay?.conversationContext}
                       {...field}
                     />
                   </FormControl>
@@ -261,7 +261,7 @@ export function RoleplayTab({
             />
             <SheetFooter>
               <Button type="submit">Create New</Button>
-              <Button onClick={() => {}}>Update</Button>
+              {/* <Button onClick={() => {}}>Update</Button> */}
             </SheetFooter>
           </form>
         </Form>
