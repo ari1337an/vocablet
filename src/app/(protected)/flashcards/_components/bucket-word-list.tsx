@@ -30,7 +30,6 @@ import {
 } from "@tanstack/react-table";
 import { Input } from "@/app/_components/ui/input";
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import EditIcon from "@/app/_icons/edit";
 import { EditBucketSheet } from "./edit-bucket-sheet";
 
 interface Flashcard {
@@ -50,6 +49,7 @@ export default function BucketWordList({
 }) {
   const {} = useAppStore();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -70,6 +70,7 @@ export default function BucketWordList({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="flex items-center"
         >
           Word/Phrase
           <CaretSortIcon className="ml-2 h-4 w-4" />
@@ -133,7 +134,6 @@ export default function BucketWordList({
       const response = await fetch("/api/buckets/" + fetchBucketId);
       const data = await response.json();
       if (data.success) {
-        // setBucketName(data.bucket.title);
         setBucket(data.bucket);
         setFlashcards(data.bucket.Vocabulary);
         setInitialFetchComplete(true);
@@ -206,14 +206,13 @@ export default function BucketWordList({
 
   return (
     <div className="flex flex-col gap-y-5">
-      <div className="w-full flex flex-col justify-end items-start px-8 lg:px-36 2xl:px-60 text-white sticky top-0 bg-secondary z-10">
+      <div className="w-full flex flex-col justify-end items-start px-4 lg:px-16 text-white sticky top-0 bg-secondary z-10">
         <div className="flex flex-row justify-between w-full py-4 items-center">
-          <div className="flex flex-row">
-            <h1 className="text-2xl font-bold">{bucket.title}</h1>
+          <div className="flex flex-row items-center">
+            <h1 className="text-2xl font-bold mr-4">{bucket.title}</h1>
             <EditBucketSheet currentBucket={bucket} setBucket={setBucket} />
-            {/* <EditIcon className="w-5 h-5 fill-white mx-4" /> */}
           </div>
-          <div className="p-4 flex flex-row justify-between items-center w-48">
+          <div className="hidden sm:flex items-center space-x-4">
             {selectionState && (
               <DeleteButtonWithConfirmationDialog
                 vocabularies={selectedFlashcards}
@@ -241,10 +240,53 @@ export default function BucketWordList({
               {selectionState ? "Cancel" : "Select"}
             </Button>
           </div>
+          <div className="sm:hidden relative">
+            <Button className="p-4" onClick={() => setMenuOpen(!menuOpen)}>
+              Menu
+            </Button>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-dark rounded-md shadow-lg z-50">
+                <div className="py-1">
+                  {!selectionState && (
+                    <AddWordsSheet
+                      currentBucketId={fetchBucketId}
+                      onAddVocab={handleAddVocabulary}
+                    />
+                  )}
+                  {!selectionState && (
+                    <Button
+                      className="w-full text-left px-4 py-2"
+                      onClick={handleLearnButton}
+                    >
+                      Learn
+                    </Button>
+                  )}
+                  <Button
+                    className="w-full text-left px-4 py-2"
+                    onClick={handleSelectionState}
+                  >
+                    {selectionState ? "Cancel" : "Select"}
+                  </Button>
+                  {selectionState && (
+                    <DeleteButtonWithConfirmationDialog
+                      vocabularies={selectedFlashcards}
+                      setFlashcards={setFlashcards}
+                    />
+                  )}
+                  {selectionState && (
+                    <ShareVocabularyButtonSheet
+                      vocabularies={selectedFlashcards}
+                      buckets={buckets}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <Separator className="my-4 bg-slate-100" />
+        <Separator className="my-4 bg-gray-300" />
       </div>
-      <div className="w-full flex items-center py-4 px-8 lg:px-36 2xl:px-60 text-white z-0">
+      <div className="w-full flex items-center py-4 px-4 lg:px-16 text-white z-0">
         <Input
           placeholder="Filter words..."
           value={
@@ -256,7 +298,7 @@ export default function BucketWordList({
           className="max-w-sm"
         />
       </div>
-      <div className="w-full overflow-y-auto px-8 lg:px-36 2xl:px-60 text-white z-0">
+      <div className="w-full overflow-y-auto px-4 lg:px-16 text-white z-0">
         {flashcards.length > 0 ? (
           <div className="w-full rounded-md border">
             <Table className="w-full">
@@ -279,7 +321,7 @@ export default function BucketWordList({
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} className="border-b border-gray-300">
+                    <TableRow key={row.id} className="border-b border-gray-200">
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
@@ -294,7 +336,7 @@ export default function BucketWordList({
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
-                      className="h-24 text-center border-r border-gray-300"
+                      className="h-24 text-center border-r border-gray-200"
                     >
                       No results.
                     </TableCell>
@@ -307,7 +349,7 @@ export default function BucketWordList({
           <div className="text-xl">There are no words in this bucket.</div>
         )}
       </div>
-      <div className="w-full flex items-center justify-end space-x-2 py-4 px-8 lg:px-36 2xl:px-60 text-white z-0">
+      <div className="w-full flex items-center justify-end space-x-2 py-4 px-4 lg:px-16 text-white z-0">
         <div className="space-x-2">
           <Button
             variant="outline"

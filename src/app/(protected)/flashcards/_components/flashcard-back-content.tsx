@@ -95,18 +95,20 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
                   Here are other meanings of the word or phrase.
                 </DialogDescription>
               </DialogHeader>
-              <ul>
-                {definitions.slice(1).map((def, index) => (
-                  <li key={index} className="mb-2">
-                    <strong>{def.partOfSpeech}:</strong> {def.definition}
-                    {def.example && (
-                      <p>
-                        <strong>Example:</strong> {def.example}
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
+              <ScrollArea className="max-h-[200px]">
+                <ul>
+                  {definitions.slice(1).map((def, index) => (
+                    <li key={index} className="mb-2">
+                      <strong>{def.partOfSpeech}:</strong> {def.definition}
+                      {def.example && (
+                        <p>
+                          <strong>Example:</strong> {def.example}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </ScrollArea>
             </DialogContent>
           </Dialog>
         )}
