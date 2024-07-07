@@ -10,6 +10,8 @@ import useAppStore from "../../_store/useAppStore";
 import { Label } from "@/app/_components/ui/label";
 import { Switch } from "@/app/_components/ui/switch";
 import { RoleplayingSwitchSheet } from "./roleplaying-switch-sheet";
+import { FlipWords } from "@/app/(landing)/_aceternity/flip-words";
+import { CommandShortcut } from "@/app/_components/ui/command";
 
 export default function App({
   session,
@@ -85,11 +87,11 @@ export default function App({
         const data = await response.json();
 
         if (data.success) {
-          // Add the Agent Suggested text to the UI.          
+          // Add the Agent Suggested text to the UI.
           addMessage({
             role: "agent",
             enhancedText: data.vocab_agent_response.enhanced_text,
-            words: data.vocab_agent_response.enhanced_words
+            words: data.vocab_agent_response.enhanced_words,
           });
 
           // Update the conversationId if it's a new conversation
@@ -134,14 +136,14 @@ export default function App({
               setMessages(data.messages);
               setConversationId(fetchConversationId);
               // console.log('data::', data);
-              if(data.roleplayResponse.hasRoleplayEnabled){
+              if (data.roleplayResponse.hasRoleplayEnabled) {
                 // console.log('roleplayResponse::', data.roleplayResponse);
-                const roleplayModeResponse = data.roleplayResponse.conversationRoleplay.Roleplay;
+                const roleplayModeResponse =
+                  data.roleplayResponse.conversationRoleplay.Roleplay;
                 // console.log('conv rolplay: ', roleplayModeResponse);
-                setRoleplayMode({agent: "roleplay", ...roleplayModeResponse});
-              }
-              else{
-                setRoleplayMode({agent: "general"});
+                setRoleplayMode({ agent: "roleplay", ...roleplayModeResponse });
+              } else {
+                setRoleplayMode({ agent: "general" });
               }
               // setRoleplayMode({})
               setProgress(100);
@@ -167,7 +169,13 @@ export default function App({
     };
 
     fetchInitialConversation();
-  }, [fetchConversationId, setMessages, setConversationId, router, setRoleplayMode]);
+  }, [
+    fetchConversationId,
+    setMessages,
+    setConversationId,
+    router,
+    setRoleplayMode,
+  ]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -190,16 +198,20 @@ export default function App({
   return (
     <div className="h-full flex flex-col items-center justify-between w-full relative">
       <div className="flex justify-end w-full px-5">
-        <RoleplayingSwitchSheet conversationOngoing={conversationId === null ? false: true} />
+        <RoleplayingSwitchSheet
+          conversationOngoing={conversationId === null ? false : true}
+        />
       </div>
       {messages.length === 0 ? (
-        <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-y-5 lg:gap-x-5">
-          <Link target="_blank" href="/subscription/buy/starter">
+        <div className="flex-1 flex flex-col items-center justify-center gap-y-5 lg:gap-x-5">
+          {/* <div className="text-4xl font-extrabold"><FlipWords words={["Hi"]} /> <br /></div> */}
+          <div className="text-muted-foreground">Write something in the chatbox and hit <CommandShortcut>Enter</CommandShortcut>.</div>
+          {/* <Link target="_blank" href="/subscription/buy/starter">
             <Button>Buy Starter $14.99</Button>
           </Link>
           <Link target="_blank" href="/subscription/buy/pro">
             <Button>Buy Pro $29.99</Button>
-          </Link>
+          </Link> */}
         </div>
       ) : (
         <div

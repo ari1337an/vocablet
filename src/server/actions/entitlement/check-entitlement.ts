@@ -7,6 +7,7 @@ export enum EntitlementSlugs {
   VOCABLET_AI_CHAT_UNLIMITED = "vocablet-ai-chat-unlimited", // for unlimited limits in each chat
   VOCABLET_FLASHCARDS_LEARNING = "vocablet-flashcards-learning", // for flashcards features
   VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT = "vocablet-roleplay-feature-in-ai-chat", // for roleplay features
+  VOCABLET_MEANING_AGENT = "vocablet-meaning-agent" // for meaning agent.
 }
 
 // DTO for enum to string conversion
