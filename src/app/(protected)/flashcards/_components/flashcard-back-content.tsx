@@ -40,7 +40,7 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
           `https://api.dictionaryapi.dev/api/v2/entries/en/${wordOrPhrase}`
         );
         const data = await response.json();
-
+        console.log(data);
         if (Array.isArray(data) && data.length > 0) {
           const definitionsList = data[0].meanings.flatMap((meaning: any) =>
             meaning.definitions.map((def: any) => ({
@@ -104,14 +104,14 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
             </li>
           )}
         </ul>
-        
-        {definitions.length > 1 && (
+
+        {definitions.length > 0 && (
           <Dialog>
             <DialogTrigger
               className="p-2 bg-primary text-white rounded"
               onClick={(e) => e.stopPropagation()}
             >
-              Show Others
+              Show All
             </DialogTrigger>
             <DialogContent
               onOpenAutoFocus={(event) => event.preventDefault()}
@@ -124,8 +124,32 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
                   Here are other meanings of the word or phrase.
                 </DialogDescription>
               </DialogHeader>
-              <ScrollArea className="max-h-[200px]">
-                <ul>
+              <ScrollArea className="max-h-screen p-4 space-y-4">
+                {definitions.length === 0 ? (
+                  <p className="text-center text-gray-500">
+                    Searching meaning...
+                  </p>
+                ) : (
+                  definitions.map((def, index) => (
+                    <div
+                      key={index}
+                      className="p-4 bg-primary rounded-lg shadow-md"
+                    >
+                      <h2 className="text-xl font-semibold text-primary-500 mb-2">
+                        {def.partOfSpeech}
+                      </h2>
+                      <p className="text-gray-100 mb-2">
+                        <strong>Definition:</strong> {def.definition}
+                      </p>
+                      {def.example && (
+                        <p className="text-gray-100 italic">
+                          <strong>Example:</strong> {def.example}
+                        </p>
+                      )}
+                    </div>
+                  ))
+                )}
+                {/* <ul>
                   {definitions.slice(1).map((def, index) => (
                     <li key={index} className="mb-2">
                       <strong>{def.partOfSpeech}:</strong> {def.definition}
@@ -136,7 +160,7 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
                       )}
                     </li>
                   ))}
-                </ul>
+                </ul> */}
               </ScrollArea>
             </DialogContent>
           </Dialog>
