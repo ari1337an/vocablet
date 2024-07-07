@@ -49,7 +49,7 @@ export async function checkEntitlement(
 
     // Check if entitlementSlug is present in user's entitlements
     return usersEntitlements.some(
-      (entitlement: Entitlement) => entitlement.feature === EntitlementSlugDTO.toString(entitlementSlug)
+      (entitlement: Entitlement) => entitlement.feature === EntitlementSlugDTO.toString(entitlementSlug) && entitlement.active === true
     );
   } catch (error) {
     throw new Error((error as Error).message);
