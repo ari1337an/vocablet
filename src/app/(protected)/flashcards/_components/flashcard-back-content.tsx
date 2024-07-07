@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
+import { Button } from "@/app/_components/ui/button";
 
 interface Definition {
   definition: string;
@@ -23,6 +24,7 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
   wordOrPhrase,
 }) => {
   const [definitions, setDefinitions] = useState<Definition[]>([]);
+  const [showAIGeneration, setShowAIGeneration] = useState(false);
 
   useEffect(() => {
     const fetchMeaning = async () => {
@@ -31,7 +33,6 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
           `https://api.dictionaryapi.dev/api/v2/entries/en/${wordOrPhrase}`
         );
         const data = await response.json();
-
         if (Array.isArray(data) && data.length > 0) {
           const definitionsList = data[0].meanings.flatMap((meaning: any) =>
             meaning.definitions.map((def: any) => ({
@@ -57,63 +58,94 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
     fetchMeaning();
   }, [wordOrPhrase]);
 
+  const generateMeaningWithAI = async () => {
+    setShowAIGeneration(true);
+    try {
+      const response = await fetch("/api/generate-meaning", { method: "POST" });
+      const data = await response.json();
+      setDefinitions([data]);
+    } catch (error) {
+      console.error(error);
+      setDefinitions([
+        { definition: "Error generating meaning with AI.", partOfSpeech: "" },
+      ]);
+    }
+    setShowAIGeneration(false);
+  };
+
   const firstDefinition = definitions[0];
 
   return (
-    <ScrollArea className="w-full h-[200px]">
-      <div className="flex flex-col items-center text-center justify-evenly h-[200px]">
-        <div className="w-full">
-          <p className="p-2">
-            <strong>Meaning:</strong>
-          </p>
-          <hr />
-        </div>
-        <ul>
-          {firstDefinition && (
-            <li className="mb-2">
-              {firstDefinition.definition}
-              {firstDefinition.example && (
-                <p>
-                  <strong>Example:</strong> {firstDefinition.example}
-                </p>
-              )}
-            </li>
-          )}
-        </ul>
-        {definitions.length > 1 && (
-          <Dialog>
-            <DialogTrigger
-              className="p-2 bg-primary text-white rounded"
-              onClick={(e) => e.stopPropagation()}
-            >
-              Show Others
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Other Definitions</DialogTitle>
-                <DialogDescription>
-                  Here are other meanings of the word or phrase.
-                </DialogDescription>
-              </DialogHeader>
-              <ScrollArea className="max-h-[200px]">
-                <ul>
-                  {definitions.slice(1).map((def, index) => (
-                    <li key={index} className="mb-2">
-                      <strong>{def.partOfSpeech}:</strong> {def.definition}
-                      {def.example && (
-                        <p>
-                          <strong>Example:</strong> {def.example}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
-            </DialogContent>
-          </Dialog>
-        )}
+    <div className="flex flex-col items-center text-center justify-evenly max-h-screen">
+      <div className="w-full">
+        <hr />
       </div>
-    </ScrollArea>
+      {firstDefinition && (
+        <div className="p-4 bg-secondary rounded-lg shadow-md m-4">
+          <h2 className="text-xl font-semibold text-primary-500 mb-2">
+            {firstDefinition.partOfSpeech}
+          </h2>
+          <p className="text-gray-100 mb-2">
+            <strong>Definition:</strong> {firstDefinition.definition}
+          </p>
+          {firstDefinition.example && (
+            <p className="text-gray-100 italic">
+              <strong>Example:</strong> {firstDefinition.example}
+            </p>
+          )}
+        </div>
+      )}
+
+      {definitions.length > 1 && (
+        <Dialog>
+          <DialogTrigger
+            className="p-2 bg-primary text-white rounded"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Show All
+          </DialogTrigger>
+          <DialogContent
+            onOpenAutoFocus={(event) => event.preventDefault()}
+            onEscapeKeyDown={(event) => event.preventDefault()}
+            onPointerDownOutside={(event) => event.preventDefault()}
+            className="max-h-[80vh] overflow-y-auto"
+          >
+            <DialogHeader>
+              <DialogTitle>Other Definitions</DialogTitle>
+              <DialogDescription>
+                Here are other meanings of the word or phrase.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="p-4 space-y-4">
+              {definitions.length === 0 ? (
+                <p className="text-center text-gray-500">
+                  Searching meaning...
+                </p>
+              ) : (
+                definitions.slice(1).map((def, index) => (
+                  <div
+                    key={index}
+                    className="p-4 bg-primary rounded-lg shadow-md"
+                  >
+                    <h2 className="text-xl font-semibold text-primary-500 mb-2">
+                      {def.partOfSpeech}
+                    </h2>
+                    <p className="text-gray-100 mb-2">
+                      <strong>Definition:</strong> {def.definition}
+                    </p>
+                    {def.example && (
+                      <p className="text-gray-100 italic">
+                        <strong>Example:</strong> {def.example}
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
   );
 };
 

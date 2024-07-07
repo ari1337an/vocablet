@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/app/_components/ui/button";
-import { Progress } from "@/app/_components/ui/progress"; // Correct import path
+import { Progress } from "@/app/_components/ui/progress";
 import useAppStore from "../../_store/useAppStore";
 import Link from "next/link";
 import {
@@ -24,13 +24,13 @@ import {
   DialogClose,
 } from "@/app/_components/ui/dialog";
 import FlashcardBackContent from "./flashcard-back-content";
+import { GenerateMeaningSheet } from "./generate-meaning-sheet";
 
-// Define the type for flashcard data
 interface Flashcard {
   wordOrPhrase: string;
   meaning: string;
   exampleSentence: string;
-  box: number; // Add box property for Leitner system
+  box: number;
 }
 
 export default function FlashCards({
@@ -45,9 +45,9 @@ export default function FlashCards({
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const [progress, setProgress] = useState(33);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [flashcardsData, setFlashcardsData] = useState<Flashcard[]>([]); // State to store the fetched flashcards data
-  const [showBack, setShowBack] = useState(false); // State to show the back of the flashcard
-  const [queue, setQueue] = useState<Flashcard[]>([]); // Queue to manage flashcards review order
+  const [flashcardsData, setFlashcardsData] = useState<Flashcard[]>([]);
+  const [showBack, setShowBack] = useState(false);
+  const [queue, setQueue] = useState<Flashcard[]>([]);
 
   useEffect(() => {
     const fetchInitialflashcards = async () => {
@@ -58,8 +58,8 @@ export default function FlashCards({
           ...card,
           box: 0,
         }));
-        setFlashcardsData(flashcards); // Store the fetched flashcards data
-        setQueue(flashcards); // Initialize queue with all cards
+        setFlashcardsData(flashcards);
+        setQueue(flashcards);
         setInitialFetchComplete(true);
         setProgress(100);
       } else {
@@ -137,7 +137,7 @@ export default function FlashCards({
   };
 
   const handleNext = () => {
-    setShowBack(false); // Ensure the next card shows the front first
+    setShowBack(false);
     if (queue.length > 1) {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % queue.length);
     }
@@ -174,8 +174,8 @@ export default function FlashCards({
   }
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center ">
-      <Card className="w-[350px] items-center text-center justify-center relative">
+    <div className="w-full h-full flex flex-col items-center justify-center p-4">
+      <Card className="w-full max-w-lg items-center text-center justify-center relative shadow-lg">
         {queue.length > 0 && queue[currentIndex] && (
           <Progress
             value={getProgressValue(queue[currentIndex].box)}
@@ -186,10 +186,19 @@ export default function FlashCards({
           {queue.length > 0 && queue[currentIndex] ? (
             <>
               <CardTitle>{showBack ? "Back" : "Front"}</CardTitle>
-              <CardDescription>
-                Click to view {showBack ? "frontside" : "backside"}. or press{" "}
-                <CommandShortcut>Space</CommandShortcut>
-              </CardDescription>
+              {!showBack && (
+                <CardDescription>
+                  Click to view back side or press{" "}
+                  <CommandShortcut>Space</CommandShortcut>
+                </CardDescription>
+              )}
+              {showBack && (
+                <CardDescription>
+                  <GenerateMeaningSheet
+                    wordToGenerate={queue[currentIndex].wordOrPhrase}
+                  />
+                </CardDescription>
+              )}
             </>
           ) : (
             <>
@@ -199,7 +208,7 @@ export default function FlashCards({
           )}
         </CardHeader>
         <CardContent
-          className="text-white cursor-pointer justify-center items-center flex flex-col text-center h-[200px] bg-primary-500"
+          className="text-white cursor-pointer justify-center items-center flex flex-col text-center max-h-screen bg-primary-500 rounded"
           onClick={() => setShowBack(!showBack)}
         >
           {queue.length > 0 && queue[currentIndex] ? (
@@ -219,7 +228,7 @@ export default function FlashCards({
           )}
         </CardContent>
         {queue.length > 0 && queue[currentIndex] ? (
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex justify-between space-x-2 p-4">
             <Button onClick={() => handleRating("Again")} variant="outline">
               Again
             </Button>
@@ -246,7 +255,9 @@ export default function FlashCards({
       <div className="mt-4 md:block hidden">
         <Dialog>
           <DialogTrigger>
-            <Button className="text-muted-foreground" variant="outline">Keyboard Shortcuts</Button>
+            <Button className="text-muted-foreground" variant="outline">
+              Keyboard Shortcuts
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
