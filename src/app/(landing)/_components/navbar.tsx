@@ -33,7 +33,6 @@ export default function Navbar({
                 to="features"
                 smooth={true}
                 duration={1500}
-                offset={-100}
               >
                 Features
               </ReactScrollLink>
@@ -75,7 +74,6 @@ export default function Navbar({
                 to="features"
                 smooth={true}
                 duration={1500}
-                offset={-100}
               >
                 Features
               </ReactScrollLink>

@@ -3,6 +3,8 @@
 import SubscriptionRepo from "@/server/database/repositories/subscription";
 import React from "react";
 import { auth } from "@/server/authentication/auth";
+import Link from "next/link";
+import { Button } from "@/app/_components/ui/button";
 
 export default async function SubscriptionPage() {
   const session = await auth();
@@ -15,8 +17,11 @@ export default async function SubscriptionPage() {
   return (
     <div className="flex flex-col gap-y-10 items-center justify-center h-full">
       {subscriptions.length === 0 ? (
-        <div className="text-center text-lg">
+        <div className="flex flex-col items-center justify-center gap-y-5 text-center text-lg">
           You don&apos;t have any subscription!
+          <Link href="/pricing">
+            <Button>See Pricing</Button>
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center">
