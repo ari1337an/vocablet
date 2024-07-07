@@ -3,7 +3,7 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/pricing"];
+export const publicRoutes = ["/", "/pricing", "/blog"];
 
 /**
  * An array of API prefixes that are accessible to the public

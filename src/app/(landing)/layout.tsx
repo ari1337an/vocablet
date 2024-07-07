@@ -21,6 +21,23 @@ export default async function RootLayout({
     <>
       <Navbar userEmail={userEmail} />
       <div>{children}</div>
+
+      <div className="text-center text-neutral-600 dark:text-neutral-400 py-4">
+        <div className="mt-2">
+          <a href="http://alphawolfventures.com" className="hover:text-white">
+            © {new Date().getFullYear()} AlphaWolf Ventures, Inc.
+          </a>
+        </div>
+        <div className="mt-2">
+          <a href="/terms/privacy" className="hover:underline">
+            Privacy Policy
+          </a>{" "}
+          |
+          <a href="/terms/service" className="hover:underline ml-2">
+            Terms of Service
+          </a>
+        </div>
+      </div>
     </>
   );
 }

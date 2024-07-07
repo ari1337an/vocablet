@@ -9,6 +9,7 @@ import { ContainerScroll } from "../_aceternity/container-scroll-animation";
 import { motion } from "framer-motion";
 import { HeroHighlight, Highlight } from "../_aceternity/hero-highlight";
 import { SparklesCore } from "../_aceternity/sparkles";
+import { MacbookScroll } from "../_aceternity/macbook-scroll";
 
 export default function LandingPage({
   currentUserEmail,
@@ -91,6 +92,7 @@ export default function LandingPage({
           draggable={false}
         />
       </ContainerScroll>
+      <div className="p-10" id="features"></div>
       <div className="w-full bg-secondary flex flex-col items-center justify-center overflow-hidden rounded-md">
         <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
           Features
@@ -116,8 +118,66 @@ export default function LandingPage({
           <div className="absolute inset-0 w-full h-full bg-secondary [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
         </div>
       </div>
-      <div className="text-center text-neutral-600 dark:text-neutral-400 py-4">
-        Start your journey to mastering vocabulary today with Vocablet.
+
+      {/* Feature 1 */}
+      <div className="flex flex-row items-center justify-between gap-y-10 px-6 md:px-40">
+        <div className="text-left max-w-lg">
+          <div className="text-5xl font-extrabold">1. Chat with AI</div>
+          <div className="mt-10">
+            Engage in dynamic conversations with our advanced AI that
+            understands and responds to your inputs. Whether you&apos;re
+            discussing everyday topics or diving into complex subjects,
+            Vocablet&apos;s AI provides meaningful interactions that enhance
+            your vocabulary seamlessly.
+          </div>
+        </div>
+        <MacbookScroll src={`/app-usage.png`} showGradient={true} />
+      </div>
+
+      {/* Feature 2 */}
+      <div className="flex flex-row items-center justify-between gap-y-10 px-6 md:px-40">
+        <MacbookScroll src={`/app-usage.png`} showGradient={true} />
+        <div className="text-left max-w-lg">
+          <div className="text-5xl font-extrabold">2. Roleplay and Learn</div>
+          <div className="mt-10">
+            Transform your learning experience by roleplaying with customizable
+            AI characters. Dive into scenarios where you can be anyone and
+            converse with famous personalities, fictional characters, or even
+            historical figures. This immersive approach helps you learn new
+            words in context, making them easier to remember and use.
+          </div>
+        </div>
+      </div>
+
+      {/* Feature 3 */}
+      <div className="flex flex-row items-center justify-between gap-y-10 px-6 md:px-40">
+        <div className="text-left max-w-lg">
+          <div className="text-5xl font-extrabold">3. Get Meaning from AI</div>
+          <div className="mt-10">
+            Encountering a new or challenging word? Simply ask our AI for an
+            explanation. Vocablet’s AI provides clear, concise meanings and
+            usage examples, helping you understand and incorporate new
+            vocabulary effortlessly into your daily conversations.
+          </div>
+        </div>
+        <MacbookScroll src={`/app-usage.png`} showGradient={true} />
+      </div>
+
+      {/* Feature 4 */}
+      <div className="flex flex-row items-center justify-between gap-y-10 px-6 md:px-40">
+        <MacbookScroll src={`/app-usage.png`} showGradient={true} />
+        <div className="text-left max-w-lg">
+          <div className="text-5xl font-extrabold">
+            4. Flashcards to Internalize
+          </div>
+          <div className="mt-10">
+            Reinforce your learning with our flashcard system. Vocablet
+            organizes newly learned words into personalized flashcard decks,
+            allowing you to review and internalize them through spaced
+            repetition. This proven method ensures that your vocabulary grows
+            steadily and sticks with you for the long term.
+          </div>
+        </div>
       </div>
     </>
   );
