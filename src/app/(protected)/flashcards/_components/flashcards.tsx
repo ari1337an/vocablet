@@ -208,7 +208,7 @@ export default function FlashCards({
           )}
         </CardHeader>
         <CardContent
-          className="text-white cursor-pointer justify-center items-center flex flex-col text-center max-h-lvh bg-primary-500 rounded"
+          className="text-white cursor-pointer justify-center items-center flex flex-col text-center max-h-screen bg-primary-500 rounded"
           onClick={() => setShowBack(!showBack)}
         >
           {queue.length > 0 && queue[currentIndex] ? (
