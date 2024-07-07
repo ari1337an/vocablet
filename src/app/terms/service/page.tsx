@@ -3,7 +3,7 @@ import React from "react";
 
 export default function TermsOfServices() {
   return (
-    <div className="container mx-auto p-4">
+    <div className="container w-10/12 md:w-1/2 p-4">
       <p className="text-sm mb-4">Last updated July 5, 2024</p>
       <h1 className="text-2xl font-bold mb-4">Welcome to Vocablet!</h1>
       <p className="mb-4">

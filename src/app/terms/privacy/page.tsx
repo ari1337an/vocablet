@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Privacy() {
   return (
-    <div className="container mx-auto p-4">
+    <div className="container w-10/12 md:w-1/2 p-4">
       <h1 className="text-2xl font-bold mb-4">Vocablet Privacy Policy</h1>
       <p className="mb-4">
         {`This Vocablet Privacy Policy ("Privacy Policy") describes how your
