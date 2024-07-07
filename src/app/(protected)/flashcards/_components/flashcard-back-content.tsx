@@ -40,7 +40,6 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
           `https://api.dictionaryapi.dev/api/v2/entries/en/${wordOrPhrase}`
         );
         const data = await response.json();
-        console.log(data);
         if (Array.isArray(data) && data.length > 0) {
           const definitionsList = data[0].meanings.flatMap((meaning: any) =>
             meaning.definitions.map((def: any) => ({
@@ -84,15 +83,28 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
   const firstDefinition = definitions[0];
 
   return (
-    <ScrollArea className="w-full h-[200px]">
-      <div className="flex flex-col items-center text-center justify-evenly h-[200px]">
+    <ScrollArea className="w-full max-h-screen">
+      <div className="flex flex-col items-center text-center justify-evenly max-h-lvh">
         <div className="w-full">
-          <p className="p-2">
-            <strong>Meaning:</strong>
-          </p>
           <hr />
         </div>
-        <ul>
+        {firstDefinition && (
+          <div className="p-4 bg-secondary rounded-lg shadow-md m-4">
+            <h2 className="text-xl font-semibold text-primary-500 mb-2">
+              {firstDefinition.partOfSpeech}
+            </h2>
+            <p className="text-gray-100 mb-2">
+              <strong>Definition:</strong> {firstDefinition.definition}
+            </p>
+            {firstDefinition.example && (
+              <p className="text-gray-100 italic">
+                <strong>Example:</strong> {firstDefinition.example}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* <ul>
           {firstDefinition && (
             <li className="mb-2">
               {firstDefinition.definition}
@@ -102,8 +114,8 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
                 </p>
               )}
             </li>
-          )}
-        </ul>
+          )} */}
+        {/* </ul> */}
 
         {definitions.length > 0 && (
           <Dialog>
