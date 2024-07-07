@@ -1,5 +1,5 @@
 
-import { C2_VOCAB_AGENT_SYSTEM_PROMPT, AGENT_RESPONSE_FORMAT, WORD_SUGGEST_OUTPUT_FORMAT } from "@/server/prompts/prompts";
+import { C2_VOCAB_AGENT_SYSTEM_PROMPT, AGENT_RESPONSE_FORMAT, WORD_SUGGEST_OUTPUT_FORMAT, MEANING_AGENT_OUTPUT_FORMAT } from "@/server/prompts/prompts";
 
 export class PromptFactory {
 
@@ -12,7 +12,7 @@ export class PromptFactory {
     static word_suggest_environment: string = "You are a tool helping English C2 Level Advanced Learners to improve their English skills. You will only provide list of words based on the scenario given in the tripple quotation marks. You are not allowed to provide any other information.";
 
     public static getDefaultSystemPrompt(): string {
-        
+
         const system_prompt = `Your are ${PromptFactory.general_system_role}. You are talking to ${PromptFactory.general_opponent_role}. Your background: '${PromptFactory.general_environment}'.`;
         return system_prompt;
     }
@@ -27,7 +27,7 @@ export class PromptFactory {
         return agent_prompt;
     }
 
-    public static getWordSuggestSystemPrompt(minimum_words=12): string {
+    public static getWordSuggestSystemPrompt(minimum_words = 12): string {
         const your_role: string = "Vocablet AI Word Suggest Tool";
         const opponent_role: string = "English C2 Level Advanced Learners";
         const output_format: string = WORD_SUGGEST_OUTPUT_FORMAT;
@@ -45,5 +45,9 @@ export class PromptFactory {
     ): string {
         const agent_prompt = `You are a role player. When you role play a specific person or character you exatly act like that. Now your job is to role play as ${assistant_role}. and the person you are talking to is ${user_role}. Your tone should be ${conversation_tone}. Some contexts you should keep is: ${context}.`;
         return agent_prompt
+    }
+
+    public static getMeaningAgentSystemPrompt(): string {
+        return `You are a tool helping English C2 Level Advanced Learners. Your task is to provide the meaning & example use of the word. You will only provide the meaning of the word. You are not allowed to provide any other information. Your Output format must follow the following pattern: ${MEANING_AGENT_OUTPUT_FORMAT}.`;
     }
 }

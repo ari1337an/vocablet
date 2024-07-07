@@ -8,6 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/_components/ui/dialog";
+import { Button } from "@/app/_components/ui/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/_components/ui/tabs";
+import { GenerateMeaningSheet } from "./generate-meaning-sheet";
 
 interface Definition {
   definition: string;
@@ -23,6 +31,7 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
   wordOrPhrase,
 }) => {
   const [definitions, setDefinitions] = useState<Definition[]>([]);
+  const [showAIGeneration, setShowAIGeneration] = useState(false);
 
   useEffect(() => {
     const fetchMeaning = async () => {
@@ -57,6 +66,21 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
     fetchMeaning();
   }, [wordOrPhrase]);
 
+  const generateMeaningWithAI = async () => {
+    setShowAIGeneration(true);
+    try {
+      const response = await fetch("/api/generate-meaning", { method: "POST" });
+      const data = await response.json();
+      setDefinitions([data]);
+    } catch (error) {
+      console.error(error);
+      setDefinitions([
+        { definition: "Error generating meaning with AI.", partOfSpeech: "" },
+      ]);
+    }
+    setShowAIGeneration(false);
+  };
+
   const firstDefinition = definitions[0];
 
   return (
@@ -80,6 +104,7 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
             </li>
           )}
         </ul>
+        
         {definitions.length > 1 && (
           <Dialog>
             <DialogTrigger
@@ -88,7 +113,11 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
             >
               Show Others
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent
+              onOpenAutoFocus={(event) => event.preventDefault()}
+              onEscapeKeyDown={(event) => event.preventDefault()}
+              onPointerDownOutside={(event) => event.preventDefault()}
+            >
               <DialogHeader>
                 <DialogTitle>Other Definitions</DialogTitle>
                 <DialogDescription>
@@ -113,6 +142,19 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
           </Dialog>
         )}
       </div>
+      {/* <div className="mt-4">
+        <p>
+          Not satisfied with the meaning?{" "}
+          <Button variant="link" onClick={generateMeaningWithAI}>
+            Use meaning agent
+          </Button>
+        </p>
+      </div>
+      {showAIGeneration && (
+        <div className="mt-4">
+          <p>Generating meaning with AI...</p>
+        </div>
+      )} */}
     </ScrollArea>
   );
 };
