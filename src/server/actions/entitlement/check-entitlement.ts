@@ -23,6 +23,8 @@ export const EntitlementSlugDTO = {
         return EntitlementSlugs.VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT;
       case "vocablet-ai-chat-unlimited":
         return EntitlementSlugs.VOCABLET_AI_CHAT_UNLIMITED;
+      case "vocablet-meaning-agent":
+        return EntitlementSlugs.VOCABLET_MEANING_AGENT;
       default:
         throw new Error(`Unknown entitlement slug: ${slug}`);
     }
