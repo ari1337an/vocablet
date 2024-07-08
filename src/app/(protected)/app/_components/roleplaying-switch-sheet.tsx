@@ -1,0 +1,132 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/app/_components/ui/sheet";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/_components/ui/tabs";
+import { Button } from "@/app/_components/ui/button";
+import useAppStore from "../../_store/useAppStore";
+import { Switch } from "@/app/_components/ui/switch";
+import toast from "react-hot-toast";
+import { RoleplayTab } from "./roleplay-tab";
+import { Label } from "@/app/_components/ui/label";
+import UpgradeDialog from "./upgrade-dialog";
+
+interface Roleplay {
+  id: string;
+  title: string;
+  assistantRole: string;
+  userRole: string;
+  conversationTone: string;
+  conversationContext: string;
+}
+
+export function RoleplayingSwitchSheet({
+  conversationOngoing,
+}: {
+  conversationOngoing: boolean;
+}) {
+  const { roleplayMode, setRoleplayMode } = useAppStore();
+  const [open, setOpen] = useState(false);
+  const [selectedRoleplay, setSelectedRoleplay] = useState<Roleplay | null>(
+    null
+  );
+  const [activeTab, setActiveTab] = useState("roleplay");
+  const [hasRoleplayAccess, setHasRoleplayAccess] = useState(false);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+
+  useEffect(() => {
+    async function checkAccess() {
+      const response = await fetch("/api/check-roleplay-access");
+      const data = await response.json();
+      if (data.success) {
+        setHasRoleplayAccess(data.hasRoleplayAccess);
+      } else {
+        toast.error("You donot have access to roleplay mode.");
+        setShowUpgradeDialog(true);
+      }
+    }
+    if (open) {
+      checkAccess();
+    }
+  }, [open]);
+
+  const handleSetButton = () => {
+    if (conversationOngoing) {
+      toast.error("Cannot change roleplay mode during conversation.");
+      return;
+    }
+    if (selectedRoleplay && activeTab == "roleplay") {
+      setRoleplayMode({
+        agent: "roleplay",
+        id: selectedRoleplay.id,
+        title: selectedRoleplay.title,
+        assistantRole: selectedRoleplay.assistantRole,
+        userRole: selectedRoleplay.userRole,
+        conversationTone: selectedRoleplay.conversationTone,
+        conversationContext: selectedRoleplay.conversationContext,
+      });
+      setOpen(false);
+    } else {
+      setRoleplayMode({
+        agent: "general",
+      });
+      setOpen(false);
+    }
+  };
+
+  return (
+    <>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger>
+          <>
+            <Switch
+              checked={roleplayMode.agent === "roleplay"}
+              id="roleplay-mode"
+            />
+            <Label htmlFor="roleplay-mode">Roleplay Mode</Label>
+          </>
+        </SheetTrigger>
+        <SheetContent className="h-full overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Roleplay Mode</SheetTitle>
+            {(selectedRoleplay || activeTab == "general") && (
+              <Button onClick={() => handleSetButton()}>Set</Button>
+            )}
+            <SheetDescription>{`Select a roleplaying template or create new`}</SheetDescription>
+          </SheetHeader>
+          <Tabs defaultValue="roleplay" onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="roleplay">Roleplay</TabsTrigger>
+              <TabsTrigger value="general">General</TabsTrigger>
+            </TabsList>
+            <TabsContent value="roleplay">
+              <RoleplayTab
+                setOpen={setOpen}
+                setSelectedRoleplay={setSelectedRoleplay}
+                selectedRoleplay={selectedRoleplay}
+                isSheetOpen={open}
+                hasRoleplayAccess={hasRoleplayAccess}
+              />
+            </TabsContent>
+            <TabsContent value="general">
+              <div>Click Set to select general agent.</div>
+            </TabsContent>
+          </Tabs>
+        </SheetContent>
+      </Sheet>
+      <UpgradeDialog open={showUpgradeDialog} setOpen={setShowUpgradeDialog} />
+    </>
+  );
+}

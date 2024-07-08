@@ -1,6 +1,6 @@
 import React from "react";
 import Message from "./message";
-import { MessageType } from "./app";
+import { MessageType } from "../../_store/useAppStore";
 
 interface ChatProps {
   messages: MessageType[];

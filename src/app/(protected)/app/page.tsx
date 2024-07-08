@@ -8,5 +8,5 @@ export default async function AppPage() {
   const session = await auth();
   if (!session || !session.user) return null;
 
-  return <App session={session} />;
+  return <App session={session} fetchConversationId={null} />;
 }

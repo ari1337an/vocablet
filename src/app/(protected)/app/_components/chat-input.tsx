@@ -6,11 +6,13 @@ import { Textarea } from "@/app/_components/ui/textarea";
 type ChatInputProps = {
   onSendMessage: (message: string) => void;
   className?: string;
+  isPending?: boolean;
 };
 
 export default function ChatInput({
   onSendMessage,
   className,
+  isPending = false,
 }: ChatInputProps) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -19,20 +21,23 @@ export default function ChatInput({
     const handleKeyPress = (e: KeyboardEvent) => {
       const currentTextareaRef = textareaRef.current;
       if (currentTextareaRef && document.activeElement !== currentTextareaRef) {
+        // Allow pasting with Ctrl+V or Command+V
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "v") return;
+
         // Check if key is not a modifier key (shift, ctrl, alt, meta)
         if (e.key.length > 1) return;
 
-        // // Check if the user isn't running a command, e.g., ctrl+c
-        // if (
-        //   e
-        //     .composedPath()
-        //     .some((el) => (el as HTMLElement).tagName === "INPUT") ||
-        //   e.ctrlKey ||
-        //   e.metaKey
-        // )
-        //   return;
+        // Check if the user isn't running a command, e.g., ctrl+c 
+        if (
+          e
+            .composedPath()
+            .some((el) => (el as HTMLElement).tagName === "INPUT") ||
+          e.ctrlKey ||
+          e.metaKey
+        )
+          return;
 
-        // Focus the textarea only and the key will be pressed there 
+        // Focus the textarea only and the key will be pressed there
         currentTextareaRef.focus();
         setValue(currentTextareaRef.value);
       }
@@ -86,10 +91,12 @@ export default function ChatInput({
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
+          disabled={isPending}
         />
         <button
           className="absolute top-1/2 right-4 transform -translate-y-1/2 p-2 bg-primary hover:bg-primary/70 text-white rounded-full"
           onClick={handleSubmit}
+          disabled={isPending}
         >
           <ArrowTurnDownLeftIcon className="w-6 h-6" />
         </button>

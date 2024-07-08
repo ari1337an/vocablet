@@ -28,7 +28,7 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <main className="h-full flex flex-col">
+    <main className="h-screen flex flex-col">
       <div className="flex flex-row items-center justify-between px-10 py-5 z-10 sticky top-0 left-0 right-0">
         <SideBar />
         <div className="h-full absolute left-0 right-0 flex items-center justify-center text-2xl">
@@ -42,7 +42,7 @@ export default async function ProtectedLayout({
         <UserAvatar avatarUrl={avatarUrl} />
       </div>
 
-      <div className="z-0 h-full">{children}</div>
+      <div className="z-0 h-full overflow-y-auto">{children}</div>
     </main>
   );
 }
