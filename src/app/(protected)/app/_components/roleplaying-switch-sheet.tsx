@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -18,9 +18,10 @@ import {
 import { Button } from "@/app/_components/ui/button";
 import useAppStore from "../../_store/useAppStore";
 import { Switch } from "@/app/_components/ui/switch";
-import { Label } from "@/app/_components/ui/label";
 import toast from "react-hot-toast";
 import { RoleplayTab } from "./roleplay-tab";
+import { Label } from "@/app/_components/ui/label";
+import UpgradeDialog from "./upgrade-dialog";
 
 interface Roleplay {
   id: string;
@@ -42,6 +43,24 @@ export function RoleplayingSwitchSheet({
     null
   );
   const [activeTab, setActiveTab] = useState("roleplay");
+  const [hasRoleplayAccess, setHasRoleplayAccess] = useState(false);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+
+  useEffect(() => {
+    async function checkAccess() {
+      const response = await fetch("/api/check-roleplay-access");
+      const data = await response.json();
+      if (data.success) {
+        setHasRoleplayAccess(data.hasRoleplayAccess);
+      } else {
+        toast.error("You donot have access to roleplay mode.");
+        setShowUpgradeDialog(true);
+      }
+    }
+    if (open) {
+      checkAccess();
+    }
+  }, [open]);
 
   const handleSetButton = () => {
     if (conversationOngoing) {
@@ -68,41 +87,46 @@ export function RoleplayingSwitchSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <>
-          <Switch
-            checked={roleplayMode.agent === "roleplay"}
-            id="roleplay-mode"
-          />
-          <Label htmlFor="roleplay-mode">Roleplay Mode</Label>
-        </>
-      </SheetTrigger>
-      <SheetContent className="h-full overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle>Roleplay Mode</SheetTitle>
-          {(selectedRoleplay || activeTab == "general") && (
-            <Button onClick={() => handleSetButton()}>Set</Button>
-          )}
-          <SheetDescription>{`Select a roleplaying template or create new`}</SheetDescription>
-        </SheetHeader>
-        <Tabs defaultValue="roleplay" onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="roleplay">Roleplay</TabsTrigger>
-            <TabsTrigger value="general">General</TabsTrigger>
-          </TabsList>
-          <TabsContent value="roleplay">
-            <RoleplayTab
-              setOpen={setOpen}
-              setSelectedRoleplay={setSelectedRoleplay}
-              selectedRoleplay={selectedRoleplay}
+    <>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger>
+          <>
+            <Switch
+              checked={roleplayMode.agent === "roleplay"}
+              id="roleplay-mode"
             />
-          </TabsContent>
-          <TabsContent value="general">
-            <div>Click Set to select general agent.</div>
-          </TabsContent>
-        </Tabs>
-      </SheetContent>
-    </Sheet>
+            <Label htmlFor="roleplay-mode">Roleplay Mode</Label>
+          </>
+        </SheetTrigger>
+        <SheetContent className="h-full overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Roleplay Mode</SheetTitle>
+            {(selectedRoleplay || activeTab == "general") && (
+              <Button onClick={() => handleSetButton()}>Set</Button>
+            )}
+            <SheetDescription>{`Select a roleplaying template or create new`}</SheetDescription>
+          </SheetHeader>
+          <Tabs defaultValue="roleplay" onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="roleplay">Roleplay</TabsTrigger>
+              <TabsTrigger value="general">General</TabsTrigger>
+            </TabsList>
+            <TabsContent value="roleplay">
+              <RoleplayTab
+                setOpen={setOpen}
+                setSelectedRoleplay={setSelectedRoleplay}
+                selectedRoleplay={selectedRoleplay}
+                isSheetOpen={open}
+                hasRoleplayAccess={hasRoleplayAccess}
+              />
+            </TabsContent>
+            <TabsContent value="general">
+              <div>Click Set to select general agent.</div>
+            </TabsContent>
+          </Tabs>
+        </SheetContent>
+      </Sheet>
+      <UpgradeDialog open={showUpgradeDialog} setOpen={setShowUpgradeDialog} />
+    </>
   );
 }

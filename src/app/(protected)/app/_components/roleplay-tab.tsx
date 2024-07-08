@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetFooter,
-} from "@/app/_components/ui/sheet";
+import { SheetFooter } from "@/app/_components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -30,8 +22,6 @@ import { ScrollArea } from "@/app/_components/ui/scroll-area";
 import { z } from "zod";
 import { Button } from "@/app/_components/ui/button";
 import useAppStore from "../../_store/useAppStore";
-import { Switch } from "@/app/_components/ui/switch";
-import { Label } from "@/app/_components/ui/label";
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,16 +65,17 @@ export function RoleplayTab({
   setOpen,
   setSelectedRoleplay,
   selectedRoleplay,
+  isSheetOpen,
+  hasRoleplayAccess,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRoleplay: React.Dispatch<
-    React.SetStateAction<Roleplay | null>
-  >;
+  setSelectedRoleplay: React.Dispatch<React.SetStateAction<Roleplay | null>>;
   selectedRoleplay: Roleplay | null;
+  isSheetOpen: boolean;
+  hasRoleplayAccess: boolean;
 }) {
   const { roleplayMode, setRoleplayMode } = useAppStore();
   const [loadedRoleplays, setLoadedRoleplays] = useState<Roleplay[]>([]);
-  //   const [selectedRoleplay, setSelectedRoleplay] = useState<Roleplay>();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -103,9 +94,7 @@ export function RoleplayTab({
         .then((response) => response.json())
         .then((data) => {
           if (data.success) {
-            // console.log(data);
             setLoadedRoleplays(data.roleplays);
-            // console.log('loaded roleplays: ', loadedRoleplays);
           } else {
             console.error("Error loading roleplays:", data.error);
           }
@@ -113,8 +102,10 @@ export function RoleplayTab({
         .catch((error) => {
           console.error("Error loading roleplays:", error);
         });
-    fetchRoleplays();
-  }, [setLoadedRoleplays, selectedRoleplay]);
+    if (isSheetOpen) {
+      fetchRoleplays();
+    }
+  }, [setLoadedRoleplays, selectedRoleplay, isSheetOpen]);
 
   const onSubmit = (values: {
     title: string;
@@ -134,16 +125,15 @@ export function RoleplayTab({
       .then((data) => {
         if (data.success) {
           setSelectedRoleplay(data.roleplay);
-
           toast.success("Roleplay has been saved!");
-        //   form.reset(); // Reset the form
-        //   setOpen(false);
         } else {
-          console.error("Error creating vocabulary:", data.error);
+          toast.error(data.message);
+          console.error("Error:", data.error);
         }
       })
       .catch((error) => {
-        console.error("Error creating vocab:", error);
+        toast.error(error.message);
+        console.error("Error:", error);
       });
   };
 
@@ -151,9 +141,22 @@ export function RoleplayTab({
     <div className="grid gap-4 py-4 max-h-fit">
       <ScrollArea>
         <Command className="w-full z-50">
-          <CommandInput placeholder="Search Roleplay Template..." className="h-9 z-50" />
+          <CommandInput
+            placeholder="Search Roleplay Template..."
+            className="h-9 z-50"
+          />
           <CommandList className="z-50 h-40">
-            <CommandEmpty>No Roleplay template found.</CommandEmpty>
+            <CommandEmpty>
+              {!hasRoleplayAccess && (
+                <div>
+                  You do not have the access to use this feature. Please
+                  upgrade.
+                </div>
+              )}
+              {hasRoleplayAccess && loadedRoleplays.length === 0 && (
+                <div>No Roleplay template found.</div>
+              )}
+            </CommandEmpty>
             <CommandGroup>
               {loadedRoleplays.map((roleplay) => (
                 <CommandItem
@@ -176,96 +179,97 @@ export function RoleplayTab({
           </CommandList>
         </Command>
       </ScrollArea>
-      <div className="grid gap-4 py-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Roleplay title</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={selectedRoleplay?.title ?? ""}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="assistantRole"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Assistant Role</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={selectedRoleplay?.assistantRole ?? ""}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="userRole"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User Role</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={selectedRoleplay?.userRole ?? ""}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="conversationTone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Conversation Tone</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={selectedRoleplay?.conversationTone ?? ""}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="conversationContext"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Conversation Context</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={selectedRoleplay?.conversationContext}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <SheetFooter>
-              <Button type="submit">Create New</Button>
-              {/* <Button onClick={() => {}}>Update</Button> */}
-            </SheetFooter>
-          </form>
-        </Form>
-      </div>
+      {hasRoleplayAccess && (
+        <div className="grid gap-4 py-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Roleplay title</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={selectedRoleplay?.title ?? ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="assistantRole"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Assistant Role</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={selectedRoleplay?.assistantRole ?? ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="userRole"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User Role</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={selectedRoleplay?.userRole ?? ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="conversationTone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Conversation Tone</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={selectedRoleplay?.conversationTone ?? ""}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="conversationContext"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Conversation Context</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={selectedRoleplay?.conversationContext}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <SheetFooter>
+                <Button type="submit">Create New</Button>
+              </SheetFooter>
+            </form>
+          </Form>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,8 +14,6 @@ import { z } from "zod";
 import OpenAITextCompletion from "../openai-completion";
 import { ConversationWithOutSystemPromptSchema } from "@/server/validation/openai/openai-messages";
 import { PromptFactory } from "@/server/prompts/prompt-factory";
-import UserRepo from "@/server/database/repositories/user";
-import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
 
 export default async function MeaningAgentCompletion(
     // userId: string,
