@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetFooter,
-} from "@/app/_components/ui/sheet";
+import { SheetFooter } from "@/app/_components/ui/sheet";
 import {
   Form,
   FormControl,
@@ -30,8 +22,6 @@ import { ScrollArea } from "@/app/_components/ui/scroll-area";
 import { z } from "zod";
 import { Button } from "@/app/_components/ui/button";
 import useAppStore from "../../_store/useAppStore";
-import { Switch } from "@/app/_components/ui/switch";
-import { Label } from "@/app/_components/ui/label";
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,12 +65,14 @@ export function RoleplayTab({
   setOpen,
   setSelectedRoleplay,
   selectedRoleplay,
+  isSheetOpen,
+  hasRoleplayAccess,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedRoleplay: React.Dispatch<
-    React.SetStateAction<Roleplay | null>
-  >;
+  setSelectedRoleplay: React.Dispatch<React.SetStateAction<Roleplay | null>>;
   selectedRoleplay: Roleplay | null;
+  isSheetOpen: boolean;
+  hasRoleplayAccess: boolean;
 }) {
   const { roleplayMode, setRoleplayMode } = useAppStore();
   const [loadedRoleplays, setLoadedRoleplays] = useState<Roleplay[]>([]);
@@ -113,8 +105,10 @@ export function RoleplayTab({
         .catch((error) => {
           console.error("Error loading roleplays:", error);
         });
-    fetchRoleplays();
-  }, [setLoadedRoleplays, selectedRoleplay]);
+    if (isSheetOpen) {
+      fetchRoleplays();
+    }
+  }, [setLoadedRoleplays, selectedRoleplay, isSheetOpen]);
 
   const onSubmit = (values: {
     title: string;
@@ -136,14 +130,16 @@ export function RoleplayTab({
           setSelectedRoleplay(data.roleplay);
 
           toast.success("Roleplay has been saved!");
-        //   form.reset(); // Reset the form
-        //   setOpen(false);
+          //   form.reset(); // Reset the form
+          //   setOpen(false);
         } else {
-          console.error("Error creating vocabulary:", data.error);
+          toast.error(data.message);
+          console.error("Error:", data.error);
         }
       })
       .catch((error) => {
-        console.error("Error creating vocab:", error);
+        // toast.error(error.message);
+        console.error("Error:", error);
       });
   };
 
@@ -151,9 +147,20 @@ export function RoleplayTab({
     <div className="grid gap-4 py-4 max-h-fit">
       <ScrollArea>
         <Command className="w-full z-50">
-          <CommandInput placeholder="Search Roleplay Template..." className="h-9 z-50" />
+          <CommandInput
+            placeholder="Search Roleplay Template..."
+            className="h-9 z-50"
+          />
           <CommandList className="z-50 h-40">
-            <CommandEmpty>No Roleplay template found.</CommandEmpty>
+            {}
+            <CommandEmpty>
+              {!hasRoleplayAccess && (
+                <div>You do not have the access to use this feature. Please upgrade.</div>
+              )}
+              {hasRoleplayAccess && loadedRoleplays.length === 0 && (
+                <div>No Roleplay template found.</div>
+              )}
+            </CommandEmpty>
             <CommandGroup>
               {loadedRoleplays.map((roleplay) => (
                 <CommandItem

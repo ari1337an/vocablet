@@ -11,6 +11,7 @@ import VocabAgentCompletion from "../vocab/completion";
 import UserRepo from "@/server/database/repositories/user";
 import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
 import VocabularyRepo from "@/server/database/repositories/vocabulary";
+import EntitlementRepo from "@/server/database/repositories/entitlement";
 
 function isValidJson(response: string) {
   try {
@@ -38,6 +39,35 @@ export default async function GeneralAgentCompletion(
       conversationId,
       requestNewConversation
     );
+
+
+    const userEntitlements = await EntitlementRepo.getEntitlementOfUser(userId).then((user) => user?.Entitlements);
+
+    const hasLimitedChat =
+      userEntitlements?.some(
+        (entitlement) => entitlement.feature === "vocablet-ai-chat-limited"
+      ) || false;
+
+    const hasUnlimitedChat =
+      userEntitlements?.some(
+        (entitlement) => entitlement.feature === "vocablet-ai-chat-unlimited"
+      ) || false;
+      
+    if (!hasLimitedChat && !hasUnlimitedChat) {
+      return {
+        success: false,
+        message: "You do not have access to use this feature. Upgrade your plan to use this feature.",
+      };
+    }else if(hasLimitedChat){
+      // cout the number of user messages
+      const userMessages = messages.filter((message) => message.role === "user");
+      if(userMessages.length > 30){
+        return {
+          success: false,
+          message: "You have reached the limit of messages for this conversation. Upgrade your plan or create a new conversation.",
+        };
+      }
+    }
 
     // Validate conversation response
     if (!isValidJson(JSON.stringify(conversation))) {

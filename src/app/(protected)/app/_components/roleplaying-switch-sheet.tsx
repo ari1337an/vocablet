@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -18,9 +18,9 @@ import {
 import { Button } from "@/app/_components/ui/button";
 import useAppStore from "../../_store/useAppStore";
 import { Switch } from "@/app/_components/ui/switch";
-import { Label } from "@/app/_components/ui/label";
 import toast from "react-hot-toast";
 import { RoleplayTab } from "./roleplay-tab";
+import { Label } from "@/app/_components/ui/label";
 
 interface Roleplay {
   id: string;
@@ -42,6 +42,22 @@ export function RoleplayingSwitchSheet({
     null
   );
   const [activeTab, setActiveTab] = useState("roleplay");
+  const [hasRoleplayAccess, setHasRoleplayAccess] = useState(false);
+
+  useEffect(() => {
+    async function checkAccess() {
+      const response = await fetch("/api/check-roleplay-access");
+      const data = await response.json();
+      if (data.success) {
+        setHasRoleplayAccess(data.hasRoleplayAccess);
+      } else {
+        toast.error("Failed to check access rights.");
+      }
+    }
+    if (open) {
+      checkAccess();
+    }
+  }, []);
 
   const handleSetButton = () => {
     if (conversationOngoing) {
@@ -69,7 +85,7 @@ export function RoleplayingSwitchSheet({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+      <SheetTrigger>
         <>
           <Switch
             checked={roleplayMode.agent === "roleplay"}
@@ -96,6 +112,8 @@ export function RoleplayingSwitchSheet({
               setOpen={setOpen}
               setSelectedRoleplay={setSelectedRoleplay}
               selectedRoleplay={selectedRoleplay}
+              isSheetOpen={open}
+              hasRoleplayAccess={hasRoleplayAccess}
             />
           </TabsContent>
           <TabsContent value="general">

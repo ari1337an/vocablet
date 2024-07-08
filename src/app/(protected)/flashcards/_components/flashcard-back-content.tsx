@@ -119,7 +119,7 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
             <div className="p-4 space-y-4">
               {definitions.length === 0 ? (
                 <p className="text-center text-gray-500">
-                  Searching meaning...
+                   Searching meaning...
                 </p>
               ) : (
                 definitions.slice(1).map((def, index) => (
