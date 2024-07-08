@@ -1,6 +1,5 @@
 import { auth } from "@/server/authentication/auth";
 import SubscriptionRepo from "@/server/database/repositories/subscription";
-import { PlanType } from "@prisma/client";
 import Stripe from "stripe";
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);

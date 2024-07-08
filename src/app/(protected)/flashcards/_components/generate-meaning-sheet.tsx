@@ -61,6 +61,7 @@ export function GenerateMeaningSheet({
     if (open) {
       generateMeaningWithAI();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, wordToGenerate]);
 
   const handleOpenChange = (isOpen: boolean) => {

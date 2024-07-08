@@ -99,6 +99,7 @@ export default function FlashCards({
     return () => {
       window.removeEventListener("keydown", handleKeydown);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queue, currentIndex]);
 
   const handleRating = (rating: string) => {
