@@ -22,6 +22,7 @@ import UserRepo from "@/server/database/repositories/user";
 import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
 import VocabularyRepo from "@/server/database/repositories/vocabulary";
 import RoleplayRepo from "@/server/database/repositories/roleplay";
+import { checkEntitlement, EntitlementSlugs } from "../../entitlement/check-entitlement";
 
 export default async function RoleplayAgentCompletion(
     userId: string,
@@ -41,8 +42,36 @@ export default async function RoleplayAgentCompletion(
             requestNewConversation,
             roleplayId
         );
+
+        const hasLimitedChat = await checkEntitlement(userId, EntitlementSlugs.VOCABLET_AI_CHAT_LIMITED);
+
+        const hasUnlimitedChat = await checkEntitlement(userId, EntitlementSlugs.VOCABLET_AI_CHAT_UNLIMITED);
+
+        
+        if (!hasLimitedChat && !hasUnlimitedChat) {
+            return {
+                success: false,
+                message: "You do not have access to use this feature. Upgrade your plan to use this feature.",
+            };
+        } else if (hasLimitedChat) {
+            // cout the number of user messages
+            const userMessages = messages.filter((message) => message.role === "user");
+            if (userMessages.length > 30) {
+                return {
+                    success: false,
+                    message: "You have reached the limit of messages for this conversation. Upgrade your plan or create a new conversation.",
+                };
+            }
+        }
+
+        // if the messages list is greater than 15 then only extract the last 15 messages
+        if (messages.length > 10) {
+            messages = messages.slice(messages.length - 10, messages.length);
+        }
+
+
         const roleplayResponse = await RoleplayRepo.findRoleplayById(roleplayId);
-        console.log('roleplay:::', roleplayResponse);
+        // console.log('roleplay:::', roleplayResponse);
         let conversationIdCurrent = conversation.id;
         let system_prompt;
         if(roleplayResponse) {

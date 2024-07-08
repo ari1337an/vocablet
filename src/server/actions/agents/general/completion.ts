@@ -12,6 +12,7 @@ import UserRepo from "@/server/database/repositories/user";
 import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
 import VocabularyRepo from "@/server/database/repositories/vocabulary";
 import EntitlementRepo from "@/server/database/repositories/entitlement";
+import { checkEntitlement, EntitlementSlugs } from "../../entitlement/check-entitlement";
 
 function isValidJson(response: string) {
   try {
@@ -41,17 +42,11 @@ export default async function GeneralAgentCompletion(
     );
 
 
-    const userEntitlements = await EntitlementRepo.getEntitlementOfUser(userId).then((user) => user?.Entitlements);
+    // const userEntitlements = await EntitlementRepo.getEntitlementOfUser(userId).then((user) => user?.Entitlements);
 
-    const hasLimitedChat =
-      userEntitlements?.some(
-        (entitlement) => entitlement.feature === "vocablet-ai-chat-limited"
-      ) || false;
+    const hasLimitedChat = await checkEntitlement(userId, EntitlementSlugs.VOCABLET_AI_CHAT_LIMITED);
 
-    const hasUnlimitedChat =
-      userEntitlements?.some(
-        (entitlement) => entitlement.feature === "vocablet-ai-chat-unlimited"
-      ) || false;
+    const hasUnlimitedChat = await checkEntitlement(userId, EntitlementSlugs.VOCABLET_AI_CHAT_UNLIMITED);
       
     if (!hasLimitedChat && !hasUnlimitedChat) {
       return {
@@ -67,6 +62,11 @@ export default async function GeneralAgentCompletion(
           message: "You have reached the limit of messages for this conversation. Upgrade your plan or create a new conversation.",
         };
       }
+    }
+
+    // if the messages list is greater than 15 then only extract the last 15 messages
+    if(messages.length > 10){
+      messages = messages.slice(messages.length - 10, messages.length);
     }
 
     // Validate conversation response
