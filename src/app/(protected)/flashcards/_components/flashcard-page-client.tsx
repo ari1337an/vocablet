@@ -1,9 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 
-import { toast } from "react-hot-toast";
 import FlashCards from "./flashcards";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/app/_components/ui/dialog";
+import { Button } from "@/app/_components/ui/button";
 
 const FlashcardsPageClient = ({
   session,
@@ -16,10 +23,25 @@ const FlashcardsPageClient = ({
 }) => {
   if (!hasFlashcardsLearning) {
     return (
-      <div>
-        {" "}
-        You dont have access to this feature. Upgrade to premium to use this feature.
-      </div>
+      <Dialog open={true}>
+        <DialogContent>
+          <DialogTitle>Upgrade Required</DialogTitle>
+          <DialogDescription>
+            You do not have access to this feature. Please upgrade to access the
+            roleplay feature.
+          </DialogDescription>
+          <div className="mt-4">
+            <Button onClick={() => (window.location.href = "/pricing")}>
+              Upgrade
+            </Button>
+            <DialogClose asChild>
+              <Button variant="outline" onClick={() => window.history.back()}>
+                Cancel
+              </Button>
+            </DialogClose>
+          </div>
+        </DialogContent>
+      </Dialog>
     );
   }
 
