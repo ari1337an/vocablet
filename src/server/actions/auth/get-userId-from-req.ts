@@ -8,6 +8,7 @@ export default async function GetUserIdFromReq(
 ): Promise<string | null> {
   const token = await getToken({
     req: request,
+    secureCookie: process.env.ENVIRONEMENT === "production",
     salt:
       process.env.ENVIRONEMENT === "production"
         ? "__Secure-authjs.session-token"
