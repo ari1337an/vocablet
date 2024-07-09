@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Sheet,
   SheetContent,
@@ -9,6 +9,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/_components/ui/sheet";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/app/_components/ui/tooltip";
 import {
   Tabs,
   TabsContent,
@@ -22,6 +28,10 @@ import toast from "react-hot-toast";
 import { RoleplayTab } from "./roleplay-tab";
 import { Label } from "@/app/_components/ui/label";
 import UpgradeDialog from "./upgrade-dialog";
+import Disclaimer from "./disclaimer";
+import ArrowTurnDownLeftIcon from "@/app/_icons/arrow-turn-down-left";
+import { Textarea } from "@/app/_components/ui/textarea";
+import ShuffleIcon from "@/app/_icons/shuffle";
 
 interface Roleplay {
   id: string;
@@ -43,7 +53,7 @@ export function RoleplayingSwitchSheet({
     null
   );
   const [activeTab, setActiveTab] = useState("roleplay");
-  const [hasRoleplayAccess, setHasRoleplayAccess] = useState(false);
+  const [hasRoleplayAccess, setHasRoleplayAccess] = useState(true);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   useEffect(() => {
@@ -51,10 +61,14 @@ export function RoleplayingSwitchSheet({
       const response = await fetch("/api/check-roleplay-access");
       const data = await response.json();
       if (data.success) {
-        setHasRoleplayAccess(data.hasRoleplayAccess);
+        if (data.hasRoleplayAccess) {
+          setHasRoleplayAccess(data.hasRoleplayAccess);
+        } else {
+          setShowUpgradeDialog(true);
+        }
       } else {
-        toast.error("You donot have access to roleplay mode.");
-        setShowUpgradeDialog(true);
+        console.error("Failed to check roleplay access.");
+        // setShowUpgradeDialog(true);
       }
     }
     if (open) {
@@ -90,13 +104,39 @@ export function RoleplayingSwitchSheet({
     <>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
-          <>
-            <Switch
-              checked={roleplayMode.agent === "roleplay"}
-              id="roleplay-mode"
-            />
-            <Label htmlFor="roleplay-mode">Roleplay Mode</Label>
-          </>
+          {roleplayMode.agent === "roleplay" ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="mr-2 p-2 bg-primary hover:bg-primary/70 text-white "
+                  >
+                    <ShuffleIcon className="w-6 h-6 fill-secondary" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Roleplaying: ON</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className=" p-2 bg-secondary hover:bg-primary/70 text-white "
+                  >
+                    <ShuffleIcon className="w-6 h-6 fill-white" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Roleplaying: OFF</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </SheetTrigger>
         <SheetContent className="h-full overflow-y-auto">
           <SheetHeader>

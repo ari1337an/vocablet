@@ -197,11 +197,8 @@ export default function App({
 
   return (
     <div className="h-full flex flex-col items-center justify-between w-full relative">
-      <div className="flex justify-end w-full px-5">
-        <RoleplayingSwitchSheet
-          conversationOngoing={conversationId === null ? false : true}
-        />
-      </div>
+      {/* <div className="flex justify-end w-full px-5">
+      </div> */}
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-y-5 lg:gap-x-5">
           {/* <div className="text-4xl font-extrabold"><FlipWords words={["Hi"]} /> <br /></div> */}
