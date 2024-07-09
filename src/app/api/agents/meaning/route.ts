@@ -15,15 +15,17 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
         const messages = body.messages;
-        
+
         // Call the completion function
         const data = await MeaningAgentCompletion(
+            userId,
             messages
         );
 
         // Check if the completion function was successful
-        if (!data.success)
-            throw new Error(data.message as string | "Completion error.");
+        if (!data.success){
+            return Response.json({success: false, message: data.message as string | "Completion error."}, {status: 200});
+        }
 
         // Return the completion response
         return Response.json(

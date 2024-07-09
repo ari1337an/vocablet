@@ -1,4 +1,5 @@
 import GetUserIdFromReq from "@/server/actions/auth/get-userId-from-req";
+import { checkEntitlement, EntitlementSlugs } from "@/server/actions/entitlement/check-entitlement";
 import CreateRoleplayAction from "@/server/actions/roleplay/create-roleplay";
 import GetRoleplaysByUserIdAction from "@/server/actions/roleplay/get-roleplays-by-user-id";
 import EntitlementRepo from "@/server/database/repositories/entitlement";
@@ -11,12 +12,12 @@ export async function POST(request: NextRequest) {
             throw new Error("Unauthorized request.");
         }
 
-        const userEntitlements = await EntitlementRepo.getEntitlementOfUser(userId).then((user) => user?.Entitlements);
+        const hasRoleplayFeatureEntitleMent = await checkEntitlement(userId, EntitlementSlugs.VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT);
 
-        const hasRoleplayFeatureEntitleMent =
-            userEntitlements?.some(
-                (entitlement) => entitlement.feature === "vocablet-roleplay-feature-in-ai-chat"
-            ) || false;
+        // const hasRoleplayFeatureEntitleMent =
+        //     userEntitlements?.some(
+        //         (entitlement) => entitlement.feature === "vocablet-roleplay-feature-in-ai-chat"
+        //     ) || false;
 
         if (!hasRoleplayFeatureEntitleMent) {
             return Response.json({ success: false, message: "You do not have access to use this feature. Upgrade your plan to use this feature." }, { status: 200 })
@@ -52,13 +53,8 @@ export async function GET(request: NextRequest) {
             throw new Error("Unauthorized request.");
         }
 
-
-        const userEntitlements = await EntitlementRepo.getEntitlementOfUser(userId).then((user) => user?.Entitlements);
-
         const hasRoleplayFeatureEntitleMent =
-            userEntitlements?.some(
-                (entitlement) => entitlement.feature === "vocablet-roleplay-feature-in-ai-chat"
-            ) || false;
+            await checkEntitlement(userId, EntitlementSlugs.VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT);
 
         if (!hasRoleplayFeatureEntitleMent) {
             return Response.json({ success: false, message: "You do not have access to use this feature. Upgrade your plan to use this feature." }, { status: 200 })

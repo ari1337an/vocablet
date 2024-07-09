@@ -58,20 +58,20 @@ const FlashcardBackContent: React.FC<FlashcardBackContentProps> = ({
     fetchMeaning();
   }, [wordOrPhrase]);
 
-  const generateMeaningWithAI = async () => {
-    setShowAIGeneration(true);
-    try {
-      const response = await fetch("/api/generate-meaning", { method: "POST" });
-      const data = await response.json();
-      setDefinitions([data]);
-    } catch (error) {
-      console.error(error);
-      setDefinitions([
-        { definition: "Error generating meaning with AI.", partOfSpeech: "" },
-      ]);
-    }
-    setShowAIGeneration(false);
-  };
+  // const generateMeaningWithAI = async () => {
+  //   setShowAIGeneration(true);
+  //   try {
+  //     const response = await fetch("/api/generate-meaning", { method: "POST" });
+  //     const data = await response.json();
+  //     setDefinitions([data]);
+  //   } catch (error) {
+  //     console.error(error);
+  //     setDefinitions([
+  //       { definition: "Error generating meaning with AI.", partOfSpeech: "" },
+  //     ]);
+  //   }
+  //   setShowAIGeneration(false);
+  // };
 
   const firstDefinition = definitions[0];
 

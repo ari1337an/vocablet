@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const userId = await GetUserIdFromReq(request);
     if (!userId) {
-      throw new Error("Unauthorized request.");
+      throw new Error("Unauthorized request! Request can't be processed!");
     }
 
     const body = await request.json();

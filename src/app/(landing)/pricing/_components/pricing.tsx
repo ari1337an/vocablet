@@ -22,6 +22,7 @@ const pricingPlans: PricingPlan[] = [
       "Vocablet AI Chat (max 30 message/conversation)",
       "Roleplay Feature in AI Chat",
       "Flashcards Learning",
+      "Word Meaning with AI",
       "Priority Support",
       "Cancel Anytime",
     ],
