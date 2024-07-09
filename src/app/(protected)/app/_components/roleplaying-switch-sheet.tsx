@@ -103,7 +103,7 @@ export function RoleplayingSwitchSheet({
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger>
+        <SheetTrigger asChild>
           {roleplayMode.agent === "roleplay" ? (
             <TooltipProvider>
               <Tooltip>
