@@ -7,6 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/_components/ui/sheet";
+import toast from "react-hot-toast";
 
 interface GenerateMeaningSheetProps {
   wordToGenerate: string;
@@ -40,19 +41,23 @@ export function GenerateMeaningSheet({
           body: JSON.stringify({ messages }),
         });
         const data = await response.json();
-        const outputs = JSON.parse(data.meaningOutput);
+        if (data.success) {
+          const outputs = JSON.parse(data.meaningOutput);
 
-        const meanings = outputs.meanings;
+          const meanings = outputs.meanings;
 
-        const defs: Definition[] = [];
-        for (const def of meanings) {
-          defs.push({
-            definition: def.definition,
-            example: def.example,
-            partOfSpeech: def.partOfSpeech,
-          });
+          const defs: Definition[] = [];
+          for (const def of meanings) {
+            defs.push({
+              definition: def.definition,
+              example: def.example,
+              partOfSpeech: def.partOfSpeech,
+            });
+          }
+          setDefinitions(defs);
+        }else{
+          toast.error(data.message);
         }
-        setDefinitions(defs);
       } catch (error) {
         console.error("Error generating meaning with AI:", error);
       }
@@ -61,7 +66,7 @@ export function GenerateMeaningSheet({
     if (open) {
       generateMeaningWithAI();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, wordToGenerate]);
 
   const handleOpenChange = (isOpen: boolean) => {
