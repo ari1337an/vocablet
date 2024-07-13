@@ -81,8 +81,7 @@ export default async function VocabAgentCompletion(
         if (!enhanced_text || typeof enhanced_text !== "string") {
             throw new Error("Invalid response format.");
         }
-
-        console.log('enhanced words;', enhanced_words);
+        
         // TODO: Deduct tokens
 
         // Return the validated response
