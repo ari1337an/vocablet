@@ -119,7 +119,7 @@ export function GenerateWordsTab({
         });
 
         const data = await response.json();
-        if (data.success) {
+        if (data.success == true) {
           const messageString = data.words.replace(/'/g, '"');
           const words = JSON.parse(messageString);
           setWords(words);
@@ -132,9 +132,14 @@ export function GenerateWordsTab({
           //     {}
           //   );
           //   setCheckedWords(initialCheckedWords);
+        }else if(data.success == false){
+          toast.error(data.message + "");
+        }else{
+          throw new Error("Word list error occured");
+          
         }
       } catch (error) {
-        console.log("word list error occured");
+        toast.error("Word list error occured")
       }
     });
   };
@@ -155,6 +160,7 @@ export function GenerateWordsTab({
                 <FormControl>
                   <Textarea
                     placeholder="A specific scenario to generate words."
+                    className="bg-black mx-1"
                     {...field}
                   />
                 </FormControl>

@@ -16,6 +16,7 @@ import { ConversationWithOutSystemPromptSchema } from "@/server/validation/opena
 import { PromptFactory } from "@/server/prompts/prompt-factory";
 import UserRepo from "@/server/database/repositories/user";
 import VocabularyBucketRepo from "@/server/database/repositories/vocabulary-bucket";
+import { checkEntitlement, EntitlementSlugs } from "../../entitlement/check-entitlement";
 
 export default async function WordSuggesterCompletion(
     userId: string,
@@ -23,6 +24,11 @@ export default async function WordSuggesterCompletion(
     minimum_words?: number,
 ) {
     try {
+        // Check User's entitlements
+        if(!(await checkEntitlement(userId, EntitlementSlugs.VOCABLET_WORD_GENERATE_AGENT))){
+          throw new Error("You do not have access to use this feature. Upgrade your plan to use this feature.");
+        }
+
         // TODO: check if user have tokens to generate the response
 
         // Get the last message from the messages array.
