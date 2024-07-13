@@ -74,7 +74,7 @@ export function AddWordsSheet({
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button variant="ghost">
           <AddIcon className="w-5 h-5 fill-white hover:fill-primary" />
         </Button>
@@ -121,8 +121,8 @@ export function AddWordsSheet({
           </Command>
           <Tabs defaultValue="generateWords">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="generateWords">Generate Words</TabsTrigger>
-              <TabsTrigger value="addWord">Add Word</TabsTrigger>
+              <TabsTrigger className="hover:bg-black" value="generateWords">Generate Words</TabsTrigger>
+              <TabsTrigger className="hover:bg-black" value="addWord">Add Word</TabsTrigger>
             </TabsList>
             <TabsContent value="generateWords">
               <GenerateWordsTab
