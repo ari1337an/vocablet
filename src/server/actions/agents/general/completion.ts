@@ -56,6 +56,8 @@ export default async function GeneralAgentCompletion(
       EntitlementSlugs.VOCABLET_AI_CHAT_UNLIMITED
     );
 
+    console.log(`User is requesting and hasLimitedChat is ${hasLimitedChat} and ${hasUnlimitedChat}`)
+
     if (!hasLimitedChat && !hasUnlimitedChat) {
       return {
         success: false,
