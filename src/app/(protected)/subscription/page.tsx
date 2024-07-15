@@ -5,6 +5,12 @@ import React from "react";
 import { auth } from "@/server/authentication/auth";
 import Link from "next/link";
 import { Button } from "@/app/_components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/app/_components/ui/tooltip";
 
 export default async function SubscriptionPage() {
   const session = await auth();
@@ -42,6 +48,46 @@ export default async function SubscriptionPage() {
                   Plan: {process.env.PRICING_PLAN_2_NAME}
                 </p>
               )}
+              {subscription.stripePriceId ===
+                process.env.PRICING_PLAN_3_PRICE_ID && (
+                <p className="text-sm ">
+                  Plan: {process.env.PRICING_PLAN_3_NAME}
+                </p>
+              )}
+
+              <p className="text-sm">
+                Messages Used:{" "}
+                {subscription.stripeSubscriptionActive &&
+                !subscription.stripeInvoiceFailed ? (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <>
+                          <span
+                            className={
+                              subscription.messageUsed /
+                                subscription.messageCurrencyMax <=
+                              0.5
+                                ? "text-green-600 font-bold"
+                                : subscription.messageUsed /
+                                    subscription.messageCurrencyMax <=
+                                  0.9
+                                ? "text-orange-600 font-bold"
+                                : "text-red-600 font-bold"
+                            }
+                          >
+                            {subscription.messageUsed}/
+                            {subscription.messageCurrencyMax}
+                          </span>
+                        </>
+                      </TooltipTrigger>
+                      <TooltipContent>Renews Monthly</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <span className="text-red-600 font-bold">0</span>
+                )}
+              </p>
 
               <p className="text-sm">
                 Status:{" "}
