@@ -5,6 +5,7 @@ import Stripe from "stripe";
 import getCustomerSubscriptionPriceId from "@/server/actions/stripe/get-priceid-from-customer-id";
 import getCustomerEmail from "@/server/actions/stripe/get-customer-email";
 import UserRepo from "@/server/database/repositories/user";
+import getMessageLimitFromPriceId from "@/server/actions/stripe/get-message-limit-from-priceid";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -36,11 +37,14 @@ export async function POST(request: NextRequest) {
         session.customer as string
       );
 
+      const message_limit = await getMessageLimitFromPriceId(priceId);
+
       await SubscriptionRepo.assignSubscription(
         customer_email as string,
         session.customer as string,
         priceId,
-        session.subscription as string
+        session.subscription as string,
+        message_limit as number
       );
     } else if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object as Stripe.Subscription;
@@ -52,6 +56,12 @@ export async function POST(request: NextRequest) {
         const priceId = subscription.items.data[0].price.id;
         if (priceId) {
           await SubscriptionRepo.updatePriceIdForCustomer(customerId, priceId);
+
+          const message_limit = await getMessageLimitFromPriceId(priceId);
+          await SubscriptionRepo.updateMessageCurrencyMax(
+            customerId,
+            message_limit
+          );
         }
 
         await SubscriptionRepo.updateExpires(
@@ -79,10 +89,21 @@ export async function POST(request: NextRequest) {
           customerId as string
         )
       ) {
-        await EntitlementRepo.markEntitlementsOfSubscriptionIdAsActive(
-          customerEmail as string
-        );
-        await SubscriptionRepo.markAsSuccessfullyRenewed(customerId as string);
+        if (invoice.billing_reason === "subscription_update") {
+          await EntitlementRepo.markEntitlementsOfSubscriptionIdAsActive(
+            customerEmail as string
+          );
+          await SubscriptionRepo.markAsSubscriptionUpgradedOrDowngraded(
+            customerId as string
+          );
+        } else {
+          await EntitlementRepo.markEntitlementsOfSubscriptionIdAsActive(
+            customerEmail as string
+          );
+          await SubscriptionRepo.markAsSuccessfullyRenewed(
+            customerId as string
+          );
+        }
       } else {
         if (invoice.billing_reason !== "subscription_create") {
           throw new Error("Subscription not found in database!");

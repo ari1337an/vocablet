@@ -29,6 +29,7 @@ export default async function createCheckoutSession(
    
     // Create a new checkout session
     const session = await stripe.checkout.sessions.create({
+      allow_promotion_codes: true,
       metadata: {
         user_id: userId,
         price_id: priceId,

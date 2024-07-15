@@ -25,6 +25,8 @@ export default async function BuyPage({
       return process.env.PRICING_PLAN_1_PRICE_ID;
     } else if (planSlug.toLowerCase() === process.env.PRICING_PLAN_2_SLUG) {
       return process.env.PRICING_PLAN_2_PRICE_ID;
+    } else if(planSlug.toLowerCase() === process.env.PRICING_PLAN_3_SLUG) {
+      return process.env.PRICING_PLAN_3_PRICE_ID;
     } else {
       throw new Error("Invalid Plan!");
     }

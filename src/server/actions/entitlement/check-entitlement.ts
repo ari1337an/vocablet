@@ -7,7 +7,8 @@ export enum EntitlementSlugs {
   VOCABLET_AI_CHAT_UNLIMITED = "vocablet-ai-chat-unlimited", // for unlimited limits in each chat
   VOCABLET_FLASHCARDS_LEARNING = "vocablet-flashcards-learning", // for flashcards features
   VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT = "vocablet-roleplay-feature-in-ai-chat", // for roleplay features
-  VOCABLET_MEANING_AGENT = "vocablet-meaning-agent" // for meaning agent.
+  VOCABLET_MEANING_AGENT = "vocablet-meaning-agent", // for meaning agent
+  VOCABLET_WORD_GENERATE_AGENT = "vocablet-word-generate-agent", // for word generate agent
 }
 
 // DTO for enum to string conversion
@@ -25,6 +26,8 @@ export const EntitlementSlugDTO = {
         return EntitlementSlugs.VOCABLET_AI_CHAT_UNLIMITED;
       case "vocablet-meaning-agent":
         return EntitlementSlugs.VOCABLET_MEANING_AGENT;
+      case "vocablet-word-generate-agent":
+        return EntitlementSlugs.VOCABLET_WORD_GENERATE_AGENT
       default:
         throw new Error(`Unknown entitlement slug: ${slug}`);
     }
@@ -32,7 +35,7 @@ export const EntitlementSlugDTO = {
 };
 
 /**
- * 
+ * Checks for if a user have an entitlement to a feature.
  * @param userId
  * @param entitlementSlug
  */
@@ -41,9 +44,9 @@ export async function checkEntitlement(
   entitlementSlug: EntitlementSlugs
 ): Promise<boolean> {
   try {
-    const usersEntitlements = (await EntitlementRepo.getEntitlementOfUser(
-      userId
-    ))?.Entitlements;
+    const usersEntitlements = (
+      await EntitlementRepo.getEntitlementOfUser(userId)
+    )?.Entitlements;
 
     if (!usersEntitlements) {
       return false;
@@ -51,7 +54,9 @@ export async function checkEntitlement(
 
     // Check if entitlementSlug is present in user's entitlements
     return usersEntitlements.some(
-      (entitlement: Entitlement) => entitlement.feature === EntitlementSlugDTO.toString(entitlementSlug) && entitlement.active === true
+      (entitlement: Entitlement) =>
+        entitlement.feature === EntitlementSlugDTO.toString(entitlementSlug) &&
+        entitlement.active === true
     );
   } catch (error) {
     throw new Error((error as Error).message);

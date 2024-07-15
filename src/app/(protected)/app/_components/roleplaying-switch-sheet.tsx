@@ -23,14 +23,9 @@ import {
 } from "@/app/_components/ui/tabs";
 import { Button } from "@/app/_components/ui/button";
 import useAppStore from "../../_store/useAppStore";
-import { Switch } from "@/app/_components/ui/switch";
 import toast from "react-hot-toast";
 import { RoleplayTab } from "./roleplay-tab";
-import { Label } from "@/app/_components/ui/label";
 import UpgradeDialog from "./upgrade-dialog";
-import Disclaimer from "./disclaimer";
-import ArrowTurnDownLeftIcon from "@/app/_icons/arrow-turn-down-left";
-import { Textarea } from "@/app/_components/ui/textarea";
 import ShuffleIcon from "@/app/_icons/shuffle";
 
 interface Roleplay {
@@ -103,40 +98,42 @@ export function RoleplayingSwitchSheet({
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger>
-          {roleplayMode.agent === "roleplay" ? (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="mr-2 p-2 bg-primary hover:bg-primary/70 text-white "
-                  >
-                    <ShuffleIcon className="w-6 h-6 fill-secondary" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Roleplaying: ON</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className=" p-2 bg-secondary hover:bg-primary/70 text-white "
-                  >
-                    <ShuffleIcon className="w-6 h-6 fill-white" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Roleplaying: OFF</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
+        <SheetTrigger asChild>
+          <div>
+            {roleplayMode.agent === "roleplay" ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="mr-2 p-2 bg-primary hover:bg-primary/70 text-white"
+                    >
+                      <ShuffleIcon className="w-6 h-6 fill-secondary" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Roleplaying: ON</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className=" p-2 bg-secondary hover:bg-primary/70 text-white z-40"
+                    >
+                      <ShuffleIcon className="w-6 h-6 fill-white" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Roleplaying: OFF</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </div>
         </SheetTrigger>
         <SheetContent className="h-full overflow-y-auto">
           <SheetHeader>

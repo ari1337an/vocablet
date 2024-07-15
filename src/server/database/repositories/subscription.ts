@@ -1,5 +1,4 @@
 import db from "@/server/database/db";
-import Stripe from "stripe";
 
 export default class SubscriptionRepo {
   static async updatePriceIdForCustomer(customerId: string, priceId: string) {
@@ -13,12 +12,37 @@ export default class SubscriptionRepo {
     });
   }
   static async markAsFailedToRenew(stripeCustomerId: string) {
-    return await db.subscription.update({
+    const subscription = await db.subscription.findUnique({
       where: { stripeCustomerId: stripeCustomerId },
-      data: { stripeInvoiceFailed: true },
+    });
+
+    if (subscription) {
+      return await db.subscription.update({
+        where: { stripeCustomerId: stripeCustomerId },
+        data: {
+          stripeInvoiceFailed: true,
+          messageUsed: subscription.messageCurrencyMax,
+        },
+      });
+    }
+
+    throw new Error(
+      `Subscription not found for customer ID: ${stripeCustomerId}`
+    );
+  }
+
+  static markAsSuccessfullyRenewed(stripeCustomerId: string) {
+    return db.subscription.update({
+      where: { stripeCustomerId: stripeCustomerId },
+      data: {
+        stripeSubscriptionExpires: null,
+        stripeInvoiceFailed: false,
+        messageUsed: 0,
+      },
     });
   }
-  static markAsSuccessfullyRenewed(stripeCustomerId: string) {
+
+  static markAsSubscriptionUpgradedOrDowngraded(stripeCustomerId: string){
     return db.subscription.update({
       where: { stripeCustomerId: stripeCustomerId },
       data: {
@@ -52,7 +76,8 @@ export default class SubscriptionRepo {
     emailId: string,
     stripeCustomerId: string,
     stripePriceId: string,
-    stripeSubscriptionId: string
+    stripeSubscriptionId: string,
+    message_limit: number
   ) {
     return await db.subscription.create({
       data: {
@@ -62,6 +87,8 @@ export default class SubscriptionRepo {
         stripeSubscriptionId,
         stripeSubscriptionActive: true,
         stripeSubscriptionExpires: null,
+        messageCurrencyMax: message_limit,
+        messageUsed: 0,
       },
     });
   }
@@ -86,4 +113,66 @@ export default class SubscriptionRepo {
       where: { stripeCustomerId: stripeCustomerId },
     });
   }
+
+  static async updateMessageCurrencyMax(
+    stripeCustomerId: string,
+    newMessageCurrency: number
+  ) {
+    return await db.subscription.update({
+      where: {
+        stripeCustomerId: stripeCustomerId,
+      },
+      data: {
+        messageCurrencyMax: newMessageCurrency,
+      },
+    });
+  }
+
+  static async getMessageRemainingCount(stripeCustomerId: string) {
+    const subscription = await db.subscription.findUnique({
+      where: { stripeCustomerId: stripeCustomerId },
+    });
+  
+    if (subscription) {
+      if (subscription.stripeSubscriptionActive && !subscription.stripeInvoiceFailed) {
+        return Math.max(0, subscription.messageCurrencyMax - subscription.messageUsed);
+      } else {
+        return 0;
+      }
+    }
+  
+    throw new Error(
+      `Subscription not found for customer ID: ${stripeCustomerId}`
+    );
+  }
+
+  static async getMessageRemainingCountByUserId(userId: string) {
+    const subscription = await db.subscription.findUnique({
+      where: { userId: userId },
+    });
+  
+    if (subscription) {
+      if (subscription.stripeSubscriptionActive && !subscription.stripeInvoiceFailed) {
+        return Math.max(0, subscription.messageCurrencyMax - subscription.messageUsed);
+      } else {
+        return 0;
+      }
+    }
+  
+    throw new Error(
+      `Subscription not found for user id: ${userId}`
+    );
+  }
+
+  static async recordOneMessageUseInDBForUser(userId: string){
+    return await db.subscription.update({
+      where: {
+        userId: userId
+      },
+      data: {
+        messageUsed: {increment: 1}
+      }
+    })
+  }
+  
 }
