@@ -59,6 +59,20 @@ export default function LandingPage({
                 Get Started
               </Button>
             </Link>
+            <a
+              href="https://www.producthunt.com/posts/vocablet?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-vocablet"
+              target="_blank"
+            >
+              <picture>
+                <img
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=471134&theme=light"
+                  alt="Vocablet - Personalized&#0032;vocabulary&#0032;learning&#0032;app&#0032;with&#0032;roleplay&#0033; | Product Hunt"
+                  // style="width: 250px; height: 54px;"
+                  width="250"
+                  height="54"
+                />
+              </picture>
+            </a>
           </div>
           <div className="hidden md:flex w-full md:w-1/2 items-center justify-center p-6">
             <Image
