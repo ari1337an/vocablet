@@ -15,9 +15,9 @@ export default function page() {
           <h1 className="text-5xl uppercase">Welcome Back</h1>
           <Separator className="w-20 h-2 rounded" />
           <p className="text-base">
-            Sign in to our app and revolutionize your routine with seamless
-            automation. Effortlessly manage tasks, schedules, and smart devices
-            while staying connected. Experience the future of efficiency today!
+            Sign in to personalize your vocabulary learning journey, engage in
+            dynamic roleplays, and master advanced words effortlessly.
+            Experience intelligent, fun, and effective language learning today!
           </p>
         </div>
       </div>

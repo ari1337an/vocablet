@@ -50,8 +50,9 @@ export default function LandingPage({
               </motion.h1>
             </div>
             <div className="text-sm md:text-lg font-semibold text-left z-20">
-              Vocablet offers an effective way to learn C2 level English
-              vocabulary to ace SATs, GREs, and other standardized tests.
+              Vocablet offers an effective way to learn advanced English
+              vocabulary, helping you excel in exams, enhance your communication
+              skills, and achieve your language goals.
             </div>
             <Link href="/auth/login">
               <Button className="text-xl p-6 z-20" variant="default">

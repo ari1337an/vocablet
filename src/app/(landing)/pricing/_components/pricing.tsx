@@ -33,7 +33,7 @@ const pricingPlans: PricingPlan[] = [
   {
     name: "Vocablet Pro",
     slug: "pro",
-    price: "$20",
+    price: "$22",
     interval: "month",
     isPopular: true,
     features: [
