@@ -259,7 +259,7 @@ export default function LandingPage({
             containerClassName="hidden"
           >
             <Image
-              src={`/roleplay-mobview.webp`}
+              src={`/meaning-example.webp`}
               alt="vocablet chat interface"
               height={1006}
               width={400}
@@ -271,7 +271,7 @@ export default function LandingPage({
             containerClassName="lg:block"
           >
             <Image
-              src={`/roleplay-mobview.webp`}
+              src={`/meaning-example.webp`}
               alt="vocablet chat interface"
               height={1006}
               width={900}
@@ -287,7 +287,7 @@ export default function LandingPage({
             containerClassName="hidden"
           >
             <Image
-              src={`/roleplay-mobview.webp`}
+              src={`/flashcard-example.webp`}
               alt="vocablet chat interface"
               height={1006}
               width={400}
@@ -299,7 +299,7 @@ export default function LandingPage({
             containerClassName="lg:block"
           >
             <Image
-              src={`/roleplay-mobview.webp`}
+              src={`/flashcard-example.webp`}
               alt="vocablet chat interface"
               height={1006}
               width={900}
