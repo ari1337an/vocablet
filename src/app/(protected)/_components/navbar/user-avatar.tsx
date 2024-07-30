@@ -35,7 +35,7 @@ export default async function UserAvatar({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          <AvatarImage className="w-12 h-12 rounded-full" src={avatarUrl} />
+          <AvatarImage className="w-12 h-12 rounded-full object-center object-fill " src={avatarUrl} />
           <AvatarFallback>
             <AvatarIcon className="w-12 h-12 rounded-full" />
           </AvatarFallback>

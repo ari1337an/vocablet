@@ -41,7 +41,7 @@ export default function Navbar({
             )}
           </div>
           <Link href="/pricing">Pricing</Link>
-          <Link href="/blog">Blog</Link>
+          {/* <Link href="/blog">Blog</Link> */}
         </div>
         <div className="hidden md:flex">
           {userEmail ? (
@@ -86,9 +86,9 @@ export default function Navbar({
           <Link href="/pricing" onClick={() => setMenuOpen(false)}>
             Pricing
           </Link>
-          <Link href="/blog" onClick={() => setMenuOpen(false)}>
+          {/* <Link href="/blog" onClick={() => setMenuOpen(false)}>
             Blog
-          </Link>
+          </Link> */}
           {userEmail ? (
             <Link href="/app" onClick={() => setMenuOpen(false)}>
               <Button>Go to App</Button>

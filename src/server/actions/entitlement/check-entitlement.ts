@@ -2,19 +2,19 @@ import EntitlementRepo from "@/server/database/repositories/entitlement";
 import { Entitlement } from "@prisma/client";
 
 // Define ENUM strings for entitlement slugs
-export enum EntitlementSlugs {
-  VOCABLET_AI_CHAT_LIMITED = "vocablet-ai-chat-limited", // for 30 limits in each chat
-  VOCABLET_AI_CHAT_UNLIMITED = "vocablet-ai-chat-unlimited", // for unlimited limits in each chat
-  VOCABLET_FLASHCARDS_LEARNING = "vocablet-flashcards-learning", // for flashcards features
-  VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT = "vocablet-roleplay-feature-in-ai-chat", // for roleplay features
-  VOCABLET_MEANING_AGENT = "vocablet-meaning-agent", // for meaning agent
-  VOCABLET_WORD_GENERATE_AGENT = "vocablet-word-generate-agent", // for word generate agent
-}
+export const EntitlementSlugs = Object.freeze({
+  VOCABLET_AI_CHAT_LIMITED: "vocablet-ai-chat-limited",
+  VOCABLET_AI_CHAT_UNLIMITED: "vocablet-ai-chat-unlimited",
+  VOCABLET_FLASHCARDS_LEARNING: "vocablet-flashcards-learning",
+  VOCABLET_ROLEPLAY_FEATURE_IN_AI_CHAT: "vocablet-roleplay-feature-in-ai-chat",
+  VOCABLET_MEANING_AGENT: "vocablet-meaning-agent",
+  VOCABLET_WORD_GENERATE_AGENT: "vocablet-word-generate-agent",
+});
 
 // DTO for enum to string conversion
 export const EntitlementSlugDTO = {
-  toString: (slug: EntitlementSlugs): string => slug,
-  toEnum: (slug: string): EntitlementSlugs => {
+  toString: (slug: any): string => slug,
+  toEnum: (slug: string) => {
     switch (slug) {
       case "vocablet-flashcards-learning":
         return EntitlementSlugs.VOCABLET_FLASHCARDS_LEARNING;
@@ -41,7 +41,7 @@ export const EntitlementSlugDTO = {
  */
 export async function checkEntitlement(
   userId: string,
-  entitlementSlug: EntitlementSlugs
+  entitlementSlug: any
 ): Promise<boolean> {
   try {
     const usersEntitlements = (
@@ -50,14 +50,16 @@ export async function checkEntitlement(
 
     if (!usersEntitlements) {
       return false;
-    }
+    } 
 
     // Check if entitlementSlug is present in user's entitlements
-    return usersEntitlements.some(
+    const result =  usersEntitlements.some(
       (entitlement: Entitlement) =>
-        entitlement.feature === EntitlementSlugDTO.toString(entitlementSlug) &&
+        entitlement.feature === entitlementSlug &&
         entitlement.active === true
     );
+
+    return result;
   } catch (error) {
     throw new Error((error as Error).message);
   }
