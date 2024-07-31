@@ -20,7 +20,6 @@ const pricingPlans: PricingPlan[] = [
     price: "$2.99",
     interval: "month",
     features: [
-      "Roleplay Feature in AI Chat",
       "Flashcards Learning",
       "Word Meaning with AI",
       "Generate Words with AI",
@@ -152,7 +151,7 @@ const PricingTable = ({
                 },
                 {
                   feature: "Roleplay Feature in AI Chat",
-                  values: [true, true, true],
+                  values: [false, true, true],
                 },
                 { feature: "Flashcards Learning", values: [true, true, true] },
                 { feature: "Word Meaning with AI", values: [true, true, true] },
