@@ -15,10 +15,25 @@ interface PricingPlan {
 
 const pricingPlans: PricingPlan[] = [
   {
+    name: "Vocablet Mini",
+    slug: "mini",
+    price: "$2.99",
+    interval: "month",
+    features: [
+      "Roleplay Feature in AI Chat",
+      "Flashcards Learning",
+      "Word Meaning with AI",
+      "Generate Words with AI",
+      "Priority Support",
+      "Cancel Anytime",
+    ],
+  },
+  {
     name: "Vocablet Starter",
     slug: "starter",
     price: "$15",
     interval: "month",
+    isPopular: true,
     features: [
       "500 AI Chat Messages Monthly",
       "30 AI Messages In Single Conversation",
@@ -35,25 +50,8 @@ const pricingPlans: PricingPlan[] = [
     slug: "pro",
     price: "$22",
     interval: "month",
-    isPopular: true,
     features: [
       "1000 AI Chat Messages Monthly",
-      "Unlimited AI Messages In Single Conversation",
-      "Roleplay Feature in AI Chat",
-      "Flashcards Learning",
-      "Word Meaning with AI",
-      "Generate Words with AI",
-      "Priority Support",
-      "Cancel Anytime",
-    ],
-  },
-  {
-    name: "Vocablet Advanced",
-    slug: "advanced",
-    price: "$28",
-    interval: "month",
-    features: [
-      "1500 AI Chat Messages Monthly",
       "Unlimited AI Messages In Single Conversation",
       "Roleplay Feature in AI Chat",
       "Flashcards Learning",
@@ -96,7 +94,7 @@ const PricingTable = ({
           >
             {plan.isPopular && (
               <div className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full self-start mb-4">
-                Most popular
+                Recommended
               </div>
             )}
             <h2 className="text-2xl font-bold mb-4">{plan.name}</h2>
@@ -125,9 +123,14 @@ const PricingTable = ({
           <table className="w-full text-white table-auto border-collapse">
             <thead>
               <tr>
-                <th className="p-4 text-left border-b-2 border-gray-600">Feature</th>
+                <th className="p-4 text-left border-b-2 border-gray-600">
+                  Feature
+                </th>
                 {pricingPlans.map((plan) => (
-                  <th key={plan.name} className="p-4 text-center border-b-2 border-gray-600">
+                  <th
+                    key={plan.name}
+                    className="p-4 text-center border-b-2 border-gray-600"
+                  >
                     {plan.name}
                   </th>
                 ))}
@@ -135,20 +138,43 @@ const PricingTable = ({
             </thead>
             <tbody>
               {[
-                { feature: "Price", values: ["$15/month", "$20/month", "$28/month"] },
-                { feature: "AI Chat Messages Monthly", values: ["500", "1000", "1500"] },
-                { feature: "AI Messages In Single Conversation", values: ["30", "Unlimited", "Unlimited"] },
-                { feature: "Roleplay Feature in AI Chat", values: [true, true, true] },
+                {
+                  feature: "Price",
+                  values: ["$2.99/month", "$15/month", "$20/month"],
+                },
+                {
+                  feature: "AI Chat Messages Monthly",
+                  values: ["0", "500", "1000"],
+                },
+                {
+                  feature: "AI Messages In Single Conversation",
+                  values: ["N/A", "30", "Unlimited"],
+                },
+                {
+                  feature: "Roleplay Feature in AI Chat",
+                  values: [true, true, true],
+                },
                 { feature: "Flashcards Learning", values: [true, true, true] },
                 { feature: "Word Meaning with AI", values: [true, true, true] },
-                { feature: "Generate Words with AI", values: [true, true, true] },
+                {
+                  feature: "Generate Words with AI",
+                  values: [true, true, true],
+                },
                 { feature: "Priority Support", values: [true, true, true] },
                 { feature: "Cancel Anytime", values: [true, true, true] },
               ].map((item) => (
-                <tr key={item.feature} className="odd:bg-gray-700 even:bg-gray-800">
-                  <td className="p-4 border-b border-gray-600">{item.feature}</td>
+                <tr
+                  key={item.feature}
+                  className="odd:bg-gray-700 even:bg-gray-800"
+                >
+                  <td className="p-4 border-b border-gray-600">
+                    {item.feature}
+                  </td>
                   {item.values.map((value, index) => (
-                    <td key={pricingPlans[index].name} className="p-4 text-center border-b border-gray-600">
+                    <td
+                      key={pricingPlans[index].name}
+                      className="p-4 text-center border-b border-gray-600"
+                    >
                       {typeof value === "boolean" ? (
                         value ? (
                           <CheckGreenIcon className="w-4 h-4 mx-auto" />

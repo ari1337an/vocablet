@@ -9,6 +9,35 @@ import getMessageLimitFromPriceId from "@/server/actions/stripe/get-message-limi
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
+async function updateEntitlement(
+  customerId: string,
+  customer_email: string | null
+) {
+  // update entitlement
+  const entitlements = await stripe.entitlements.activeEntitlements.list({
+    customer: customerId,
+  });
+  const newEntitlements = entitlements.data.map(
+    (entitlement: any) => entitlement.lookup_key
+  );
+  if (newEntitlements && newEntitlements.length == 0) {
+    await EntitlementRepo.clearEntitlementOfUserByCustomerId(customerId);
+  } else {
+    const customerEmail = customer_email;
+    if (customerEmail) {
+      const user = await UserRepo.findUserByEmail(customerEmail);
+      if (!user) {
+        throw new Error(`No user found with customer email: ${customerEmail}`);
+      }
+
+      // Assign the new entitlements to the user
+      await EntitlementRepo.assignEntitlementToUser(user.id, newEntitlements);
+    } else {
+      // don't worry, the customer has already been deleted
+    }
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const rawBody = await request.text();
@@ -32,6 +61,8 @@ export async function POST(request: NextRequest) {
       // make sure this is not null (assert it in the business logic, not here)
       const customer_email = session.customer_email;
 
+      const customerId = session.customer as string;
+
       // priceId will be available now no matter what
       const priceId = await getCustomerSubscriptionPriceId(
         session.customer as string
@@ -46,6 +77,9 @@ export async function POST(request: NextRequest) {
         session.subscription as string,
         message_limit as number
       );
+
+      // update entitlement
+      updateEntitlement(customerId, customer_email);
     } else if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer as string;
@@ -89,6 +123,9 @@ export async function POST(request: NextRequest) {
           customerId as string
         )
       ) {
+        // for every invoice paid, trigger an entitlement update
+        updateEntitlement(customerId as string, customerEmail);
+
         if (invoice.billing_reason === "subscription_update") {
           await EntitlementRepo.markEntitlementsOfSubscriptionIdAsActive(
             customerEmail as string
