@@ -9,6 +9,7 @@
     "lint": "next lint",
     "email": "email dev --dir ./src/app/_templates",
     "postinstall": "prisma generate",
+    "postbuild": "next-sitemap",
     "webhook:start": "stripe listen -e customer.subscription.updated,customer.subscription.deleted,checkout.session.completed,entitlements.active_entitlement_summary.updated,invoice.payment_failed,invoice.paid --forward-to http://localhost:3000/api/webhook"
   },
   "dependencies": {
@@ -50,6 +51,7 @@
     "mini-svg-data-uri": "^1.4.4",
     "next": "14.2.3",
     "next-auth": "^5.0.0-beta.18",
+    "next-sitemap": "^4.2.3",
     "next-themes": "^0.3.0",
     "openai": "^4.47.2",
     "react": "^18",
