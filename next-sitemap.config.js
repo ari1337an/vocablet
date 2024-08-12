@@ -9,6 +9,18 @@ module.exports = {
         userAgent: "*",
         allow: "/",
       },
+      {
+        userAgent: "Googlebot",
+        disallow: ""
+      },
+      {
+        userAgent: "AdsBot-Google",
+        disallow: ""
+      },
+      {
+        userAgent: "Googlebot-Image",
+        disallow: ""
+      }
     ],
   },
   additionalPaths: async (config) => {

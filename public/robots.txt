@@ -2,6 +2,18 @@
 User-agent: *
 Allow: /
 
+# Googlebot
+User-agent: Googlebot
+Disallow: 
+
+# AdsBot-Google
+User-agent: AdsBot-Google
+Disallow: 
+
+# Googlebot-Image
+User-agent: Googlebot-Image
+Disallow: 
+
 # Host
 Host: https://vocablet.io
 
