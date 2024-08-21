@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./_providers/theme-provider";
 import { Toaster } from "react-hot-toast";
+import { GoogleTagManager } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -95,7 +96,7 @@ export default function RootLayout({
         <meta name="title" content="Vocablet: Learn Vocabulary With Roleplays!"/>
         <meta name="keywords" content="vocabulary app,vocabulary learning,chat vocabulary,personalized vocabulary,advanced vocabulary,learn vocabulary,chat learning app,chatbot vocabulary,vocabulary suggestions,language learning,learn new words,vocabulary flashcards,vocabulary builder,chatbot language learning,interactive vocabulary learning,vocabulary training app,personalized language learning,advanced words suggestion,chat with ai,ai vocabulary tutor,vocabulary flashcards app,learn vocabulary fast,language proficiency,custom vocabulary lists,ai language learning, roleplay, roleplay vocabulary, alphawolf vocabulary, chat agents"/>
 
-
+        <GoogleTagManager gtmId="AW-16554231936" />
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark">
