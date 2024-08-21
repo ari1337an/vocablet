@@ -21,7 +21,7 @@ export default function Message({ message }: MessageProps) {
     >
       {message.role === "assistant" && (
         <div
-          className={`p-5 my-8 break-words mr-5 bg-black text-white max-w-xl rounded-xl`}
+          className={`p-5 my-8 break-words mr-5 bg-secondary text-white max-w-xl rounded-xl`}
           style={{ wordWrap: "break-word", overflowWrap: "break-word" }}
         >
           <MarkdownComponent markdownText={message.message as string} />

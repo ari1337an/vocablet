@@ -7,7 +7,7 @@ import { z } from "zod";
 export default async function OpenAITextCompletion(
   messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
   systemPrompt: string = `Your name is ${process.env.NEXT_PUBLIC_BRAND_NAME} AI. You're a helpful assistant.`,
-  model: string = "gpt-3.5-turbo"
+  model: string = "gpt-4o-mini"
 ) {
   const validatedMessages =
     ConversationWithOutSystemPromptSchema.parse(messages);
