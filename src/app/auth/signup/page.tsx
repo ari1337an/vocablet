@@ -2,7 +2,12 @@ import React, { Suspense } from "react";
 import { SignUp } from "./_components/sign-up"; // Changed to SignUp
 import { Separator } from "@/app/_components/ui/separator";
 import Link from "next/link";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Signup | Vocablet AI",
+  description: "Signup to Vocablet",
+};
 export default function Page() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row relative">

@@ -2,6 +2,12 @@ import React, { Suspense } from "react";
 import { SignIn } from "./_components/sign-in";
 import { Separator } from "@/app/_components/ui/separator";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Signin | Vocablet AI",
+  description: "Signin to Vocablet",
+};
 
 export default function page() {
   return (

@@ -202,7 +202,10 @@ export default function App({
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-y-5 lg:gap-x-5">
           {/* <div className="text-4xl font-extrabold"><FlipWords words={["Hi"]} /> <br /></div> */}
-          <div className="text-muted-foreground">Write something in the chatbox and hit <CommandShortcut>Enter</CommandShortcut>.</div>
+          <div className="text-muted-foreground">
+            Write something in the chatbox and hit{" "}
+            <CommandShortcut>Enter</CommandShortcut>.
+          </div>
           {/* <Link target="_blank" href="/subscription/buy/starter">
             <Button>Buy Starter $14.99</Button>
           </Link>
@@ -220,7 +223,7 @@ export default function App({
       )}
 
       <ChatInput
-        className="w-full max-w-4xl px-4 bg-dark rounded-lg pb-4"
+        className="w-full max-w-4xl px-4 rounded-lg pb-4"
         onSendMessage={handleSendMessage}
         isPending={isPending}
       />

@@ -1,22 +1,15 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./_providers/theme-provider";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { Toaster } from "react-hot-toast";
-import { GoogleTagManager } from '@next/third-parties/google'
-
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_BRAND_NAME,
-  description: process.env.NEXT_PUBLIC_BRAND_DESC,
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const session = await auth();
   return (
     <html suppressHydrationWarning lang="en">
       <head>
@@ -93,17 +86,30 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff" />
-        <meta name="title" content="Vocablet: Learn Vocabulary With Roleplays!"/>
-        <meta name="keywords" content="vocabulary app,vocabulary learning,chat vocabulary,personalized vocabulary,advanced vocabulary,learn vocabulary,chat learning app,chatbot vocabulary,vocabulary suggestions,language learning,learn new words,vocabulary flashcards,vocabulary builder,chatbot language learning,interactive vocabulary learning,vocabulary training app,personalized language learning,advanced words suggestion,chat with ai,ai vocabulary tutor,vocabulary flashcards app,learn vocabulary fast,language proficiency,custom vocabulary lists,ai language learning, roleplay, roleplay vocabulary, alphawolf vocabulary, chat agents"/>
+        <meta
+          name="title"
+          content="Vocablet: Learn vocabulary with AI"
+        />
+        <meta
+          name="keywords"
+          content="vocabulary app,vocabulary learning,chat vocabulary,personalized vocabulary,advanced vocabulary,learn vocabulary,chat learning app,chatbot vocabulary,vocabulary suggestions,language learning,learn new words,vocabulary flashcards,vocabulary builder,chatbot language learning,interactive vocabulary learning,vocabulary training app,personalized language learning,advanced words suggestion,chat with ai,ai vocabulary tutor,vocabulary flashcards app,learn vocabulary fast,language proficiency,custom vocabulary lists,ai language learning, roleplay, roleplay vocabulary, alphawolf vocabulary, chat agents"
+        />
 
         <GoogleTagManager gtmId="AW-16554231936" />
       </head>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark">
-          {children}
-          <Toaster />
-        </ThemeProvider>
+
+      <body className={`bg-[#FCFCFC] dark:bg-black ${inter.className}`}>
+        <Providers>
+          <SessionProvider session={session}>
+            {children}
+            <Toaster />
+          </SessionProvider>
+        </Providers>
       </body>
     </html>
   );
 }
+
+import { Providers } from "./providers";
+import { auth } from "@/server/authentication/auth";
+import { SessionProvider } from "next-auth/react";

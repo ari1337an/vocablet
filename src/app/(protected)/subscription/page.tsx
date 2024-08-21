@@ -21,16 +21,16 @@ export default async function SubscriptionPage() {
   );
 
   return (
-    <div className="flex flex-col gap-y-10 items-center justify-center h-full">
+    <div className=" flex flex-col gap-y-10 items-center justify-center h-full">
       {subscriptions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-y-5 text-center text-lg">
+        <div className="flex flex-col items-center justify-center gap-y-5 text-center text-lg ">
           You don&apos;t have any subscription!
           <Link href="/pricing">
             <Button>See Pricing</Button>
           </Link>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center ring-4 ring-primary rounded-lg">
           {subscriptions.map((subscription: any) => (
             <div
               key={subscription.stripeCustomerId || `topup-${subscription.id}`}
