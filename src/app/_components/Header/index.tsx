@@ -139,7 +139,7 @@ const Header = () => {
                                 </svg>
                               </span>
                             </p>
-                            <div
+                            {/* <div
                               className={`submenu relative left-0 top-full rounded-sm bg-white transition-[top] duration-300 group-hover:opacity-100 dark:bg-dark lg:invisible lg:absolute lg:top-[110%] lg:block lg:w-[250px] lg:p-4 lg:opacity-0 lg:shadow-lg lg:group-hover:visible lg:group-hover:top-full ${
                                 openIndex === index ? "block" : "hidden"
                               }`}
@@ -155,11 +155,36 @@ const Header = () => {
                                   </Link>
                                 )
                               )}
-                            </div>
+                            </div> */}
                           </>
                         )}
                       </li>
                     ))}
+                    <li key="5" className="group relative">
+                      <div className="flex items-center justify-start ">
+                        {session?.data?.user?.email && (
+                          <>
+                            <Link
+                              href="/app"
+                              className="ease-in-up shadow-btn hover:shadow-btn-hover rounded-sm bg-primary px-4 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:hidden md:px-9 lg:px-6 xl:px-9"
+                            >
+                              Get Started
+                            </Link>
+                          </>
+                        )}
+                        {!session?.data?.user?.email && (
+                          <>
+                            <Link
+                              href="/auth/login"
+                              className="ease-in-up shadow-btn hover:shadow-btn-hover rounded-sm bg-primary px-4 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:hidden md:px-9 lg:px-6 xl:px-9"
+                            >
+                              Get Started
+                            </Link>
+                          </>
+                        )}
+
+                      </div>
+                    </li>
                   </ul>
                 </nav>
               </div>
