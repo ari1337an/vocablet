@@ -11,7 +11,7 @@ export default async function RootLayout({
 }) {
   const session = await auth();
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="en" className="dark">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link
@@ -131,7 +131,7 @@ export default async function RootLayout({
         <GoogleTagManager gtmId="AW-16554231936" />
       </head>
 
-      <body className={`bg-[#FCFCFC] dark dark:bg-black ${inter.className}`}>
+      <body className={`bg-[#FCFCFC] dark:bg-black ${inter.className}`}>
         <Providers>
           <SessionProvider session={session}>
             {children}
