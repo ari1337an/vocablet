@@ -7,18 +7,18 @@ import Header from "../_components/Header";
 import Footer from "../_components/Footer";
 
 export const metadata: Metadata = {
-  title: "Blog Page | Free Next.js Template for Startup and SaaS",
-  description: "This is Blog Page for Startup Nextjs Template",
+  title: "Blogs | Vocablet",
+  description: "Learn about vocabulary, grammar, and more with our blogs!",
   // other metadata
 };
 
 const Blog = () => {
   return (
     <>
-      <Header/>
+      <Header />
       <Breadcrumb
-        pageName="Blog Grid"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius eros eget sapien consectetur ultrices. Ut quis dapibus libero."
+        pageName="Blogs"
+        description="Learn about vocabulary, grammar, and more with our blogs!"
       />
 
       <section className="pb-[120px] pt-[120px]">
@@ -95,7 +95,7 @@ const Blog = () => {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </>
   );
 };
