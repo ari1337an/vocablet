@@ -49,6 +49,13 @@ module.exports = {
     });
 
     result.push({
+      loc: "/blog/quizlet-vs-magoosh-vs-vocablet-best-vocabulary-learning-tools-compared",
+      changefreq: "daily",
+      priority: 0.7,
+      lastmod: new Date().toISOString(),
+    });
+
+    result.push({
       loc: "/auth/login",
       changefreq: "daily",
       priority: 0.7,
