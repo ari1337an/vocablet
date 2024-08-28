@@ -94,40 +94,6 @@ export default async function RootLayout({
           content="vocabulary app,vocabulary learning,chat vocabulary,personalized vocabulary,advanced vocabulary,learn vocabulary,chat learning app,chatbot vocabulary,vocabulary suggestions,language learning,learn new words,vocabulary flashcards,vocabulary builder,chatbot language learning,interactive vocabulary learning,vocabulary training app,personalized language learning,advanced words suggestion,chat with ai,ai vocabulary tutor,vocabulary flashcards app,learn vocabulary fast,language proficiency,custom vocabulary lists,ai language learning, roleplay, roleplay vocabulary, alphawolf vocabulary, chat agents"
         />
 
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Vocablet",
-              url: "https://vocablet.io",
-              potentialAction: [
-                {
-                  "@type": "RegisterAction",
-                  target: "https://vocablet.io/auth/signup",
-                  name: "Signup",
-                },
-                {
-                  "@type": "LoginAction",
-                  target: "https://vocablet.io/auth/login",
-                  name: "Login",
-                },
-                {
-                  "@type": "ViewAction",
-                  target: "https://vocablet.io/blog",
-                  name: "Blog",
-                },
-                {
-                  "@type": "ViewAction",
-                  target: "https://vocablet.io/pricing",
-                  name: "Pricing",
-                },
-              ],
-            }),
-          }}
-        />
-
         <GoogleTagManager gtmId="AW-16554231936" />
       </head>
 
