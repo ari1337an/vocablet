@@ -38,6 +38,7 @@ export default async function ProtectedLayout({
           >
             <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
           </Button>
+
         </div>
         <UserAvatar avatarUrl={avatarUrl} />
       </div>
