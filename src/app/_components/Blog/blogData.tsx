@@ -1,21 +1,36 @@
 import { Blog } from "@/server/types/blog";
 
 const blogData: Blog[] = [
+  // {
+  //   id: 1,
+  //   title: "Top 10 tips to learn vocabulary very fast.",
+  //   paragraph:
+  //     "In this blog, I share the top 10 tips to learn vocabulary very fast. I have learned these tips from my experience and a lot of research. I hope you will find these tips helpful.",
+  //   image: "/images/blog/blog-01.jpg",
+  //   author: {
+  //     name: "Faisal Ahmed ",
+  //     image: "/images/blog/author-02.png",
+  //     designation: "AI Researcher",
+  //   },
+  //   tags: ["creative"],
+  //   publishDate: "2025",
+  //   slug: "top-10-tips-to-learn-vocabulary-very-fast",
+  // },
   {
-    id: 1,
-    title: "Top 10 tips to learn vocabulary very fast.",
+    id: 2,
+    title: "Quizlet vs. Magoosh vs. Vocablet: Best Vocabulary Learning Tools Compared",
     paragraph:
-      "In this blog, I share the top 10 tips to learn vocabulary very fast. I have learned these tips from my experience and a lot of research. I hope you will find these tips helpful.",
+      "A detailed comparison of Quizlet, Magoosh, and Vocablet, exploring the best vocabulary learning tools for different needs and preferences.",
     image: "/images/blog/blog-01.jpg",
     author: {
-      name: "Faisal Ahmed ",
-      image: "/images/blog/author-01.png",
-      designation: "AI Researcher",
+      name: "Arian S. Hasan",
+      image: "/images/blog/author-arian.jpg",
+      designation: "GRE Aspirant",
     },
-    tags: ["creative"],
-    publishDate: "2025",
-    slug: "top-10-tips-to-learn-vocabulary-very-fast",
-  },
+    tags: ["Analysis"],
+    publishDate: "2024",
+    slug: "quizlet-vs-magoosh-vs-vocablet-best-vocabulary-learning-tools-compared",
+  }
   // {
   //   id: 2,
   //   title: "9 simple ways to improve your design skills",

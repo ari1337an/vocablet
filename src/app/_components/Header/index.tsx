@@ -217,7 +217,7 @@ const Header = () => {
                 )}
 
                 <div>
-                  <ThemeToggler />
+                  {/* <ThemeToggler /> */}
                 </div>
               </div>
             </div>

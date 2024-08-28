@@ -13,9 +13,9 @@ import { Metadata } from "next";
 import "./react-modal.css"
 
 export const metadata: Metadata = {
-  title: "Vocablet | Your Personalized Vocabulary Builder",
+  title: "Vocablet | AI-Powered Vocabulary Learning Platform",
   description:
-    "Learn Vocabulary Quickly and Easily with Vocablet. Improve your vocabulary with our AI-powered Roleplaying and Vocabulary Builder. Talk with your favourite characters, learn new words, practice with flashcards, and track your progress.",
+    "Boost your vocabulary effortlessly with Vocablet. Our AI-powered platform helps you learn new words, practice with flashcards, and engage in conversations with your favorite characters. Join now to enhance your language skills quickly and enjoyably.",
 };
 
 export default function Home() {
@@ -32,7 +32,7 @@ export default function Home() {
       {/* <Testimonials /> */}
       <Pricing />
       <Blog />
-      <Contact />
+      {/* <Contact /> */}
       <Footer />
     </>
   );
