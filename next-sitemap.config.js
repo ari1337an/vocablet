@@ -56,6 +56,13 @@ module.exports = {
     });
 
     result.push({
+      loc: "/blog/top-10-tips-to-learn-vocabulary-very-fast",
+      changefreq: "daily",
+      priority: 0.7,
+      lastmod: new Date().toISOString(),
+    });
+
+    result.push({
       loc: "/auth/login",
       changefreq: "daily",
       priority: 0.7,
