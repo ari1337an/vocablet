@@ -3,17 +3,18 @@ import { Blog } from "@/server/types/blog";
 const blogData: Blog[] = [
   {
     id: 1,
-    title: "Top 10 tips to learn vocabulary very fast.",
+    title:
+      "How to Improve Vocabulary with AI",
     paragraph:
       "In this blog, I share the top 10 tips to learn vocabulary very fast. I have learned these tips from my experience and a lot of research. I hope you will find these tips helpful.",
-    image: "/images/blog/blog-01.jpg",
+    image: "/images/blog/pexels-markus-chatgpt.jpg",
     author: {
       name: "Faisal Ahmed",
       image: "/images/blog/author-faisal.jpg",
-      designation: "GRE Aspirant",
+      designation: "CEO, AlphaWolf Ventures",
     },
     tags: ["creative"],
-    publishDate: "2025",
+    publishDate: "2024",
     slug: "top-10-tips-to-learn-vocabulary-very-fast",
   },
   {
