@@ -1,14 +1,19 @@
-import Image from 'next/image';
-import BlogTitle from "./BlogTitle";
-import AuthorData from "./AuthorData";
-import MoreInfo from "./MoreHeadingDetails";
+import Image from "next/image";
 
-const BlogWideImage = ({
+type BlogWideImageProps = {
+  imageSrc: string;
+  imageAlt: string;
+  attributionName?: string;
+  attributionLink?: string;
+  sourceName?: string;
+};
+
+const BlogWideImage: React.FC<BlogWideImageProps> = ({
   imageSrc,
-  imageAlt
-}: {
-  imageSrc: string,
-  imageAlt: string
+  imageAlt,
+  attributionName,
+  attributionLink,
+  sourceName,
 }) => {
   return (
     <>
@@ -21,6 +26,22 @@ const BlogWideImage = ({
             className="object-cover object-center"
           />
         </div>
+        {/* Image attribution */}
+        {/* Image attribution */}
+        {attributionName && attributionLink && sourceName && (
+          <p className="text-center text-sm text-gray-500 mt-2">
+            Image by{" "}
+            <a
+              href={attributionLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-blue-600"
+            >
+              {attributionName}
+            </a>{" "}
+            from {sourceName}
+          </p>
+        )}
       </div>
     </>
   );

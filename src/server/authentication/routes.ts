@@ -3,14 +3,14 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/pricing", "/blog", "/blog-details", "/features", "/terms/service", "/terms/privacy", "/blog/quizlet-vs-magoosh-vs-vocablet-best-vocabulary-learning-tools-compared"];
+export const publicRoutes = ["/", "/pricing", "/blog", "/blog-details", "/features", "/terms/service", "/terms/privacy"];
 
 /**
  * An array of API prefixes that are accessible to the public
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicAPIPrefixes = ["/api/webhook"];
+export const publicAPIPrefixes = ["/api/webhook", "/blog"];
 
 /**
  * An array of API prefixes that are protected by bearer token authorization
