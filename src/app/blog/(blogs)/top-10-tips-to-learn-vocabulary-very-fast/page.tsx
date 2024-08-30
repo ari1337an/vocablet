@@ -132,13 +132,13 @@ const BlogDetailsPage = () => {
 
                 <div>
                   <Paragraph>
-                    Are you tired of word-of-the-day apps that don’t seem to
+                    {`Are you tired of word-of-the-day apps that don’t seem to
                     take you anywhere? Do you feel stuck in your vocabulary
                     improvement journey? Whether you're preparing for a new job,
                     planning to travel, or simply want to be more knowledgeable,
                     boosting your vocabulary can make a huge difference. In this
                     blog, I’ll share 10 tips that will help you supercharge your
-                    vocabulary learning experience using AI.
+                    vocabulary learning experience using AI.`}
                   </Paragraph>
                   <BlogWideImage
                     imageSrc="/images/blog/pexels-markus-chatgpt.jpg"
@@ -152,99 +152,99 @@ const BlogDetailsPage = () => {
                     1. Develop a Reading Habit
                   </SubHeading>
                   <Paragraph>
-                    Reading exposes you to new words, making it one of the best
+                    {`Reading exposes you to new words, making it one of the best
                     ways to improve your vocabulary. Whether you prefer novels,
                     academic papers, or blogs, reading regularly will introduce
                     you to a wide array of vocabulary. The more you read, the
                     more unique words you’ll encounter. If you’re preparing for
                     a professional exam, traveling to a new country, or simply
                     want to sound more articulate, reading is your gateway to a
-                    richer vocabulary.
+                    richer vocabulary.`}
                   </Paragraph>
                   <SubHeading id="vocabulary-notes">
                     2. Take Vocabulary Notes
                   </SubHeading>
                   <Paragraph>
-                    As you read or browse the internet, jot down new words you
+                    {`As you read or browse the internet, jot down new words you
                     encounter. Reviewing these notes regularly and trying to use
                     these words in conversations will help you retain them
                     better. This is especially useful if you're learning a new
                     language for travel or trying to excel in a professional
-                    environment where advanced vocabulary is key.
+                    environment where advanced vocabulary is key.`}
                   </Paragraph>
                   <SubHeading id="dictionary-thesaurus">
                     3. Use a Dictionary and Thesaurus
                   </SubHeading>
                   <Paragraph>
-                    Don’t hesitate to look up unfamiliar words. Understanding
+                    {`Don’t hesitate to look up unfamiliar words. Understanding
                     their definitions, synonyms, and antonyms deepens your
                     comprehension and usage. This habit is crucial whether
                     you're writing an important report for work or trying to
-                    expand your conversational skills.
+                    expand your conversational skills.`}
                   </Paragraph>
                   <SubHeading id="conversing-partner">
                     4. Converse with a Partner
                   </SubHeading>
                   <Paragraph>
-                    Practice is key. Conversing with someone allows you to use
+                    {`Practice is key. Conversing with someone allows you to use
                     new words in context, reinforcing your memory and building
                     confidence in your usage. Whether you're practicing for a
                     job interview, preparing for a trip abroad, or simply trying
                     to be more articulate in daily conversations, regular
-                    practice will help you achieve your goals.
+                    practice will help you achieve your goals.`}
                   </Paragraph>
                   <SubHeading id="watching-movies">
                     5. Watch Movies and Series
                   </SubHeading>
                   <Paragraph>
-                    Films and TV shows are a fun way to learn colloquial
+                    {`Films and TV shows are a fun way to learn colloquial
                     language, slang, and cultural references. Subtitles can help
                     you catch new words and understand how they’re used in
                     conversation. This is particularly helpful if you're trying
                     to learn a new language or improve your understanding of
-                    cultural nuances before traveling.
+                    cultural nuances before traveling.`}
                   </Paragraph>
                   <SubHeading id="using-flashcards">
                     6. Use Flashcards
                   </SubHeading>
                   <Paragraph>
-                    Flashcards are great for memorization. Apps like Anki offer
+                    {`Flashcards are great for memorization. Apps like Anki offer
                     digital flashcards with spaced repetition, helping you
                     reinforce new vocabulary at optimal intervals. Whether
                     you're studying for an exam, preparing for a new job, or
                     learning a language, flashcards can help you retain key
-                    vocabulary more effectively.
+                    vocabulary more effectively.`}
                   </Paragraph>
                   <SubHeading id="learn-context">
                     7. Learn in Context
                   </SubHeading>
                   <Paragraph>
-                    AI tools analyze the context in which you encounter new
+                    {`AI tools analyze the context in which you encounter new
                     words, helping you understand and remember their meanings
                     better. Whether you're in a business meeting or learning a
                     new language, understanding words in context helps you apply
-                    them more effectively.
+                    them more effectively.`}
                   </Paragraph>
                   <SubHeading id="personalized-suggestions">
                     8. Personalized Vocabulary Suggestions
                   </SubHeading>
                   <Paragraph>
-                    AI can suggest words based on your interests and daily
+                    {`AI can suggest words based on your interests and daily
                     activities, ensuring that the vocabulary you learn is
                     relevant and immediately useful. If you're preparing for a
                     specific event or need to improve vocabulary in a particular
                     field, these personalized suggestions can make your learning
-                    more efficient.
+                    more efficient.`}
                   </Paragraph>
                   <SubHeading id="speak-with-ai">
                     9. Speak with AI as a Partner
                   </SubHeading>
                   <Paragraph>
-                    AI chatbots can simulate conversations on various topics,
+                    {`AI chatbots can simulate conversations on various topics,
                     giving you a safe environment to practice and learn new
                     vocabulary naturally. This is perfect for those who are shy
                     about speaking in public or need practice before a big
-                    presentation or trip.
+                    presentation or trip.`}
                   </Paragraph>
                   <SubHeading id="discover-vocablet">
                     10. Discover Vocabulary with Vocablet
@@ -254,7 +254,7 @@ const BlogDetailsPage = () => {
                     <strong>Vocablet</strong>. This app allows you to engage in
                     roleplaying scenarios with customizable AI characters,
                     providing personalized vocabulary suggestions based on your
-                    conversations. Whether you're preparing for a new job, a
+                    conversations. Whether {`you're`} preparing for a new job, a
                     trip abroad, or simply want to impress your friends with
                     your vocabulary, <strong>Vocablet</strong> tailors the
                     learning experience to your needs. Vocabulary lists are
@@ -265,7 +265,7 @@ const BlogDetailsPage = () => {
                       Traditional methods are great, but AI tools like{" "}
                       <strong>Vocablet</strong> can take your vocabulary
                       learning to the next level, making it more personalized
-                      and engaging. Whether you’re learning for work, travel, or
+                      and engaging. Whether {`you’re`} learning for work, travel, or
                       personal growth, <strong>Vocablet</strong> has got you
                       covered.
                     </p>
