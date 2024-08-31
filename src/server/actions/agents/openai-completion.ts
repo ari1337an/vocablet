@@ -3,12 +3,11 @@ import { ConversationWithOutSystemPromptSchema } from "@/server/validation/opena
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { z } from "zod";
-import { encoding_for_model, TiktokenModel } from "tiktoken";
+import { encodingForModel, TiktokenModel } from "js-tiktoken";
 
 const CountTokens = async (text: string, model: string = "gpt-4o-mini") => {
-  const encoding = encoding_for_model(model as TiktokenModel); // for gpt-4o-mini
+  const encoding = encodingForModel(model as TiktokenModel); // for gpt-4o-mini
   const tokens = encoding.encode(text);
-  encoding.free();
   return tokens.length;
 };
 
