@@ -21,11 +21,11 @@ export default async function validateOrCreateConversation(
 ) {
   if (!conversationId && !requestNewConversation) {
     throw new Error(
-      "Invalid conversation id. Please request a new conversation."
+      "Please request a new conversation."
     );
   } else if (conversationId && requestNewConversation) {
     throw new Error(
-      "Invalid request. Please provide a valid conversation id or request a new conversation."
+      "Please request a new conversation."
     );
   } else if (!conversationId && requestNewConversation) {
     const valdiatedMessage =
