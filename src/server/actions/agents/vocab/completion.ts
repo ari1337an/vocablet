@@ -45,7 +45,7 @@ export default async function VocabAgentCompletion(
             ConversationWithOutSystemPromptSchema.parse([input]);
 
         // Get completion from OpenAI
-        const [reply, totalTokens] = await OpenAITextCompletion(
+        const [reply, totalTokens, outputTokens] = await OpenAITextCompletion(
             valdiatedMessage,
             PromptFactory.getVocabSystemPrompt(),
         );

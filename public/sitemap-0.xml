@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://vocablet.io/pricing</loc><lastmod>2024-08-21T18:08:53.264Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://vocablet.io/features</loc><lastmod>2024-08-21T18:08:53.265Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://vocablet.io/blog</loc><lastmod>2024-08-21T18:08:53.265Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://vocablet.io/auth/login</loc><lastmod>2024-08-21T18:08:53.265Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://vocablet.io/auth/signup</loc><lastmod>2024-08-21T18:08:53.265Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/icon.ico</loc><lastmod>2024-08-31T16:16:02.062Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/manifest.json</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/pricing</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/features</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/blog</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/blog/quizlet-vs-magoosh-vs-vocablet-best-vocabulary-learning-tools-compared</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/blog/top-10-tips-to-learn-vocabulary-very-fast</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/auth/login</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://vocablet.io/auth/signup</loc><lastmod>2024-08-31T16:16:02.063Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

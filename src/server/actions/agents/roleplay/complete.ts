@@ -97,10 +97,7 @@ export default async function RoleplayAgentCompletion(
       system_prompt = PromptFactory.getDefaultSystemPrompt();
     }
 
-    // STRIPE_SUBSCRIPTION record the message usage
-    await recordOneMessageUseInDBForUser(userId);
-
-    const [reply, totalTokens] = await OpenAITextCompletion(
+    const [reply, totalTokens, outputTokens] = await OpenAITextCompletion(
       messages,
       system_prompt
     );
@@ -109,6 +106,9 @@ export default async function RoleplayAgentCompletion(
         "Failed to generate a response or calculate total tokens."
       );
     }
+
+    // STRIPE_SUBSCRIPTION record the message usage
+    await recordOneMessageUseInDBForUser(userId, outputTokens as number);
 
     // Record the turn in the database
     const turn = await TurnRepo.CreateTurnInDB(

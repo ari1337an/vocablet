@@ -3,6 +3,14 @@ import { ConversationWithOutSystemPromptSchema } from "@/server/validation/opena
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 import { z } from "zod";
+import { encoding_for_model, TiktokenModel } from "tiktoken";
+
+const CountTokens = async (text: string, model: string = "gpt-4o-mini") => {
+  const encoding = encoding_for_model(model as TiktokenModel); // for gpt-4o-mini
+  const tokens = encoding.encode(text);
+  encoding.free();
+  return tokens.length;
+};
 
 export default async function OpenAITextCompletion(
   messages: z.infer<typeof ConversationWithOutSystemPromptSchema>,
@@ -21,6 +29,16 @@ export default async function OpenAITextCompletion(
     ...validatedMessages,
   ];
 
+  // Check Input token limit
+  let last_text: string =
+    messagesWithSystemPrompt[messagesWithSystemPrompt.length - 1].content;
+  const last_input_token = await CountTokens(last_text);
+  if (last_input_token > 500) {
+    throw new Error(
+      "Please reduce the length of your queries. Vocablet enforces limits under its Fair Usage Policy (FUP) for the Vocablet Community."
+    );
+  }
+
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
@@ -32,6 +50,7 @@ export default async function OpenAITextCompletion(
 
   return [
     chatCompletion.choices[0].message.content,
-    chatCompletion.usage?.total_tokens,
+    chatCompletion.usage?.total_tokens as number, // total tokens = input tokens + output tokens
+    chatCompletion.usage?.completion_tokens as number, // output tokens
   ];
 }

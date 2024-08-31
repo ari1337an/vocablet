@@ -28,22 +28,24 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <main className="h-screen flex flex-col">
-      <div className="flex flex-row items-center justify-between px-10 py-5 z-10 sticky top-0 left-0 right-0">
-        <SideBar />
-        <div className="h-full absolute left-0 right-0 flex items-center justify-center text-2xl">
-          <Button
-            variant="ghost"
-            className="text-2xl hover:text-primary hover:cursor-pointer"
-          >
-            <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
-          </Button>
-
+    <>
+    <title>Vocablet App</title>
+      <main className="h-screen flex flex-col">
+        <div className="flex flex-row items-center justify-between px-10 py-5 z-10 sticky top-0 left-0 right-0">
+          <SideBar />
+          <div className="h-full absolute left-0 right-0 flex items-center justify-center text-2xl">
+            <Button
+              variant="ghost"
+              className="text-2xl hover:text-primary hover:cursor-pointer"
+            >
+              <Link href="/app">{process.env.NEXT_PUBLIC_BRAND_NAME}</Link>
+            </Button>
+          </div>
+          <UserAvatar avatarUrl={avatarUrl} />
         </div>
-        <UserAvatar avatarUrl={avatarUrl} />
-      </div>
 
-      <div className="z-0 h-full overflow-y-auto">{children}</div>
-    </main>
+        <div className="z-0 h-full overflow-y-auto">{children}</div>
+      </main>
+    </>
   );
 }

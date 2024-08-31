@@ -52,7 +52,7 @@ export default async function MeaningAgentCompletion(
         let system_prompt = PromptFactory.getMeaningAgentSystemPrompt();
 
 
-        const [reply, totalTokens] = await OpenAITextCompletion(
+        const [reply, totalTokens, outputTokens] = await OpenAITextCompletion(
             validatedWordSuggestMessage,
             system_prompt,
         );
