@@ -42,7 +42,7 @@ export default class SubscriptionRepo {
     });
   }
 
-  static markAsSubscriptionUpgradedOrDowngraded(stripeCustomerId: string){
+  static markAsSubscriptionUpgradedOrDowngraded(stripeCustomerId: string) {
     return db.subscription.update({
       where: { stripeCustomerId: stripeCustomerId },
       data: {
@@ -132,15 +132,21 @@ export default class SubscriptionRepo {
     const subscription = await db.subscription.findUnique({
       where: { stripeCustomerId: stripeCustomerId },
     });
-  
+
     if (subscription) {
-      if (subscription.stripeSubscriptionActive && !subscription.stripeInvoiceFailed) {
-        return Math.max(0, subscription.messageCurrencyMax - subscription.messageUsed);
+      if (
+        subscription.stripeSubscriptionActive &&
+        !subscription.stripeInvoiceFailed
+      ) {
+        return Math.max(
+          0,
+          subscription.messageCurrencyMax - subscription.messageUsed
+        );
       } else {
         return 0;
       }
     }
-  
+
     throw new Error(
       `Subscription not found for customer ID: ${stripeCustomerId}`
     );
@@ -150,29 +156,46 @@ export default class SubscriptionRepo {
     const subscription = await db.subscription.findUnique({
       where: { userId: userId },
     });
-  
+
     if (subscription) {
-      if (subscription.stripeSubscriptionActive && !subscription.stripeInvoiceFailed) {
-        return Math.max(0, subscription.messageCurrencyMax - subscription.messageUsed);
+      if (
+        subscription.stripeSubscriptionActive &&
+        !subscription.stripeInvoiceFailed
+      ) {
+        return Math.max(
+          0,
+          subscription.messageCurrencyMax - subscription.messageUsed
+        );
       } else {
         return 0;
       }
     }
-  
-    throw new Error(
-      `Subscription not found for user id: ${userId}`
-    );
+
+    throw new Error(`Subscription not found for user id: ${userId}`);
   }
 
-  static async recordOneMessageUseInDBForUser(userId: string){
+  static async recordOneMessageUseInDBForUser(userId: string) {
     return await db.subscription.update({
       where: {
-        userId: userId
+        userId: userId,
       },
       data: {
-        messageUsed: {increment: 1}
-      }
-    })
+        messageUsed: { increment: 1 },
+      },
+    });
   }
-  
+
+  static async recordNMessageUseInDBForUser(
+    userId: string,
+    incrementBy: number = 1
+  ) {
+    return await db.subscription.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        messageUsed: { increment: incrementBy },
+      },
+    });
+  }
 }

@@ -12,6 +12,7 @@ import { Switch } from "@/app/_components/ui/switch";
 import { RoleplayingSwitchSheet } from "./roleplaying-switch-sheet";
 import { FlipWords } from "@/app/(landing)/_aceternity/flip-words";
 import { CommandShortcut } from "@/app/_components/ui/command";
+import { Metadata } from "next";
 
 export default function App({
   session,

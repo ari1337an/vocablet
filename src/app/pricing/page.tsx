@@ -2,6 +2,7 @@ import Footer from "@/app/_components/Footer";
 import Header from "@/app/_components/Header";
 import Pricing from "@/app/_components/Pricing";
 import { Metadata } from "next";
+import PricingCompareTable from "../_components/Pricing/pricingComparison";
 
 export const metadata: Metadata = {
   title: "Pricing | Vocablet AI",
@@ -14,6 +15,7 @@ export default function PricingPage() {
     <>
       <Header />
       <Pricing />
+      <PricingCompareTable />
       <Footer />
     </>
   );

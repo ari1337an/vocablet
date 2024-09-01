@@ -1,14 +1,11 @@
 "use client";
-import { useState } from "react";
 import SectionTitle from "../Common/SectionTitle";
 import OfferList from "./OfferList";
 import PricingBox from "./PricingBox";
 
 const Pricing = () => {
-  const [isMonthly, setIsMonthly] = useState(true);
-
   return (
-    <section id="pricing" className="relative z-10 py-16 md:py-20 lg:py-28">
+    <section id="pricing" className="relative py-16 md:py-20 lg:py-28">
       <div className="container">
         <SectionTitle
           title="Simple and Affordable Pricing"
@@ -17,53 +14,13 @@ const Pricing = () => {
           width="665px"
         />
 
-        {/* <div className="w-full">
-          <div className="mb-8 flex justify-center md:mb-12 lg:mb-16">
-            <span
-              onClick={() => setIsMonthly(true)}
-              className={`${
-                isMonthly
-                  ? "pointer-events-none text-primary"
-                  : "text-dark dark:text-white"
-              } mr-4 cursor-pointer text-base font-semibold`}
-            >
-              Monthly
-            </span>
-            <div
-              onClick={() => setIsMonthly(!isMonthly)}
-              className="flex cursor-pointer items-center"
-            >
-              <div className="relative">
-                <div className="h-5 w-14 rounded-full bg-[#1D2144] shadow-inner"></div>
-                <div
-                  className={`${
-                    isMonthly ? "" : "translate-x-full"
-                  } shadow-switch-1 absolute left-0 top-[-4px] flex h-7 w-7 items-center justify-center rounded-full bg-primary transition`}
-                >
-                  <span className="active h-4 w-4 rounded-full bg-white"></span>
-                </div>
-              </div>
-            </div>
-            <span
-              onClick={() => setIsMonthly(false)}
-              className={`${
-                isMonthly
-                  ? "text-dark dark:text-white"
-                  : "pointer-events-none text-primary"
-              } ml-4 cursor-pointer text-base font-semibold`}
-            >
-              Yearly
-            </span>
-          </div>
-        </div> */}
-
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
           <PricingBox
             packageName="Vocablet Mini"
             price="2.99"
             duration="mo"
             slug="mini"
-            subtitle="Flashcards with AI"
+            subtitle="Flashcards with AI (No AI Chat)"
           >
             <OfferList text="Flashcards Learning" status="active" />
             <OfferList text="Word Meaning with AI" status="active" />
@@ -77,14 +34,22 @@ const Pricing = () => {
             duration="mo"
             slug="starter"
             recommended={true}
-            subtitle="Chat and learn and memorize with Flashcards"
+            subtitle="Chat and learn and memorize with Flashcards.(No Roleplay)"
           >
-            <OfferList text="3000 AI Chat Messages Monthly" status="active" />
             <OfferList
+              text="Unlimited AI Chat Messages Monthly"
+              status="active"
+              tooltip="Unlimited AI Chat comes with a Fair Usage Policy (FUP). Enjoy up to 15,000 monthly messages—more than enough for typical usecase."
+            />
+            {/* <OfferList
               text="30 AI Messages In Single Conversation"
               status="active"
-            />
-            <OfferList text="Roleplay Feature in AI Chat" status="active" />
+            /> */}
+            {/* <OfferList
+              text="Roleplay Feature in AI Chat"
+              status="active"
+              limitedOffer={true}
+            /> */}
             <OfferList text="Flashcards Learning" status="active" />
             <OfferList text="Word Meaning with AI" status="active" />
             <OfferList text="Generate Words with AI" status="active" />
@@ -96,14 +61,22 @@ const Pricing = () => {
             price="22"
             duration="mo"
             slug="pro"
-            subtitle="Chat and learn and memorize with Flashcards"
+            subtitle="Chat, roleplay, and learn and memorize with Flashcards. Everything!"
           >
-            <OfferList text="6000 AI Chat Messages Monthly" status="active" />
             <OfferList
+              text="Unlimited AI Chat Messages Monthly"
+              status="active"
+              tooltip="Unlimited AI Chat comes with a Fair Usage Policy (FUP). Enjoy up to 22,000 monthly messages—more than enough for advanced usecase."
+            />
+            {/* <OfferList
               text="Unlimited AI Messages In Single Conversation"
               status="active"
+            /> */}
+            <OfferList
+              text="Roleplay Feature in AI Chat"
+              status="active"
+              showFlameIcon={true}
             />
-            <OfferList text="Roleplay Feature in AI Chat" status="active" />
             <OfferList text="Flashcards Learning" status="active" />
             <OfferList text="Word Meaning with AI" status="active" />
             <OfferList text="Generate Words with AI" status="active" />
@@ -113,7 +86,7 @@ const Pricing = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 z-[-1]">
+      <div className="absolute bottom-0 left-0 ">
         <svg
           width="239"
           height="601"
