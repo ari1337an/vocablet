@@ -1,5 +1,4 @@
 "use client";
-import { LoginFormSchema } from "@/server/validation/auth/login-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -14,31 +13,24 @@ import {
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
 import { z } from "zod";
-import OAuthSection from "../../_components/oauth-section";
 import { Separator } from "@/app/_components/ui/separator";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import AlternateOption from "../../_components/alternate-option";
-import { PasswordInput } from "../../_components/password-input";
-import SignInAction from "@/server/actions/auth/login-usecase";
 import { CSSTransition } from "react-transition-group";
 import CheckIcon from "@/app/_icons/check";
 import { useSignInCallbackUrl } from "@/app/_hooks/auth/useSignInCallbackUrl";
-import {
-  DEFAULT_LOGIN_REDIRECT,
-  REQUEST_TO_FORGOT_PASS,
-  REQUEST_TO_SIGNUP_ROUTE,
-} from "@/server/authentication/routes";
 import XMarkIcon from "@/app/_icons/x-mark";
 import "../../_components/vibrate-transition.css";
 import "../../_components/slide-right-transition.css";
 import { Suspense } from "react";
+import { ForgotFormSchema } from "@/server/validation/auth/forgot-form";
+import ForgotPasswordAction from "@/server/actions/auth/forgot-password-usecase";
+import { useReCaptcha } from "next-recaptcha-v3";
 import Link from "next/link";
-import { Checkbox } from "@/app/_components/ui/checkbox";
-import { Label } from "@/app/_components/ui/label";
 
-export function SignIn() {
+export function ForgotPassword() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -46,23 +38,13 @@ export function SignIn() {
   const [isErrorAnimation, setIsErrorAnimation] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = useSignInCallbackUrl();
+  // Import 'executeRecaptcha' using 'useReCaptcha' hook
+  const { executeRecaptcha } = useReCaptcha();
 
-  const isLogout = searchParams.get("logout") === "success";
-
-  useEffect(() => {
-    if (isLogout) {
-      toast("Successfully logged out!", { icon: "✅", id: "0" });
-    }
-  }, [isLogout]);
-
-  const form = useForm<z.infer<typeof LoginFormSchema>>({
-    resolver: zodResolver(LoginFormSchema),
+  const form = useForm<z.infer<typeof ForgotFormSchema>>({
+    resolver: zodResolver(ForgotFormSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
@@ -70,21 +52,21 @@ export function SignIn() {
     setShowPassword(!showPassword);
   };
 
-  function onSubmit(values: z.infer<typeof LoginFormSchema>) {
+  function onSubmit(values: z.infer<typeof ForgotFormSchema>) {
     // clear the messages
     setError(null);
     setSuccess(null);
 
-    startTransition(() => {
+    startTransition(async () => {
+      // Generate ReCaptcha token
+      const token = await executeRecaptcha("password_reset_form_submit");
+
       // call the login server action
-      SignInAction(values)
+      ForgotPasswordAction(values, token)
         .then((result) => {
           if (result && result.success) {
             setSuccess(result.message || null);
             setIsSuccessAnimation(true);
-            setTimeout(() => {
-              router.push(callbackUrl || DEFAULT_LOGIN_REDIRECT);
-            }, 5000);
           } else {
             setError(result.message || "Something went wrong!");
             setIsErrorAnimation(true);
@@ -102,7 +84,7 @@ export function SignIn() {
   return (
     <Suspense>
       <div className="min-h-screen m-auto flex flex-col items-center justify-center gap-y-5">
-        <h1 className="text-2xl font-semibold">Login to your account</h1>
+        <h1 className="text-2xl font-semibold">Reset your password</h1>
         <div className="w-2/3 sm:w-1/2">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
@@ -125,37 +107,6 @@ export function SignIn() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        field={field}
-                        disabled={
-                          isPending || isErrorAnimation || isSuccessAnimation
-                        }
-                        showPassword={showPassword}
-                        placeholder="********"
-                        togglePasswordVisibility={togglePasswordVisibility}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-row items-center justify-between px-1">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="terms" />
-                  <Label htmlFor="terms">Remember me</Label>
-                </div>
-                <Link className="hover:underline" href={REQUEST_TO_FORGOT_PASS}>
-                  Forgot Password?
-                </Link>
-              </div>
-
               <CSSTransition
                 in={isErrorAnimation}
                 timeout={{ enter: 1000, exit: 0 }}
@@ -195,7 +146,7 @@ export function SignIn() {
 
               {!isErrorAnimation && !success && (
                 <Button disabled={isPending} className="w-full" type="submit">
-                  Login
+                  Send Verification Link
                 </Button>
               )}
             </form>
@@ -205,7 +156,6 @@ export function SignIn() {
             <div className="mx-2 text-white">or</div>
             <Separator className="w-1/4 h-0.5 rounded bg-slate-200" />
           </div>
-          <OAuthSection />
           <AlternateOption />
         </div>
       </div>

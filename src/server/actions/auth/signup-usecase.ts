@@ -4,11 +4,16 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import UserRepo from "@/server/database/repositories/user";
 import sendVerificationLinkUseCase from "../email/send-verification-link-usecase";
+import VerifyReCaptchaToken from "../recaptcha/verify";
 
 export default async function SignupAction(
-  values: z.infer<typeof SignupFormSchema>
+  values: z.infer<typeof SignupFormSchema>,
+  recaptchaToken: string
 ) {
   try {
+    // validate the recaptchatoken here
+    await VerifyReCaptchaToken(recaptchaToken);
+
     // Validate the form values using zod
     const parsedValues = SignupFormSchema.parse(values);
 

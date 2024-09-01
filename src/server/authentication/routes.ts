@@ -3,7 +3,15 @@
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicRoutes = ["/", "/pricing", "/blog", "/blog-details", "/features", "/terms/service", "/terms/privacy"];
+export const publicRoutes = [
+  "/",
+  "/pricing",
+  "/blog",
+  "/blog-details",
+  "/features",
+  "/terms/service",
+  "/terms/privacy",
+];
 
 /**
  * An array of API prefixes that are accessible to the public
@@ -17,14 +25,27 @@ export const publicAPIPrefixes = ["/api/webhook", "/blog"];
  * These routes require authentication
  * @type {string[]}
  */
-export const protectedAPIPrefixes = ["/api/agents", "/api/buckets"];
+export const protectedAPIPrefixes = [
+  "/api/agents",
+  "/api/buckets",
+  "/api/roleplay",
+  "/api/check-roleplay-access",
+  "/api/conversation",
+  "/api/vocabulary",
+];
 
 /**
  * An array of routes that are used
  * These routes will redirect logged in users to /app
  * @type {string[]}
  */
-export const authRoutes = ["/auth/login", "/auth/signup", "/auth/error"];
+export const authRoutes = [
+  "/auth/login",
+  "/auth/signup",
+  "/auth/error",
+  "/auth/forgot",
+  "/forgot-password-verify",
+];
 
 /**
  * The prefix for API authentication routes
@@ -50,3 +71,9 @@ export const REQUEST_TO_LOGIN_ROUTE = "/auth/login";
  * @type {string}
  */
 export const REQUEST_TO_SIGNUP_ROUTE = "/auth/signup";
+
+/**
+ * Request user to be forgot password
+ * @type {string}
+ */
+export const REQUEST_TO_FORGOT_PASS = "/auth/forgot";

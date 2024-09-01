@@ -24,8 +24,8 @@ export default function VerifyEmail({ code }: { code: string | null }) {
       .then((response: Response) => {
         setProgress(66);
         setResponse(response);
-        setTimeout(() => setProgress(88), 1500);
-        setTimeout(() => setProgress(100), 3000);
+        // setTimeout(() => setProgress(88), 1500);
+        // setTimeout(() => setProgress(100), 3000);
       })
       .catch((error) => {
         setResponse({
