@@ -6,12 +6,20 @@ export default class VerificationRepo {
       where: { identifier: userId },
     });
   }
-  
+
   static findVerificationByTokenAndUserId(token: string, userId: string) {
     return db.verificationToken.findFirst({
       where: {
         token,
         identifier: userId,
+      },
+    });
+  }
+
+  static findVerificationByToken(token: string) {
+    return db.verificationToken.findFirst({
+      where: {
+        token,
       },
     });
   }

@@ -3,6 +3,7 @@ import { SignUp } from "./_components/sign-up"; // Changed to SignUp
 import { Separator } from "@/app/_components/ui/separator";
 import Link from "next/link";
 import { Metadata } from "next";
+import { ReCaptchaProvider } from "next-recaptcha-v3";
 
 export const metadata: Metadata = {
   title: "Signup | Vocablet AI",
@@ -13,7 +14,11 @@ export default function Page() {
     <div className="min-h-screen flex flex-col lg:flex-row relative">
       <div className="w-full lg:w-1/2 bg-secondary">
         <Suspense>
-          <SignUp />
+          <ReCaptchaProvider
+            reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT}
+          >
+            <SignUp />
+          </ReCaptchaProvider>
         </Suspense>
       </div>
       <div className="hidden lg:flex w-1/2 bg-primary flex-col items-center px-10">

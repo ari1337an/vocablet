@@ -28,6 +28,7 @@ import XMarkIcon from "@/app/_icons/x-mark";
 import toast from "react-hot-toast";
 import "../../_components/vibrate-transition.css";
 import "../../_components/slide-right-transition.css";
+import { useReCaptcha } from "next-recaptcha-v3";
 
 export function SignUp() {
   const [error, setError] = useState<string | null>(null);
@@ -49,14 +50,20 @@ export function SignUp() {
     },
   });
 
+  // Import 'executeRecaptcha' using 'useReCaptcha' hook
+  const { executeRecaptcha } = useReCaptcha();
+
   function onSubmit(values: z.infer<typeof SignupFormSchema>) {
     // clear the messages
     setError(null);
     setSuccess(null);
 
-    startTransition(() => {
+    startTransition(async () => {
+      // Generate ReCaptcha token
+      const token = await executeRecaptcha("signup_form_submit");
+
       // call the signup server action
-      SignupAction(values)
+      SignupAction(values, token)
         .then((result) => {
           if (result.success) {
             setSuccess(result.message || null);
