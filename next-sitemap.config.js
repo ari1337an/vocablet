@@ -63,6 +63,13 @@ module.exports = {
     });
 
     result.push({
+      loc: "/blog/how-to-roleplay-as-different-characters-and-learn-vocabulary",
+      changefreq: "daily",
+      priority: 0.7,
+      lastmod: new Date().toISOString(),
+    });
+
+    result.push({
       loc: "/auth/login",
       changefreq: "daily",
       priority: 0.7,
