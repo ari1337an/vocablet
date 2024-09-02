@@ -74,4 +74,13 @@ body,
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  /* Add the custom class for highlightBoxParagraph */
+  .highlightBoxParagraph {
+    @apply mb-4 text-gray-600 dark:text-gray-400 font-medium leading-relaxed; /* Adjust these values as needed */
+  }
+
+  .subheading {
+    @apply font-medium leading-tight text-black dark:text-white  sm:leading-tight lg:leading-tight xl:leading-tight;
+  }
 }
