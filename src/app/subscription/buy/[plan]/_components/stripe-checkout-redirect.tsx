@@ -37,7 +37,7 @@ export default function StripeCheckOutRedirect({
     };
 
     sendGTMEvent({
-      event: "add_to_cart",
+      event: "begin_checkout",
       value: { price: price, priceId: priceId },
     });
 
