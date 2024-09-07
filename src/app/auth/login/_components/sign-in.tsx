@@ -37,6 +37,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { Label } from "@/app/_components/ui/label";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export function SignIn() {
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +81,7 @@ export function SignIn() {
       SignInAction(values)
         .then((result) => {
           if (result && result.success) {
+            sendGTMEvent({ event: "login" });
             setSuccess(result.message || null);
             setIsSuccessAnimation(true);
             setTimeout(() => {
