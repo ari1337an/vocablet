@@ -14,39 +14,39 @@ export default function SuccessPaymentPage() {
   const [progress, setProgress] = useState<number>(33);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCheckoutDetails = async () => {
-    const session_id = searchParams.get("session_id");
-    if (!session_id) return;
-
-    try {
-      setProgress(50); // Start loading
-      const result = await getCheckoutDetails(session_id); // Call server action
-      setProgress(70); // Mid-progress on data retrieval
-      if (result.success) {
-        sendGTMEvent({
-          event: "purchase",
-          ecommerce: {
-            value: result.value,
-            currency: result.currency,
-            transactionId: session_id,
-          },
-        });
-        setProgress(100); // Complete progress
-      } else {
-        setError(result.message || "Failed to fetch checkout details.");
-        setProgress(0); // Reset progress on failure
-      }
-    } catch (err) {
-      setError("An error occurred while fetching the details.");
-      setProgress(0); // Reset progress on error
-    }
-  };
-
   useEffect(() => {
+    const fetchCheckoutDetails = async () => {
+      const session_id = searchParams.get("session_id");
+      if (!session_id) return;
+
+      try {
+        setProgress(50); // Start loading
+        const result = await getCheckoutDetails(session_id); // Call server action
+        setProgress(70); // Mid-progress on data retrieval
+        if (result.success) {
+          sendGTMEvent({
+            event: "purchase",
+            ecommerce: {
+              value: result.value,
+              currency: result.currency,
+              transactionId: session_id,
+            },
+          });
+          setProgress(100); // Complete progress
+        } else {
+          setError(result.message || "Failed to fetch checkout details.");
+          setProgress(0); // Reset progress on failure
+        }
+      } catch (err) {
+        setError("An error occurred while fetching the details.");
+        setProgress(0); // Reset progress on error
+      }
+    };
+
     startTransition(() => {
       fetchCheckoutDetails();
     });
-  }, [searchParams, fetchCheckoutDetails]);
+  }, [searchParams]);
 
   return (
     <main className="min-h-screen flex flex-row items-center justify-center bg-secondary">
