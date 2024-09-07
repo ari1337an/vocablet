@@ -103,7 +103,7 @@ export default function UserCredentialEmail({
                   To get you started, we&apos;ve created an account for you.
                   Below are your temporary login credentials:
                 </Text>
-                <Container>
+                <Container className="text-center">
                   <Text className="font-normal">
                     <b>Email: </b>
                     {email}
@@ -117,7 +117,7 @@ export default function UserCredentialEmail({
                 <Text>
                   Please use these credentials to access your account at{" "}
                   <Link
-                    className="text-primary"
+                    className="text-white bg-primary rounded-3xl px-2 py-1"
                     href={`https://${hostdomain}/auth/login`}
                   >
                     Login Page
@@ -135,7 +135,7 @@ export default function UserCredentialEmail({
                   >
                     support@alphawolfventures.com
                   </Link>
-                  .
+                  . We also have a customer portal for managing billing, Click here <Link className="text-white bg-primary rounded-3xl px-2 py-1" href="https://billing.stripe.com/p/login/4gwdROboSgxe21qeUU">Customer Portal</Link>
                 </Text>
               </Row>
 
