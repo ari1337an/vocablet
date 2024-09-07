@@ -7,9 +7,9 @@ export default function SuccessPaymentPage() {
   const router = useRouter();
 
   useEffect(() => {
-    setTimeout(() => {
-      router.push("/app");
-    }, 5000);
+    // setTimeout(() => {
+    //   router.push("/app");
+    // }, 5000);
   });
 
   return (
@@ -17,7 +17,7 @@ export default function SuccessPaymentPage() {
       response={{
         success: true,
         message:
-          "Congratulations! Your purchased was successfull. Redirecting...",
+          "Congratulations! Your purchased was successfull.",
       }}
     />
   );

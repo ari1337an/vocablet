@@ -6,6 +6,7 @@ import getCustomerSubscriptionPriceId from "@/server/actions/stripe/get-priceid-
 import getCustomerEmail from "@/server/actions/stripe/get-customer-email";
 import UserRepo from "@/server/database/repositories/user";
 import getMessageLimitFromPriceId from "@/server/actions/stripe/get-message-limit-from-priceid";
+import createUserWithCustomerEmailIfNotExists from "@/server/actions/stripe/create-user-with-customer-email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -59,7 +60,12 @@ export async function POST(request: NextRequest) {
       const session: Stripe.Checkout.Session = event.data.object;
 
       // make sure this is not null (assert it in the business logic, not here)
-      const customer_email = session.customer_email;
+      const customer_email = await getCustomerEmail(session.customer as string);
+      
+      // create user and send temporary credentials over email if not created
+      if (customer_email) {
+        await createUserWithCustomerEmailIfNotExists(customer_email);
+      }
 
       const customerId = session.customer as string;
 
@@ -79,10 +85,16 @@ export async function POST(request: NextRequest) {
       );
 
       // update entitlement
-      updateEntitlement(customerId, customer_email);
+      updateEntitlement(customerId, customer_email as string);
     } else if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer as string;
+
+      // create user and send temporary credentials over email if not created
+      const customer_email = await getCustomerEmail(customerId);
+      if (customer_email) {
+        await createUserWithCustomerEmailIfNotExists(customer_email);
+      }
 
       if (
         await SubscriptionRepo.findSubscriptionByStripeCustomerId(customerId)
@@ -117,6 +129,11 @@ export async function POST(request: NextRequest) {
       const invoice = event.data.object as Stripe.Invoice;
       const customerId = invoice.customer;
       const customerEmail = invoice.customer_email;
+
+      // create user and send temporary credentials over email if not created
+      if (customerEmail) {
+        await createUserWithCustomerEmailIfNotExists(customerEmail);
+      }
 
       if (
         await SubscriptionRepo.findSubscriptionByStripeCustomerId(
@@ -179,6 +196,12 @@ export async function POST(request: NextRequest) {
       const newEntitlements = entitlementsSummary.entitlements.data.map(
         (entitlement: any) => entitlement.lookup_key
       );
+
+      // create user and send temporary credentials over email if not created
+      const customer_email = await getCustomerEmail(customerId);
+      if (customer_email) {
+        await createUserWithCustomerEmailIfNotExists(customer_email);
+      }
 
       if (newEntitlements && newEntitlements.length == 0) {
         await EntitlementRepo.clearEntitlementOfUserByCustomerId(customerId);

@@ -18,7 +18,7 @@ export const publicRoutes = [
  * These routes do not require authentication
  * @type {string[]}
  */
-export const publicAPIPrefixes = ["/api/webhook", "/blog"];
+export const publicAPIPrefixes = ["/api/webhook", "/blog", "/subscription/buy", "/subscription/cancel", "/subscription/success"];
 
 /**
  * An array of API prefixes that are protected by bearer token authorization

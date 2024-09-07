@@ -51,6 +51,16 @@ export default class UserRepo {
     });
   }
 
+  static async createUserAndVerify(email: string, password: string) {
+    return db.user.create({
+      data: {
+        email,
+        password,
+        emailVerified: new Date().toISOString()
+      },
+    });
+  }
+
   static async findUserByEmail(email: string) {
     return db.user.findUnique({
       where: { email },

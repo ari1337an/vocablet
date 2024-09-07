@@ -25,11 +25,27 @@ export default async function BuyPage({
       return process.env.PRICING_PLAN_1_PRICE_ID;
     } else if (planSlug.toLowerCase() === process.env.PRICING_PLAN_2_SLUG) {
       return process.env.PRICING_PLAN_2_PRICE_ID;
-    } else if(planSlug.toLowerCase() === process.env.PRICING_PLAN_3_SLUG) {
+    } else if (planSlug.toLowerCase() === process.env.PRICING_PLAN_3_SLUG) {
       return process.env.PRICING_PLAN_3_PRICE_ID;
     } else {
       throw new Error("Invalid Plan!");
     }
+  };
+
+  const getPriceByPriceId = (priceId: string) => {
+    if (priceId === process.env.PRICING_PLAN_1_PRICE_ID)
+      return parseFloat(
+        (process.env.PRICING_PLAN_1_PRICE_VALUE as string) || "2.99"
+      );
+    else if (priceId === process.env.PRICING_PLAN_2_PRICE_ID)
+      return parseFloat(
+        (process.env.PRICING_PLAN_2_PRICE_VALUE as string) || "15"
+      );
+    else if (priceId === process.env.PRICING_PLAN_3_PRICE_ID)
+      return parseFloat(
+        (process.env.PRICING_PLAN_3_PRICE_VALUE as string) || "22"
+      );
+    else return 0.0;
   };
 
   try {
@@ -43,6 +59,8 @@ export default async function BuyPage({
         />
       );
     }
+
+    const price = getPriceByPriceId(priceId);
 
     // create a checkout session
     const stripeSession = await createCheckoutSession(priceId);
@@ -63,7 +81,11 @@ export default async function BuyPage({
     }
 
     return (
-      <StripeCheckOutRedirect stripeSessionId={stripeSession.stripeSessionId} />
+      <StripeCheckOutRedirect
+        stripeSessionId={stripeSession.stripeSessionId}
+        price={price}
+        priceId={priceId}
+      />
     );
   } catch (error) {
     return (
