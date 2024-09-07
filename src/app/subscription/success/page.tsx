@@ -46,7 +46,7 @@ export default function SuccessPaymentPage() {
     startTransition(() => {
       fetchCheckoutDetails();
     });
-  }, [searchParams]);
+  }, [searchParams, fetchCheckoutDetails]);
 
   return (
     <main className="min-h-screen flex flex-row items-center justify-center bg-secondary">
