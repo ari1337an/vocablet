@@ -8,7 +8,7 @@ export default async function getCheckoutDetails(sessionId: string) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId) as Stripe.Checkout.Session;
     // const customer = await stripe.customers.retrieve(session.customer as string) as Stripe.Customer;
-    if(session.payment_status === "unpaid" || !session.amount_total){
+    if(session.payment_status === "unpaid"){
       throw new Error("Invalid Session");   
     }
     console.log(session)
