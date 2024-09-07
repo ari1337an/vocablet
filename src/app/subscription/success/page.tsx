@@ -1,8 +1,7 @@
 "use client";
+
 import { useEffect, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
-import { Progress } from "@/app/_components/ui/progress"; // shadcn/ui progress bar
-import MessageComponent from "@/app/_components/message/message";
 import getCheckoutDetails from "@/server/actions/stripe/get-checkout-details"; // Import server action
 import { sendGTMEvent } from "@next/third-parties/google";
 import CheckGreenIcon from "@/app/_icons/check-green";
@@ -23,6 +22,7 @@ export default function SuccessPaymentPage() {
         setProgress(50); // Start loading
         const result = await getCheckoutDetails(session_id); // Call server action
         setProgress(70); // Mid-progress on data retrieval
+        console.log(result)
         if (result.success) {
           sendGTMEvent({
             event: "purchase",

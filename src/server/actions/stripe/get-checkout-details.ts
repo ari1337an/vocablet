@@ -11,8 +11,10 @@ export default async function getCheckoutDetails(sessionId: string) {
     if(session.payment_status === "unpaid" || !session.amount_total){
       throw new Error("Invalid Session");   
     }
+    console.log(session)
     return {success: true, currency: session.currency?.toUpperCase() || "USD", value: (session.amount_total as number)/100.0 }
   } catch (error) {
+    console.log(error)
     return {success: false, message: "Invalid Session!"}
   }
 }
