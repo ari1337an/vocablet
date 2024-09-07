@@ -1,5 +1,6 @@
 "use client";
 
+import { sendGTMEvent } from "@next/third-parties/google";
 import { OAuthLoginButton } from "./oauth-login-button";
 import { useSignIn } from "@/app/_hooks/auth/useSignInOAuth";
 
@@ -64,6 +65,7 @@ export default function OAuthSection() {
   const signInGithub = useSignIn("github");
 
   const onClick = (provider: "google" | "github") => {
+    sendGTMEvent({event: "login"})
     if (provider === "google") signInGoogle();
     else signInGithub();
   };

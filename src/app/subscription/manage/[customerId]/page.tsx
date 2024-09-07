@@ -5,12 +5,18 @@ import React from "react";
 import StripeBillingRedirect from "./_components/stripe-billing-redirect";
 import SubscriptionRepo from "@/server/database/repositories/subscription";
 import createPortalSession from "@/server/actions/stripe/create-portal-session";
+import { auth } from "@/server/authentication/auth";
 
 export default async function BuyPage({
   params,
 }: {
   params: { customerId: string };
 }) {
+  // check customer id is current user or not
+  const session = await auth();
+  const userId = session?.user.userId;
+  if (!userId) return null;
+
   const customerId = params?.customerId;
 
   if (!customerId) {
@@ -22,8 +28,10 @@ export default async function BuyPage({
   }
 
   // fetch subscription details from the server
-  const subscription = await SubscriptionRepo.findSubscriptionByStripeCustomerId(customerId);
-  if (!subscription || !subscription.stripeCustomerId) {
+  const subscription =
+    await SubscriptionRepo.findSubscriptionByStripeCustomerId(customerId);
+
+  if (!subscription || !subscription.stripeCustomerId || subscription.userId != userId) {
     return (
       <MessageComponent
         response={{ success: false, message: "Invalid customer ID!" }}
@@ -32,13 +40,11 @@ export default async function BuyPage({
   }
 
   // create a checkout session
-  const stripeSession = await createPortalSession(subscription.stripeCustomerId);
+  const stripeSession = await createPortalSession(
+    subscription.stripeCustomerId
+  );
 
-  if (
-    !stripeSession ||
-    !stripeSession.success ||
-    !stripeSession.url
-  ) {
+  if (!stripeSession || !stripeSession.success || !stripeSession.url) {
     return (
       <MessageComponent
         response={{
@@ -49,7 +55,5 @@ export default async function BuyPage({
     );
   }
 
-  return (
-    <StripeBillingRedirect stripeBillingSessionUrl={stripeSession.url} />
-  );
+  return <StripeBillingRedirect stripeBillingSessionUrl={stripeSession.url} />;
 }

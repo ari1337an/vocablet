@@ -4,11 +4,16 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Progress } from "@/app/_components/ui/progress";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export default function StripeCheckOutRedirect({
   stripeSessionId,
+  price,
+  priceId,
 }: {
   stripeSessionId: string;
+  price: number;
+  priceId: string;
 }) {
   const [progress, setProgress] = useState(13);
 
@@ -31,18 +36,20 @@ export default function StripeCheckOutRedirect({
       await stripe?.redirectToCheckout({ sessionId: stripeSessionId });
     };
 
+    sendGTMEvent({
+      event: "add_to_cart",
+      value: { price: price, priceId: priceId },
+    });
+
     // Set the flag to indicate the effect has run
     hasEffectRun.current = true;
 
     setProgress(33);
     setTimeout(() => {
-      setProgress(88);
-    }, 2000);
-    setTimeout(() => {
       setProgress(100);
       handleCheckout();
-    }, 3100);
-  }, [stripeSessionId]);
+    }, 1000);
+  }, [stripeSessionId, priceId, price]);
 
   return (
     <main className="min-h-screen h-full flex flex-col items-center justify-center gap-y-5">

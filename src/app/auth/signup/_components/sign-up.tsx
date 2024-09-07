@@ -29,6 +29,7 @@ import toast from "react-hot-toast";
 import "../../_components/vibrate-transition.css";
 import "../../_components/slide-right-transition.css";
 import { useReCaptcha } from "next-recaptcha-v3";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export function SignUp() {
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +67,7 @@ export function SignUp() {
       SignupAction(values, token)
         .then((result) => {
           if (result.success) {
+            sendGTMEvent({event: "sign_up"})
             setSuccess(result.message || null);
             setIsSuccessAnimation(true);
             setTimeout(() => {
