@@ -36,10 +36,10 @@ const pricingPlans: PricingPlan[] = [
   {
     name: "Vocablet Starter",
     slug: "starter",
-    price: "$15",
+    price: "$7.99",
     interval: "mo",
     features: {
-      "AI Chat Messages Monthly": "15000/mo",
+      "AI Chat Messages Monthly": "7000/mo",
       "Roleplay Feature in AI Chat": <CircleXIcon className="w-4 h-4 mx-auto fill-rose-500" />,
       "Flashcards Learning": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Word Meaning with AI": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
@@ -51,10 +51,10 @@ const pricingPlans: PricingPlan[] = [
   {
     name: "Vocablet Pro",
     slug: "pro",
-    price: "$22",
+    price: "$9.99",
     interval: "mo",
     features: {
-      "AI Chat Messages Monthly": "22000/mo",
+      "AI Chat Messages Monthly": "9000/mo",
       "Roleplay Feature in AI Chat": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Flashcards Learning": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Word Meaning with AI": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
