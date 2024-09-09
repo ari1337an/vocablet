@@ -30,7 +30,7 @@ const Pricing = () => {
           </PricingBox>
           <PricingBox
             packageName="Vocablet Starter"
-            price="15"
+            price="7.99"
             duration="mo"
             slug="starter"
             recommended={true}
@@ -39,7 +39,7 @@ const Pricing = () => {
             <OfferList
               text="Unlimited AI Chat Messages Monthly"
               status="active"
-              tooltip="Unlimited AI Chat comes with a Fair Usage Policy (FUP). Enjoy up to 15,000 monthly messages—more than enough for typical usecase."
+              tooltip="Unlimited AI Chat comes with a Fair Usage Policy (FUP). Enjoy up to 7000 monthly messages—more than enough for typical usecase."
             />
             {/* <OfferList
               text="30 AI Messages In Single Conversation"
@@ -58,7 +58,7 @@ const Pricing = () => {
           </PricingBox>
           <PricingBox
             packageName="Vocablet Pro"
-            price="22"
+            price="9.99"
             duration="mo"
             slug="pro"
             subtitle="Chat, roleplay, and learn and memorize with Flashcards. Everything!"
@@ -66,7 +66,7 @@ const Pricing = () => {
             <OfferList
               text="Unlimited AI Chat Messages Monthly"
               status="active"
-              tooltip="Unlimited AI Chat comes with a Fair Usage Policy (FUP). Enjoy up to 22,000 monthly messages—more than enough for advanced usecase."
+              tooltip="Unlimited AI Chat comes with a Fair Usage Policy (FUP). Enjoy up to 9000 monthly messages—more than enough for advanced usecase."
             />
             {/* <OfferList
               text="Unlimited AI Messages In Single Conversation"
