@@ -169,7 +169,7 @@ const Header = () => {
                               href="/app"
                               className="ease-in-up shadow-btn hover:shadow-btn-hover rounded-sm bg-primary px-4 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:hidden md:px-9 lg:px-6 xl:px-9"
                             >
-                              Get Started
+                              Go to App
                             </Link>
                           </>
                         )}
@@ -179,7 +179,7 @@ const Header = () => {
                               href="/auth/login"
                               className="ease-in-up shadow-btn hover:shadow-btn-hover rounded-sm bg-primary px-4 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:hidden md:px-9 lg:px-6 xl:px-9"
                             >
-                              Get Started
+                              Login
                             </Link>
                           </>
                         )}
