@@ -22,6 +22,8 @@ const Pricing = () => {
             slug="mini"
             subtitle="Flashcards with AI (No AI Chat)"
           >
+            <OfferList text="AI Chat Messages" status="inactive" />
+            <OfferList text="Roleplay Feature in AI Chat" status="inactive" />
             <OfferList text="Flashcards Learning" status="active" />
             <OfferList text="Word Meaning with AI" status="active" />
             <OfferList text="Generate Words with AI" status="active" />
@@ -45,11 +47,10 @@ const Pricing = () => {
               text="30 AI Messages In Single Conversation"
               status="active"
             /> */}
-            {/* <OfferList
+            <OfferList
               text="Roleplay Feature in AI Chat"
-              status="active"
-              limitedOffer={true}
-            /> */}
+              status="inactive"
+            />
             <OfferList text="Flashcards Learning" status="active" />
             <OfferList text="Word Meaning with AI" status="active" />
             <OfferList text="Generate Words with AI" status="active" />

@@ -24,7 +24,7 @@ const pricingPlans: PricingPlan[] = [
     price: "$2.99",
     interval: "mo",
     features: {
-      "AI Chat Messages Monthly": "0/mo",
+      "AI Chat Messages Monthly": "0 messages/mo",
       "Roleplay Feature in AI Chat": <CircleXIcon className="w-4 h-4 mx-auto fill-rose-500" />,
       "Flashcards Learning": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Word Meaning with AI": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
@@ -39,7 +39,7 @@ const pricingPlans: PricingPlan[] = [
     price: "$7.99",
     interval: "mo",
     features: {
-      "AI Chat Messages Monthly": "7000/mo",
+      "AI Chat Messages Monthly": "7000 messages/mo",
       "Roleplay Feature in AI Chat": <CircleXIcon className="w-4 h-4 mx-auto fill-rose-500" />,
       "Flashcards Learning": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Word Meaning with AI": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
@@ -54,7 +54,7 @@ const pricingPlans: PricingPlan[] = [
     price: "$9.99",
     interval: "mo",
     features: {
-      "AI Chat Messages Monthly": "9000/mo",
+      "AI Chat Messages Monthly": "9000 messages/mo",
       "Roleplay Feature in AI Chat": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Flashcards Learning": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
       "Word Meaning with AI": <CheckGreenIcon className="w-4 h-4 mx-auto" />,
