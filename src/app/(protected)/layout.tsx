@@ -22,10 +22,10 @@ export default async function ProtectedLayout({
   const avatarUrl =
     session.user.image === null ? undefined : (session.user.image as string);
 
-  // Check if the user has verified their email
-  if (!session?.user?.emailVerified) {
-    return <RequestEmailVerification />;
-  }
+  // // Check if the user has verified their email
+  // if (!session?.user?.emailVerified) {
+  //   return <RequestEmailVerification />;
+  // }
 
   return (
     <>
