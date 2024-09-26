@@ -13,6 +13,10 @@ export default function Message({ message }: MessageProps) {
   //   setShowAgentMessage(!showAgentMessage);
   // };
 
+  if(message.role === "assistant" && message.message === "You do not have access to use this feature. Upgrade your plan to use this feature."){
+    message.message = "[You do not have access to use this feature. Upgrade your plan to use this feature. Click Here To Upgrade](https://vocablet.io/pricing)"
+  }
+
   return (
     <div
       className={`text-sm max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl ${
