@@ -1,31 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Vocablet  
+🚀 **Immersive AI-Powered Language Learning**  
 
-## Getting Started
+Vocablet helps learners improve vocabulary retention through **roleplay-based conversations**, **real-time word suggestions**, and **adaptive flashcards** — all powered by AI.  
 
-First, run the development server:
+👉 Live demo: [vocablet.io](https://vocablet.io)  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features  
+- **Immersive Roleplay Chats** — practice conversations in real-world scenarios.  
+- **Real-Time Vocabulary Suggestions** — get instant word recommendations while you chat.  
+- **Adaptive Flashcards** — auto-generate flashcards from your own conversations.  
+- **Personal Word Bank** — save & review words you’ve encountered in roleplays.  
+- **Responsive Web App** — clean UI/UX with mobile-first design.  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🛠️ Tech Stack  
+- **Frontend:** NextJS, Tailwind CSS  
+- **Backend:** NextJS 
+- **AI/ML:** OpenAI Compatible API
+- **Infrastructure:** Docker, AWS EC2/S3, DigitalOcean  
+- **Other:** Stripe for payments, Redis, RESTful APIs, OpenAPI/Swagger  
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Getting Started  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
+### Prerequisites  
+- Node.js ≥ 18  
+- Docker & Docker Compose  
+- PostgreSQL (local or cloud instance)  
